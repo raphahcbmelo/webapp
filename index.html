@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CONTAS</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
+        body { background-color: #121212; color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        
+        #app-container {
+            width: 100%; max-width: 400px; height: 100vh; max-height: 850px;
+            background-color: #1e1e1e; position: relative; overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8); border: 1px solid #333;
+            display: flex; flex-direction: column;
+        }
+
+        .view { display: none; flex: 1; width: 100%; padding: 20px; overflow-y: auto; }
+        .view.active { display: block; animation: fadeIn 0.15s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #444; padding-bottom: 10px; }
+        .header h1 { font-size: 1.2rem; color: #4caf50; }
+        .btn-voltar { background: transparent; color: #ff5252; border: 1px solid #ff5252; padding: 5px 10px; cursor: pointer; font-weight: bold; border-radius: 4px; }
+        .btn-exportar { background: transparent; color: #2196f3; border: 1px solid #2196f3; padding: 5px 10px; cursor: pointer; font-weight: bold; border-radius: 4px; margin-right: 5px;}
+        
+        .launcher-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .app-icon { background-color: #2c2c2c; border: 2px solid #444; border-radius: 12px; padding: 20px 10px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .app-icon:active { background-color: #4caf50; color: #000; border-color: #4caf50; }
+        .app-icon h2 { font-size: 0.8rem; margin-top: 8px; }
+        .icon-symbol { font-size: 1.8rem; }
+
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; color: #aaa; }
+        .form-control { width: 100%; padding: 10px; background-color: #121212; border: 1px solid #555; color: #fff; border-radius: 5px; }
+        .form-control:focus { outline: none; border-color: #4caf50; }
+        
+        .tipo-toggle { display: flex; gap: 10px; margin-bottom: 15px; }
+        .tipo-btn { flex: 1; padding: 10px; text-align: center; border: 1px solid #555; border-radius: 5px; cursor: pointer; background: #2c2c2c; font-weight: bold; }
+        .tipo-btn.active.receita { background-color: #2e7d32; border-color: #4caf50; color: #fff; }
+        .tipo-btn.active.despesa { background-color: #c62828; border-color: #ff5252; color: #fff; }
+
+        #bloco-recorrencia { display: none; background: #252525; padding: 10px; border-radius: 5px; margin-bottom: 12px; border-left: 3px solid #4caf50; }
+        .btn-executar { width: 100%; padding: 15px; background-color: #4caf50; color: #000; border: none; border-radius: 5px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 15px; text-transform: uppercase; }
+        .btn-executar:active { background-color: #388e3c; }
+
+        .chart-wrapper { background: #121212; padding: 10px; border-radius: 8px; margin-top: 15px; min-height: 280px; display: flex; align-items: center; justify-content: center; position: relative; }
+        .cb-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; background: #252525; padding: 5px; border-radius: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+        .cb-item input { transform: scale(1.1); }
+
+        .resumo-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; margin-top: 15px; }
+        .resumo-item { background: #252525; padding: 12px 10px; border-radius: 5px; text-align: center; border: 1px solid #333; }
+        .resumo-item.total { grid-column: span 2; background: #1a1a1a; }
+        .resumo-item h4 { font-size: 0.7rem; color: #aaa; margin-bottom: 5px; }
+        .resumo-item p { font-size: 1.1rem; font-weight: bold; }
+        .text-green { color: #4caf50 !important; }
+        .text-red { color: #ff5252 !important; }
+        .text-white { color: #fff !important; }
+        
+        #lista-dossie { max-height: 350px; overflow-y: auto; padding-right: 5px; margin-top: 15px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #121212; }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-box { background: #1a1a1a; padding: 20px; border-radius: 8px; border: 1px solid #444; width: 90%; max-width: 350px; }
+        .modal-box h3 { color: #2196f3; margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .modal-option { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; background: #252525; padding: 10px; border-radius: 5px;}
+        .modal-option input { transform: scale(1.3); }
+        .modal-option label { font-size: 0.85rem; color: #fff; cursor: pointer; width: 100%;}
+        .btn-cancelar { background: transparent; border: 1px solid #555; color: #aaa; padding: 10px; border-radius: 5px; flex: 1; cursor: pointer;}
+        
+        #loading-pdf { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; color: #4caf50; font-size: 1.2rem; justify-content: center; align-items: center; font-weight: bold; flex-direction: column; text-align: center;}
+        
+        .footer-dev { text-align: center; font-size: 0.7rem; color: #555; padding: 15px 0; margin-top: auto; }
+        .footer-dev a { color: #4caf50; text-decoration: none; font-weight: bold; }
+
+        #sala-branca-print { display: none; }
+        @media print {
+            @page { size: landscape; margin: 10mm; }
+            body { background: #fff !important; color: #000 !important; }
+            #app-container, .modal-overlay, #loading-pdf { display: none !important; }
+            #sala-branca-print { display: block !important; position: static !important; width: 100% !important; background: #fff !important; color: #000 !important; font-family: Arial, sans-serif; }
+            .page-break { page-break-before: always; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+
+        .calc-display { width: 100%; padding: 15px; font-size: 2rem; text-align: right; background: #0a0a0a; color: #4caf50; border: 1px solid #444; border-radius: 5px; margin-bottom: 20px; outline: none; letter-spacing: 2px; }
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .calc-btn { background: #252525; border: 1px solid #444; color: #fff; font-size: 1.4rem; padding: 18px 0; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.1s; }
+        .calc-btn:active { background: #4caf50; color: #000; border-color: #4caf50; transform: scale(0.95); }
+        .calc-btn.op { background: #1e1e1e; color: #2196f3; border-color: #333; }
+        .calc-btn.action { background: #333; font-size: 1.2rem; color: #aaa; }
+        .calc-btn.equal { background: #2e7d32; color: #fff; border-color: #4caf50; }
+
+        .dados-box { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: center; }
+        .dados-box h3 { color: #fff; font-size: 1rem; margin-bottom: 10px; }
+        .dados-box p { color: #aaa; font-size: 0.8rem; margin-bottom: 15px; }
+        .btn-dados { display: inline-block; width: 100%; padding: 12px; font-weight: bold; border-radius: 5px; cursor: pointer; border: none; text-transform: uppercase; }
+        .btn-export { background: #2196f3; color: #fff; }
+        .btn-import { background: #ff9800; color: #000; }
+        .btn-danger { background: #ff5252; color: #fff; }
+        .alerta-caos { background: rgba(255,82,82,0.1); border-left: 4px solid #ff5252; padding: 10px; font-size: 0.8rem; color: #ffccbc; margin-bottom: 15px; text-align: left; }
+    </style>
+</head>
+<body>
+
+<div id="loading-pdf">
+    <div style="font-size: 2rem; margin-bottom: 10px;">⚙️</div>
+    PROCESSANDO...<br><span style="font-size: 0.8rem; color: #aaa; margin-top: 10px;">Aguarde o sistema tático.</span>
+</div>
+
+<div id="app-container">
+    <div id="view-launcher" class="view active">
+        <div class="header"><h1>CONTAS</h1><span style="font-size: 0.8rem; color: #666;">v2.0</span></div>
+        <div class="launcher-grid">
+            <div class="app-icon" onclick="abrirApp('view-contas')"><div class="icon-symbol">💸</div><h2>LANÇAMENTOS</h2></div>
+            <div class="app-icon" onclick="abrirApp('view-radar')"><div class="icon-symbol">📊</div><h2>GRÁFICOS</h2></div>
+            <div class="app-icon" onclick="abrirApp('view-dossie')"><div class="icon-symbol">📁</div><h2>RELATÓRIOS</h2></div>
+            <div class="app-icon" onclick="abrirApp('view-calculadora')"><div class="icon-symbol">🧮</div><h2>CALCULADORA</h2></div>
+            <div class="app-icon" onclick="abrirApp('view-dados')"><div class="icon-symbol">💾</div><h2>DADOS</h2></div>
+            <div class="app-icon" onclick="abrirApp('view-instalar')"><div class="icon-symbol">📱</div><h2>INSTALAÇÃO</h2></div>
+        </div>
+        <div class="footer-dev">dev by <a href="https://github.com/raphahcbmelo" target="_blank">@raphahcbmelo</a></div>
+    </div>
+
+    <div id="view-contas" class="view">
+        <div class="header"><h1>LANÇAMENTOS</h1><button class="btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div>
+        <div class="tipo-toggle"><div id="form-tipo-receita" class="tipo-btn active receita" onclick="setTipoForm('receita')">RECEITA</div><div id="form-tipo-despesa" class="tipo-btn" onclick="setTipoForm('despesa')">DESPESA</div></div>
+        <div class="form-group"><label>NOME DA CONTA:</label><input list="lista-contas" id="form-nome" class="form-control"><datalist id="lista-contas"></datalist></div>
+        <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin: 15px 0;"><input type="checkbox" id="form-recorrente" onchange="toggleRecorrenciaForm()" style="transform: scale(1.4);"><label style="margin: 0; color: #fff; font-weight: bold;">RECORRENTE?</label></div>
+        <div id="bloco-recorrencia"><div class="form-group"><label>FREQUÊNCIA:</label><select id="form-frequencia" class="form-control" onchange="ajustarLabelsData()"><option value="diario">Diário</option><option value="semanal">Semanal</option><option value="mensal" selected>Mensal</option></select></div></div>
+        <div class="form-group"><label id="lbl-data-inicial">DATA DO LANÇAMENTO:</label><input type="date" id="form-data-inicio" class="form-control"></div>
+        <div class="form-group" id="grp-data-limite" style="display: none;"><label>DATA LIMITE (ATÉ QUANDO):</label><input type="date" id="form-data-limite" class="form-control"></div>
+        <div class="form-group"><label>VALOR REAL (R$):</label><input type="number" step="0.01" id="form-valor" class="form-control"></div>
+        <button class="btn-executar" onclick="capturarEMandarProBanco()">EXECUTAR OPERAÇÃO</button>
+    </div>
+
+    <div id="view-radar" class="view">
+        <div class="header">
+            <h1>GRÁFICO FINANCEIRO</h1>
+            <div><button class="btn-exportar" onclick="abrirModalPdfRadar()">IMPRIMIR</button><button class="btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <div class="form-group" style="flex:1;"><label>DE:</label><input type="date" id="radar-data-de" class="form-control" onchange="atualizarPainelContas()"></div>
+            <div class="form-group" style="flex:1;"><label>ATÉ:</label><input type="date" id="radar-data-ate" class="form-control" onchange="atualizarPainelContas()"></div>
+        </div>
+        <div class="form-group">
+            <label>AGRUPAMENTO DE TEMPO:</label>
+            <select id="radar-agrupamento" class="form-control" onchange="verificarTravaGrafico()"><option value="geral">Geral (Acumulado no Período)</option><option value="diario">Evolução Diária</option><option value="semanal">Evolução Semanal</option><option value="mensal">Evolução Mensal</option></select>
+        </div>
+        <div class="form-group">
+            <label>MODELO DE GRÁFICO:</label>
+            <select id="radar-tipo-grafico" class="form-control" onchange="renderizarGraficoAvancado()"><option value="radar" id="opt-radar">Atributos RPG (Radar)</option><option value="pie" id="opt-pie">Distribuição Pizza</option><option value="line" id="opt-line">Linha de Tendência</option><option value="bar" id="opt-bar">Barras de Impacto</option></select>
+        </div>
+        <div class="form-group" style="margin-top: 15px; background: #1a1a1a; padding: 10px; border-radius: 5px; border: 1px solid #333;">
+            <label style="color: #4caf50; font-weight: bold; font-size: 0.8rem; border-bottom: 1px solid #333; padding-bottom: 5px; display: block;">FILTRAR CONTAS:</label>
+            <div style="display: flex; gap: 5px; margin: 8px 0;"><button onclick="selecionarMassa('receita')" style="flex: 1; padding: 4px; background: #2e7d32; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer;">+ RECEITAS</button><button onclick="selecionarMassa('despesa')" style="flex: 1; padding: 4px; background: #c62828; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer;">+ DESPESAS</button><button onclick="limparSelecaoMassa()" style="padding: 4px 8px; background: #444; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer;">ZERAR</button></div>
+            <div id="painel-checkboxes" style="max-height: 140px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 2px;"></div>
+        </div>
+        <button class="btn-executar" style="margin-bottom: 15px;" onclick="renderizarGraficoAvancado()">GERAR ANÁLISE</button>
+        <div class="chart-wrapper"><canvas id="canvasRadar"></canvas></div>
+    </div>
+
+    <div id="view-dossie" class="view">
+        <div class="header">
+            <h1>RELATÓRIO FINANCEIRO</h1>
+            <div><button class="btn-exportar" onclick="abrirModalPdfDossie()">IMPRIMIR</button><button class="btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <div class="form-group" style="flex:1;"><label>DE:</label><input type="date" id="dossie-data-de" class="form-control"></div><div class="form-group" style="flex:1;"><label>ATÉ:</label><input type="date" id="dossie-data-ate" class="form-control"></div>
+        </div>
+        <div class="form-group">
+            <label>FILTRAR TIPO:</label>
+            <select id="dossie-tipo" class="form-control"><option value="todos">Tudo (Receitas e Despesas)</option><option value="receita">Apenas Receitas</option><option value="despesa">Apenas Despesas</option></select>
+        </div>
+        <button class="btn-executar" style="padding: 10px; margin-top: 5px;" onclick="gerarRelatorioDossie()">GERAR RELATÓRIO</button>
+        <div class="resumo-box" id="dossie-resumo" style="display: none;">
+            <div class="resumo-item"><h4>ENTRADAS</h4><p class="text-green" id="resumo-receitas">R$ 0,00</p></div><div class="resumo-item"><h4>SAÍDAS</h4><p class="text-red" id="resumo-despesas">R$ 0,00</p></div><div class="resumo-item total" id="box-saldo-total"><h4>SALDO DO PERÍODO</h4><p id="resumo-saldo">R$ 0,00</p></div>
+        </div>
+        <div id="lista-dossie"><p style="text-align: center; color: #555; margin-top: 30px; font-size: 0.8rem;">[ Selecione o período para gerar a tabela ]</p></div>
+    </div>
+
+    <div id="view-calculadora" class="view">
+        <div class="header"><h1>CALCULADORA</h1><button class="btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div>
+        <input type="text" id="calc-display" class="calc-display" readonly placeholder="0">
+        <div class="calc-grid">
+            <button class="calc-btn action" onclick="calcAction('clear')" style="color: #ff5252; grid-column: span 2;">C</button>
+            <button class="calc-btn action" onclick="calcAction('back')" style="color: #ffc107; grid-column: span 2;">⌫</button>
+            <button class="calc-btn" onclick="calcInput('7')">7</button><button class="calc-btn" onclick="calcInput('8')">8</button><button class="calc-btn" onclick="calcInput('9')">9</button><button class="calc-btn op" onclick="calcInput('/')">÷</button>
+            <button class="calc-btn" onclick="calcInput('4')">4</button><button class="calc-btn" onclick="calcInput('5')">5</button><button class="calc-btn" onclick="calcInput('6')">6</button><button class="calc-btn op" onclick="calcInput('*')">×</button>
+            <button class="calc-btn" onclick="calcInput('1')">1</button><button class="calc-btn" onclick="calcInput('2')">2</button><button class="calc-btn" onclick="calcInput('3')">3</button><button class="calc-btn op" onclick="calcInput('-')">-</button>
+            <button class="calc-btn" onclick="calcInput('0')">0</button><button class="calc-btn" onclick="calcInput('.')">.</button><button class="calc-btn equal" onclick="calcAction('eval')">=</button><button class="calc-btn op" onclick="calcInput('+')">+</button>
+        </div>
+    </div>
+
+    <div id="view-dados" class="view">
+        <div class="header"><h1>COFRE DE DADOS</h1><button class="btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div>
+        <div class="alerta-caos"><strong>⚠️ PROCEDIMENTO TÁTICO:</strong> O backup cria um arquivo `.json`. No Android, ao baixar, você escolhe salvar direto no Google Drive ou no celular. Para restaurar, basta importar esse arquivo.</div>
+        <div class="dados-box">
+            <h3>EXPORTAR (BACKUP)</h3>
+            <p>Salva todo o histórico financeiro atual.</p>
+            <button class="btn-dados btn-export" onclick="exportarBackup()">GERAR ARQUIVO .JSON</button>
+        </div>
+        <div class="dados-box">
+            <h3>IMPORTAR (RESTAURAR)</h3>
+            <p>Carrega um backup antigo (substitui o atual).</p>
+            <input type="file" id="input-importar" style="display: none;" accept=".json" onchange="processarImportacao(event)">
+            <button class="btn-dados btn-import" onclick="document.getElementById('input-importar').click()">SELECIONAR ARQUIVO</button>
+        </div>
+        <div class="dados-box" style="border-color: #ff5252;">
+            <h3 style="color: #ff5252;">PROTOCOLO TERRA ARRASADA</h3>
+            <p>Apaga permanentemente TODOS os dados.</p>
+            <button class="btn-dados btn-danger" onclick="limparBancoGeral()">APAGAR TUDO</button>
+        </div>
+    </div>
+
+    <div id="view-instalar" class="view">
+        <div class="header"><h1>INSTALAÇÃO TÁTICA</h1><button class="btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div>
+        <div class="alerta-caos"><strong>⚠️ AVISO CRÍTICO DE MIGRAÇÃO:</strong> Se você estiver usando o app via link no navegador e decidir "Instalar na tela inicial", o celular vai criar um banco de dados novo. <strong>Faça o BACKUP JSON no app DADOS antes de instalar</strong>, e depois Importe no app instalado. No iOS o sistema limpa a memória se não usar o app com frequência, mantenha backups recorrentes.</div>
+        <div class="dados-box" style="text-align: left;">
+            <h3 style="color: #4caf50;">🤖 PARA ANDROID</h3>
+            <p style="color: #e0e0e0; font-size: 0.9rem;">1. Abra este sistema no Google Chrome.<br>2. Toque nos <strong>três pontinhos (⋮)</strong> no canto superior direito.<br>3. Escolha <strong>"Adicionar à tela inicial"</strong> ou "Instalar Aplicativo".<br>4. O ícone do CONTAS aparecerá junto com seus outros apps.</p>
+        </div>
+        <div class="dados-box" style="text-align: left;">
+            <h3 style="color: #2196f3;">🍏 PARA iOS (IPHONE)</h3>
+            <p style="color: #e0e0e0; font-size: 0.9rem;">1. Abra este sistema no navegador <strong>Safari</strong>.<br>2. Toque no ícone de <strong>Compartilhar</strong> (o quadrado com a seta pra cima) no rodapé.<br>3. Role o menu e escolha <strong>"Adicionar à Tela de Início"</strong>.<br>4. Confirme no canto superior direito.</p>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-radar-pdf">
+    <div class="modal-box">
+        <h3>EXPORTAR GRÁFICOS</h3>
+        <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 15px;">Selecione os gráficos pro A4 (Paisagem):</p>
+        <div class="modal-option"><input type="checkbox" id="chk-pdf-radar" checked><label for="chk-pdf-radar">Gráfico de RPG (Radar)</label></div>
+        <div class="modal-option"><input type="checkbox" id="chk-pdf-pie" checked><label for="chk-pdf-pie">Distribuição (Pizza)</label></div>
+        <div class="modal-option"><input type="checkbox" id="chk-pdf-line" checked><label for="chk-pdf-line">Linha de Tendência</label></div>
+        <div class="modal-option"><input type="checkbox" id="chk-pdf-bar" checked><label for="chk-pdf-bar">Barras de Impacto</label></div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-exportar" style="flex: 2; background: #2196f3; color: #fff;" onclick="dispararPdfRadar()">GERAR</button></div>
+    </div>
+</div>
+<div class="modal-overlay" id="modal-dossie-pdf">
+    <div class="modal-box">
+        <h3>EXPORTAR RELATÓRIO</h3>
+        <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 15px;">Incluir gráfico de evolução de saldo no A4 (Paisagem)?</p>
+        <div class="modal-option"><input type="radio" name="rad-pdf-grafico" id="rad-pdf-nao" value="nao" checked><label for="rad-pdf-nao">Não, apenas a tabela</label></div>
+        <div class="modal-option"><input type="radio" name="rad-pdf-grafico" id="rad-pdf-mesma" value="mesma"><label for="rad-pdf-mesma">Sim, no topo</label></div>
+        <div class="modal-option"><input type="radio" name="rad-pdf-grafico" id="rad-pdf-ultima" value="ultima"><label for="rad-pdf-ultima">Sim, na última página</label></div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-exportar" style="flex: 2; background: #2196f3; color: #fff;" onclick="dispararPdfDossie()">GERAR</button></div>
+    </div>
+</div>
+
+<div id="sala-branca-print"></div>
+
+<script>
+    Chart.register(ChartDataLabels);
+
+    let db; const dbName = "FinancasDB"; const storeName = "lancamentos";
+    function initDB() { const req = indexedDB.open(dbName, 1); req.onsuccess = (e) => { db = e.target.result; carregarDatalistSugestoes(); definirDatasPadrao(); }; req.onupgradeneeded = (e) => { let d = e.target.result; if (!d.objectStoreNames.contains(storeName)) d.createObjectStore(storeName, { keyPath: "id" }); }; }
+    function abrirApp(id) { document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); if(id === 'view-radar') atualizarPainelContas(); if(id === 'view-dossie') { document.getElementById('dossie-resumo').style.display = 'none'; document.getElementById('lista-dossie').innerHTML = '<p style="text-align: center; color: #555; margin-top: 30px; font-size: 0.8rem;">[ Selecione o período para gerar a tabela ]</p>'; } }
+    function formatarMoeda(valor) { return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+    function formatarDataBR(dataStr) { const p = dataStr.split('-'); return `${p[2]}/${p[1]}/${p[0]}`; }
+
+    let tipoForm = 'receita'; function setTipoForm(tipo) { tipoForm = tipo; document.getElementById('form-tipo-receita').classList.remove('active', 'receita'); document.getElementById('form-tipo-despesa').classList.remove('active', 'despesa'); document.getElementById(`form-tipo-${tipo}`).classList.add('active', tipo); }
+    function toggleRecorrenciaForm() { const chk = document.getElementById('form-recorrente').checked; document.getElementById('bloco-recorrencia').style.display = chk ? 'block' : 'none'; document.getElementById('grp-data-limite').style.display = chk ? 'block' : 'none'; ajustarLabelsData(); }
+    function ajustarLabelsData() { const chk = document.getElementById('form-recorrente').checked; const f = document.getElementById('form-frequencia').value; const lbl = document.getElementById('lbl-data-inicial'); if(!chk) { lbl.innerText = "DATA DO LANÇAMENTO:"; return; } if(f === 'diario') lbl.innerText = "DATA DE INÍCIO:"; if(f === 'semanal') lbl.innerText = "1º LANÇAMENTO:"; if(f === 'mensal') lbl.innerText = "DATA BASE:"; }
+    function definirDatasPadrao() { const hoje = new Date().toISOString().split('T')[0]; document.getElementById('form-data-inicio').value = hoje; document.getElementById('radar-data-de').value = "2026-05-01"; document.getElementById('radar-data-ate').value = "2026-12-31"; document.getElementById('dossie-data-de').value = "2026-05-01"; document.getElementById('dossie-data-ate').value = "2026-12-31"; }
+    
+    function capturarEMandarProBanco() {
+        const nome = document.getElementById('form-nome').value.trim().toUpperCase(); const dIni = document.getElementById('form-data-inicio').value; const dLim = document.getElementById('form-data-limite').value; const val = parseFloat(document.getElementById('form-valor').value); const rec = document.getElementById('form-recorrente').checked; const freq = document.getElementById('form-frequencia').value;
+        if(!nome || !dIni || isNaN(val) || val <= 0) { alert("Preenche essa porra direito!"); return; }
+        const t = db.transaction([storeName], "readwrite"); const s = t.objectStore(storeName); const loteId = "LOTE-" + Date.now();
+        if (!rec) { s.add({ id: `${dIni.replace(/-/g,'')}-${nome}-${Date.now()}`, lote: loteId, data: dIni, nome: nome, valor: val, tipo: tipoForm }); } 
+        else {
+            if(!dLim) { alert("Cadê a data limite?"); return; }
+            let dAtual = new Date(dIni + 'T00:00:00'); let dFim = new Date(dLim + 'T00:00:00'); let diaOriginal = dAtual.getDate();
+            while(dAtual <= dFim) {
+                let dFmt = dAtual.toISOString().split('T')[0]; s.add({ id: `${dFmt.replace(/-/g,'')}-${nome}-${Math.random().toString(36).substr(2, 5)}`, lote: loteId, data: dFmt, nome: nome, valor: val, tipo: tipoForm });
+                if(freq === 'diario') dAtual.setDate(dAtual.getDate() + 1); else if(freq === 'semanal') dAtual.setDate(dAtual.getDate() + 7);
+                else if(freq === 'mensal') { let mesOrig = dAtual.getMonth(); dAtual.setMonth(dAtual.getMonth() + 1); dAtual.setDate(diaOriginal); if (dAtual.getMonth() !== (mesOrig + 1) % 12) dAtual.setDate(0); }
+            }
+        }
+        t.oncomplete = () => { alert("Lançamento Registrado!"); document.getElementById('form-nome').value = ''; document.getElementById('form-valor').value = ''; carregarDatalistSugestoes(); };
+    }
+    function carregarDatalistSugestoes() { const s = db.transaction([storeName], "readonly").objectStore(storeName); const n = new Set(); s.openCursor().onsuccess = (e) => { let c = e.target.result; if(c) { n.add(c.value.nome); c.continue(); } else { const dl = document.getElementById('lista-contas'); dl.innerHTML = ''; n.forEach(x => dl.innerHTML += `<option value="${x}">`); } }; }
+
+    function atualizarPainelContas() {
+        const de = document.getElementById('radar-data-de').value; const ate = document.getElementById('radar-data-ate').value; if(!de || !ate) return;
+        const s = db.transaction([storeName], "readonly").objectStore(storeName); let conj = {};
+        s.openCursor().onsuccess = (e) => {
+            let c = e.target.result;
+            if(c) { if(c.value.data >= de && c.value.data <= ate) conj[c.value.nome] = c.value.tipo; c.continue(); }
+            else { const p = document.getElementById('painel-checkboxes'); p.innerHTML = ''; Object.keys(conj).sort().forEach(n => { p.innerHTML += `<label class="cb-item" style="border-left: 3px solid ${conj[n] === 'receita' ? '#4caf50' : '#ff5252'}"><input type="checkbox" class="radar-cb-conta" data-nome="${n}" data-tipo="${conj[n]}" checked> ${n}</label>`; }); }
+        };
+    }
+    function selecionarMassa(tipo) { document.querySelectorAll('.radar-cb-conta').forEach(cb => { if(cb.getAttribute('data-tipo') === tipo) cb.checked = true; }); }
+    function limparSelecaoMassa() { document.querySelectorAll('.radar-cb-conta').forEach(cb => cb.checked = false); }
+    function verificarTravaGrafico() { const g = document.getElementById('radar-agrupamento').value; const s = document.getElementById('radar-tipo-grafico'); if(g !== 'geral') { document.getElementById('opt-radar').disabled = true; document.getElementById('opt-pie').disabled = true; if(s.value === 'radar' || s.value === 'pie') s.value = 'line'; } else { document.getElementById('opt-radar').disabled = false; document.getElementById('opt-pie').disabled = false; } }
+    
+    let chartInstance = null;
+    function obterSegunda(dStr) { let d=new Date(dStr+'T00:00:00'); let dia=d.getDay(); let diff=d.getDate()-dia+(dia==0?-6:1); return new Date(d.setDate(diff)).toISOString().split('T')[0]; }
+    
+    function renderizarGraficoAvancado() {
+        const de = document.getElementById('radar-data-de').value; const ate = document.getElementById('radar-data-ate').value; const agp = document.getElementById('radar-agrupamento').value; const mod = document.getElementById('radar-tipo-grafico').value;
+        let contas = []; document.querySelectorAll('.radar-cb-conta:checked').forEach(cb => contas.push(cb.getAttribute('data-nome')));
+        const ctx = document.getElementById('canvasRadar').getContext('2d'); if(chartInstance) chartInstance.destroy();
+        if(contas.length===0) { ctx.clearRect(0,0,400,400); return; }
+        const s = db.transaction([storeName], "readonly").objectStore(storeName); let reg = [];
+        s.openCursor().onsuccess = (e) => {
+            let c = e.target.result;
+            if(c) { if(c.value.data >= de && c.value.data <= ate && contas.includes(c.value.nome)) reg.push(c.value); c.continue(); }
+            else { let chartData = compilarDadosGrafico(agp, contas, reg, '#fff', '#aaa'); chartInstance = new Chart(ctx, { type: mod, data: chartData.data, options: { responsive: true, maintainAspectRatio: false, plugins: chartData.plugins, scales: chartData.scales } }); }
+        };
+    }
+
+    function compilarDadosGrafico(agp, contas, reg, corTextoGeral, corTextoDataLabels) {
+        let pluginsObj = { legend: { labels: { color: corTextoGeral } }, datalabels: { color: corTextoDataLabels, align: 'top', font: { size: 9, family: 'Courier New' }, formatter: function(v) { return v > 0 ? v.toLocaleString('pt-BR', {minimumFractionDigits: 2}) : ''; } } };
+        if(agp === 'geral') {
+            let tot = {}; contas.forEach(n => tot[n] = 0); reg.forEach(r => tot[r.nome] += r.valor);
+            return { data: { labels: Object.keys(tot), datasets: [{ data: Object.values(tot), backgroundColor: ['rgba(76,175,80,0.5)','rgba(255,82,82,0.5)','rgba(33,150,243,0.5)','rgba(255,193,7,0.5)','rgba(156,39,176,0.5)'], borderColor: ['#4caf50','#ff5252','#2196f3','#ffc107','#9c27b0'], borderWidth: 2 }] }, scales: {}, plugins: pluginsObj };
+        } else {
+            let chaves = new Set(); reg.forEach(r => { if(agp==='diario') r.p = r.data; if(agp==='semanal') r.p = obterSegunda(r.data); if(agp==='mensal') r.p = r.data.substring(0,7); chaves.add(r.p); });
+            let lbls = Array.from(chaves).sort(); let dts = contas.map((n,i) => { return { label: n, data: lbls.map(pCh => reg.filter(r => r.nome === n && r.p === pCh).reduce((s,c)=>s+c.valor,0)), borderColor: `hsl(${(i*65)%360}, 70%, 60%)`, backgroundColor: 'transparent', tension: 0.1 }; });
+            return { data: { labels: lbls, datasets: dts }, scales: { x: { ticks: { color: corTextoGeral } }, y: { ticks: { color: corTextoGeral } } }, plugins: pluginsObj };
+        }
+    }
+
+    let ultimaBuscaDossie = [];
+    function gerarRelatorioDossie() {
+        const de = document.getElementById('dossie-data-de').value; const ate = document.getElementById('dossie-data-ate').value; const tipo = document.getElementById('dossie-tipo').value;
+        if(!de || !ate) return;
+        const s = db.transaction([storeName], "readonly").objectStore(storeName); let reg = []; let tR = 0; let tD = 0;
+        s.openCursor().onsuccess = (e) => {
+            let c = e.target.result;
+            if(c) { let r = c.value; if(r.data >= de && r.data <= ate && (tipo === 'todos' || r.tipo === tipo)) { reg.push(r); if(r.tipo === 'receita') tR += r.valor; if(r.tipo === 'despesa') tD += r.valor; } c.continue(); }
+            else { ultimaBuscaDossie = { reg, tR, tD, de, ate }; renderizarHTMLDossie(reg, tR, tD); }
+        };
+    }
+    
+    function gerarHTMLTabelaDinamica(reg, corBorda, corTextoBase) {
+        if(reg.length === 0) return `<p style="text-align: center; color: #666; margin-top: 20px;">[ Sem movimentações no período ]</p>`;
+        let datas = [...new Set(reg.map(r => r.data))].sort((a,b) => a.localeCompare(b));
+        let contas = [...new Set(reg.map(r => r.nome))].sort();
+        let table = `<div style="overflow-x: auto;"><table style="width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: center; color: ${corTextoBase};">`;
+        table += `<thead><tr style="background: rgba(100,100,100,0.2);"><th style="padding: 8px; border: 1px solid ${corBorda};">DATA</th>`;
+        contas.forEach(c => table += `<th style="padding: 8px; border: 1px solid ${corBorda};">${c}</th>`);
+        table += `</tr></thead><tbody>`;
+        datas.forEach(d => {
+            table += `<tr><td style="padding: 8px; border: 1px solid ${corBorda}; white-space: nowrap;">${formatarDataBR(d)}</td>`;
+            contas.forEach(c => {
+                let sum = reg.filter(r => r.data === d && r.nome === c).reduce((acc, curr) => acc + curr.valor, 0);
+                let valStr = sum > 0 ? formatarMoeda(sum) : '-';
+                let tipo = reg.find(r => r.nome === c)?.tipo;
+                let color = sum > 0 ? (tipo === 'receita' ? '#4caf50' : '#ff5252') : corTextoBase;
+                table += `<td style="padding: 8px; border: 1px solid ${corBorda}; color: ${color}; white-space: nowrap;">${valStr}</td>`;
+            });
+            table += `</tr>`;
+        });
+        table += `</tbody></table></div>`;
+        return table;
+    }
+
+    function renderizarHTMLDossie(reg, tR, tD) {
+        document.getElementById('dossie-resumo').style.display = 'grid'; document.getElementById('resumo-receitas').innerText = formatarMoeda(tR); document.getElementById('resumo-despesas').innerText = formatarMoeda(tD);
+        let s = tR - tD; let pS = document.getElementById('resumo-saldo'); pS.innerText = formatarMoeda(s);
+        pS.classList.remove('text-green', 'text-red', 'text-white'); if(s > 0) pS.classList.add('text-green'); else if(s < 0) pS.classList.add('text-red'); else pS.classList.add('text-white');
+        document.getElementById('lista-dossie').innerHTML = gerarHTMLTabelaDinamica(reg, '#555', '#fff');
+    }
+
+    function abrirModalPdfRadar() { document.getElementById('modal-radar-pdf').style.display = 'flex'; }
+    function abrirModalPdfDossie() { document.getElementById('modal-dossie-pdf').style.display = 'flex'; }
+    function fecharModais() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
+
+    async function gerarGraficoBase64(tipo, dados, scales, w, h, pluginsData) {
+        return new Promise((resolve) => {
+            const container = document.createElement('div');
+            container.style.width = w + 'px'; container.style.height = h + 'px';
+            container.style.position = 'absolute'; container.style.left = '-9999px'; container.style.display = 'block';
+            document.body.appendChild(container);
+            const canvas = document.createElement('canvas'); container.appendChild(canvas);
+            
+            Chart.defaults.color = '#000'; 
+            const chart = new Chart(canvas, { type: tipo, data: dados, options: { responsive: false, animation: false, plugins: pluginsData, scales: scales } });
+            
+            setTimeout(() => {
+                const base64 = chart.toBase64Image();
+                chart.destroy(); document.body.removeChild(container); Chart.defaults.color = '#fff';
+                resolve(base64);
+            }, 600); 
+        });
+    }
+
+    async function dispararPdfRadar() {
+        fecharModais();
+        const de = document.getElementById('radar-data-de').value; const ate = document.getElementById('radar-data-ate').value;
+        let contas = []; document.querySelectorAll('.radar-cb-conta:checked').forEach(cb => contas.push(cb.getAttribute('data-nome')));
+        if(contas.length === 0) { alert("Seleciona alguma conta primeiro."); return; }
+
+        document.getElementById('loading-pdf').style.display = 'flex';
+        const sala = document.getElementById('sala-branca-print');
+        const tipos = [];
+        if(document.getElementById('chk-pdf-radar').checked) tipos.push({id: 'radar', title: 'Atributos RPG (Geral)'});
+        if(document.getElementById('chk-pdf-pie').checked) tipos.push({id: 'pie', title: 'Distribuição (Geral)'});
+        if(document.getElementById('chk-pdf-line').checked) tipos.push({id: 'line', title: 'Linha Temporal'});
+        if(document.getElementById('chk-pdf-bar').checked) tipos.push({id: 'bar', title: 'Barras Temporais'});
+
+        if(tipos.length === 0) { alert("Marca um gráfico."); document.getElementById('loading-pdf').style.display = 'none'; return; }
+
+        const s = db.transaction([storeName], "readonly").objectStore(storeName); let reg = [];
+        s.openCursor().onsuccess = async (e) => {
+            let c = e.target.result;
+            if(c) { if(c.value.data >= de && c.value.data <= ate && contas.includes(c.value.nome)) reg.push(c.value); c.continue(); }
+            else {
+                let htmlGraficos = '';
+                for(let t of tipos) {
+                    let agp = (t.id === 'line' || t.id === 'bar') ? 'mensal' : 'geral'; 
+                    let chartData = compilarDadosGrafico(agp, contas, reg, '#000', '#000');
+                    let imgB64 = await gerarGraficoBase64(t.id, chartData.data, chartData.scales, 800, 400, chartData.plugins);
+                    htmlGraficos += `<div style="text-align:center; margin-bottom: 30px; width: 45%; display: inline-block; padding: 10px;"><h3 style="font-size: 16px; margin-bottom: 10px;">${t.title}</h3><img src="${imgB64}" style="max-width: 100%; height: auto;"></div>`;
+                }
+                sala.innerHTML = `<div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;"><h1>GRÁFICO FINANCEIRO</h1><p>Período: ${formatarDataBR(de)} a ${formatarDataBR(ate)}</p></div><div style="display: flex; justify-content: center; flex-wrap: wrap;">${htmlGraficos}</div>`;
+                document.getElementById('loading-pdf').style.display = 'none';
+                setTimeout(() => { window.print(); sala.innerHTML = ''; }, 200);
+            }
+        };
+    }
+
+    async function dispararPdfDossie() {
+        fecharModais();
+        if(!ultimaBuscaDossie.reg || ultimaBuscaDossie.reg.length === 0) { alert("Gera a tabela na tela primeiro!"); return; }
+        
+        document.getElementById('loading-pdf').style.display = 'flex';
+        const sala = document.getElementById('sala-branca-print');
+        let r = ultimaBuscaDossie.reg; let tR = ultimaBuscaDossie.tR; let tD = ultimaBuscaDossie.tD;
+        const opcaoGrafico = document.querySelector('input[name="rad-pdf-grafico"]:checked').value;
+        
+        let htmlBase = `<div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;"><h1>RELATÓRIO FINANCEIRO</h1><p>Período: ${formatarDataBR(ultimaBuscaDossie.de)} a ${formatarDataBR(ultimaBuscaDossie.ate)}</p></div><table style="width: 100%; margin-bottom: 20px; text-align: center; border-collapse: collapse; font-weight: bold;"><tr><td style="border: 1px solid #000; padding: 10px; background: #e8f5e9;">ENTRADAS<br><span style="color: #2e7d32;">${formatarMoeda(tR)}</span></td><td style="border: 1px solid #000; padding: 10px; background: #ffebee;">SAÍDAS<br><span style="color: #c62828;">${formatarMoeda(tD)}</span></td><td style="border: 1px solid #000; padding: 10px; background: #f5f5f5;">SALDO<br><span style="color: ${(tR-tD) >= 0 ? '#2e7d32' : '#c62828'}">${formatarMoeda(tR-tD)}</span></td></tr></table>`;
+        let htmlTabela = gerarHTMLTabelaDinamica(r, '#000', '#000');
+        let htmlGrafico = '';
+        if(opcaoGrafico !== 'nao') {
+            let meses = new Set(); r.forEach(x => meses.add(x.data.substring(0,7))); let lbls = Array.from(meses).sort();
+            let dadosLinha = lbls.map(m => { let sR = r.filter(x => x.data.startsWith(m) && x.tipo === 'receita').reduce((s,c)=>s+c.valor,0); let sD = r.filter(x => x.data.startsWith(m) && x.tipo === 'despesa').reduce((s,c)=>s+c.valor,0); return sR - sD; });
+            let pluginsData = { legend: { labels: { color: '#000' } }, datalabels: { color: '#000', align: 'top', font: { size: 9 }, formatter: function(v) { return v !== 0 ? v.toLocaleString('pt-BR', {minimumFractionDigits: 2}) : ''; } } };
+            let imgB64 = await gerarGraficoBase64('line', { labels: lbls, datasets: [{ label: 'Saldo (R$)', data: dadosLinha, borderColor: '#000', backgroundColor: 'rgba(0,0,0,0.1)', fill: true, tension: 0.1 }] }, { x: { ticks: { color: '#000' } }, y: { ticks: { color: '#000' } } }, 900, 300, pluginsData);
+            htmlGrafico = `<div style="text-align:center; margin-bottom: 20px;"><h3>Evolução de Saldo Mensal</h3><img src="${imgB64}" style="max-width: 100%; height: auto;"></div>`;
+        }
+
+        if(opcaoGrafico === 'mesma') sala.innerHTML = htmlBase + htmlGrafico + htmlTabela;
+        else if(opcaoGrafico === 'ultima') sala.innerHTML = htmlBase + htmlTabela + `<div class="page-break"></div>` + htmlGrafico;
+        else sala.innerHTML = htmlBase + htmlTabela;
+
+        document.getElementById('loading-pdf').style.display = 'none';
+        setTimeout(() => { window.print(); sala.innerHTML = ''; }, 200);
+    }
+
+    function calcInput(val) { const d = document.getElementById('calc-display'); if (d.value === 'Erro') d.value = ''; d.value += val; }
+    function calcAction(action) {
+        const d = document.getElementById('calc-display');
+        if (d.value === 'Erro') d.value = '';
+        if (action === 'clear') { d.value = ''; } else if (action === 'back') { d.value = d.value.slice(0, -1); } else if (action === 'eval') {
+            try { let exp = d.value.replace(/,/g, '.').replace(/÷/g, '/').replace(/×/g, '*'); if (exp.trim() === '') return; let res = eval(exp); d.value = Number.isInteger(res) ? res : parseFloat(res.toFixed(4)); } catch (e) { d.value = 'Erro'; }
+        }
+    }
+
+    function exportarBackup() {
+        const s = db.transaction([storeName], "readonly").objectStore(storeName); let reg = [];
+        s.openCursor().onsuccess = (e) => {
+            let c = e.target.result;
+            if(c) { reg.push(c.value); c.continue(); }
+            else {
+                if(reg.length === 0) { alert("O cofre tá vazio. Lança alguma porra primeiro."); return; }
+                const dataStr = JSON.stringify(reg, null, 2);
+                const blob = new Blob([dataStr], {type: "application/json"});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                let hj = new Date().toISOString().split('T')[0].replace(/-/g, '');
+                a.href = url; a.download = `CONTAS_BACKUP_${hj}.json`;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+            }
+        };
+    }
+
+    function processarImportacao(event) {
+        const file = event.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const dados = JSON.parse(e.target.result);
+                if(!Array.isArray(dados)) throw new Error("Formato inválido.");
+                if(!confirm("⚠️ AVISO TÁTICO: ISSO VAI APAGAR TUDO QUE TÁ AQUI E SUBSTITUIR PELO ARQUIVO. Certeza?")) return;
+                
+                document.getElementById('loading-pdf').style.display = 'flex';
+                const t = db.transaction([storeName], "readwrite");
+                const s = t.objectStore(storeName);
+                s.clear().onsuccess = () => { dados.forEach(r => s.add(r)); };
+                t.oncomplete = () => { document.getElementById('loading-pdf').style.display = 'none'; alert("Cofre restaurado com sucesso!"); carregarDatalistSugestoes(); };
+            } catch(err) { alert("Arquivo corrompido ou formato errado."); }
+        };
+        reader.readAsText(file);
+    }
+
+    function limparBancoGeral() {
+        if(confirm("⚠️ PROTOCOLO TERRA ARRASADA: VOCÊ ESTÁ PRESTES A DELETAR TUDO PERMANENTEMENTE. TEM CERTEZA ABSOLUTA?")) {
+            if(confirm("ÚLTIMO AVISO. FEZ O BACKUP ANTES?")) {
+                const t = db.transaction([storeName], "readwrite");
+                t.objectStore(storeName).clear();
+                t.oncomplete = () => { alert("Dados obliterados da memória."); carregarDatalistSugestoes(); };
+            }
+        }
+    }
+
+    window.onload = initDB;
+</script>
+</body>
+</html>

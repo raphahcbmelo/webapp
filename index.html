@@ -8,6 +8,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="WEBFIN">
+    <link rel="apple-touch-icon" href="https://ui-avatars.com/api/?name=$&background=ffffff&color=4caf50&size=512&font-size=0.6&bold=true">
+    
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#121212">
 
@@ -16,27 +18,24 @@
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', Courier, monospace !important; }
-        body { background-color: #121212; color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        body { background-color: #121212; color: #e0e0e0; overflow: hidden; }
         
+        /* Sanduíche Tático: Header Fixo + Rolagem no meio + Footer Fixo no chão. Uso do 100dvh para não sumir no mobile. */
         #app-container {
-            width: 100%; max-width: 400px; height: 100vh;
-            background-color: #1e1e1e; position: relative; overflow: hidden;
+            width: 100%; max-width: 400px; height: 100dvh; margin: 0 auto;
+            background-color: #1e1e1e; position: relative;
             box-shadow: 0 0 20px rgba(0,0,0,0.8); border: 1px solid #333;
             display: flex; flex-direction: column;
             padding-top: env(safe-area-inset-top);
         }
 
-        .view { display: none; flex-direction: column; height: 100%; width: 100%; }
+        .view { display: none; flex: 1; flex-direction: column; overflow: hidden; }
         .view.active { display: flex; animation: fadeIn 0.15s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Cabeçalho Cravado no Topo */
+        /* Cabeçalho Fixo (Teto) */
         .header { flex-shrink: 0; background-color: #1a1a1a; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 2px solid #333; z-index: 50; }
         .header h1 { font-size: 1.2rem; color: #4caf50; letter-spacing: 2px; margin: 0; }
-        
-        /* Área que rola separadamente */
-        .view-scroll { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 70px; text-align: left; }
-
         .header-acoes { display: flex; gap: 10px; align-items: center; }
         .btn-voltar { background: transparent; color: #ff5252; border: 1px solid #ff5252; padding: 5px 10px; cursor: pointer; font-weight: bold; border-radius: 4px; }
         .btn-exportar { background: transparent; color: #2196f3; border: 1px solid #2196f3; padding: 5px 10px; cursor: pointer; font-weight: bold; border-radius: 4px; margin-right: 5px;}
@@ -44,15 +43,27 @@
         .btn-config { font-size: 1.5rem; cursor: pointer; color: #666; transition: 0.2s; }
         .btn-config:active { color: #4caf50; }
 
-        /* Grid de Combate - Alinhado à Esquerda */
-        .grid-linha { display: flex; justify-content: flex-start; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 1px dashed #333; padding-bottom: 15px; }
-        .grid-linha:last-child { border-bottom: none; }
-        .app-icon { background: transparent; border: none; text-align: left; cursor: pointer; transition: 0.1s; padding: 5px; width: 85px; display: flex; flex-direction: column; align-items: flex-start; }
+        /* Rodapé Fixo (Chão) */
+        .footer-fixed { flex-shrink: 0; background: #0a0a0a; text-align: center; padding: 10px 0; border-top: 1px solid #333; font-size: 0.75rem; color: #666; z-index: 50; display: flex; justify-content: center; gap: 15px; align-items: center; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+        .footer-fixed a { color: #4caf50; text-decoration: none; font-weight: bold; }
+        .btn-doar { background: transparent; border: 1px solid #ffc107; color: #ffc107; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 0.7rem; }
+
+        /* Área de Rolagem Interna */
+        .view-scroll { flex: 1; overflow-y: auto; padding: 20px; text-align: left; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #121212; }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+
+        /* Matriz Visual (Grid Real de 4 Colunas = Quadrados Imaginários) */
+        .launcher-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+        .app-icon { background: transparent; border: none; cursor: pointer; transition: 0.1s; padding: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         .app-icon:active { transform: scale(0.9); }
-        .app-icon h2 { font-size: 0.65rem; margin-top: 8px; font-weight: bold; color: #ccc; }
+        .app-icon h2 { font-size: 0.60rem; margin-top: 8px; font-weight: bold; color: #ccc; width: 100%; word-wrap: break-word; }
         .icon-symbol { font-size: 2.2rem; }
         .icon-cifrao { font-size: 2.4rem; font-weight: bold; color: #4caf50; line-height: 1; }
+        .divisor-grid { grid-column: span 4; height: 1px; border-bottom: 1px dashed #333; margin: 10px 0; }
 
+        /* Formulários e Componentes */
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; color: #aaa; font-weight: bold; }
         .form-control { width: 100%; padding: 10px; background-color: #121212; border: 1px solid #555; color: #fff; border-radius: 5px; }
@@ -79,9 +90,6 @@
         .text-red { color: #ff5252 !important; }
         .text-white { color: #fff !important; }
         #lista-dossie { max-height: 350px; overflow-y: auto; padding-right: 5px; margin-top: 15px; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #121212; }
-        ::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
 
         .diario-item { background: #1a1a1a; border-left: 4px solid #555; padding: 12px; margin-bottom: 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
         .diario-item.receita { border-left-color: #4caf50; }
@@ -104,34 +112,27 @@
 
         .dados-box { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: left; }
         .dados-box h3 { color: #fff; font-size: 1rem; margin-bottom: 10px; }
-        .btn-dados { display: inline-block; width: 100%; padding: 12px; font-weight: bold; border-radius: 5px; cursor: pointer; border: none; text-transform: uppercase; text-align: center; margin-bottom: 10px;}
+        .btn-dados { display: block; width: 100%; padding: 12px; font-weight: bold; border-radius: 5px; cursor: pointer; border: none; text-transform: uppercase; text-align: center; margin-bottom: 10px;}
         .btn-export { background: #2196f3; color: #fff; }
         .btn-import { background: #ff9800; color: #000; }
         .btn-danger { background: #ff5252; color: #fff; margin-bottom: 0; }
         .alerta-caos { background: rgba(255,82,82,0.1); border-left: 4px solid #ff5252; padding: 10px; font-size: 0.8rem; color: #ffccbc; margin-bottom: 15px; text-align: left; }
-
-        .footer-fixed { position: absolute; bottom: 0; left: 0; width: 100%; background: #0a0a0a; text-align: center; padding: 10px 0; border-top: 1px solid #333; font-size: 0.75rem; color: #666; z-index: 10; display: flex; justify-content: center; gap: 15px; align-items: center; }
-        .footer-fixed a { color: #4caf50; text-decoration: none; font-weight: bold; }
-        .btn-doar { background: transparent; border: 1px solid #ffc107; color: #ffc107; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 0.7rem; }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 20px;}
         .modal-box { background: #1a1a1a; padding: 20px; border-radius: 8px; border: 1px solid #444; width: 100%; max-width: 350px; text-align: left; max-height: 90vh; overflow-y: auto;}
         .modal-box h3 { color: #2196f3; margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px solid #333; padding-bottom: 5px; }
         .modal-option { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; background: #252525; padding: 10px; border-radius: 5px;}
         .modal-option input { transform: scale(1.3); }
-        .btn-cancelar { background: transparent; border: 1px solid #555; color: #aaa; padding: 10px; border-radius: 5px; flex: 1; cursor: pointer; text-align: center; width: 100%;}
+        .btn-cancelar { background: transparent; border: 1px solid #555; color: #aaa; padding: 10px; border-radius: 5px; width: 100%; cursor: pointer; text-align: center;}
         
         #loading-pdf { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; color: #4caf50; font-size: 1.2rem; justify-content: center; align-items: center; font-weight: bold; flex-direction: column; text-align: center;}
         
-        #sala-branca-print { display: none; position: absolute; top:0; left:0; width: 100%; height: 100%; background: #fff; z-index: 9998; color: #000; overflow: auto; padding: 20px;}
-        body.modo-impressao #app-container { display: none !important; }
-        body.modo-impressao #sala-branca-print { display: block !important; }
-
+        /* O CSS Brutal de Impressão (Nativo, sem travar o iOS) */
+        #sala-branca-print { display: none; }
         @media print {
-            @page { size: landscape; margin: 10mm; }
-            body { background: #fff !important; color: #000 !important; }
-            #app-container, .modal-overlay, #loading-pdf { display: none !important; }
-            #sala-branca-print { display: block !important; position: static !important; width: 100% !important; background: #fff !important; color: #000 !important; font-family: 'Courier New', Courier, monospace; }
+            body * { visibility: hidden; }
+            #sala-branca-print, #sala-branca-print * { visibility: visible; }
+            #sala-branca-print { display: block !important; position: absolute; left: 0; top: 0; width: 100%; background: #fff !important; color: #000 !important; font-family: 'Courier New', Courier, monospace; padding: 15px; }
             .page-break { page-break-before: always; }
             * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
@@ -142,24 +143,25 @@
 <div id="loading-pdf"><div style="font-size: 2rem; margin-bottom: 10px;">⚙️</div>PROCESSANDO...</div>
 
 <div id="app-container">
+    
     <div id="view-launcher" class="view active">
         <div class="header">
             <h1>WEBFIN</h1>
             <div class="btn-config" onclick="abrirMenuSistema()">⚙️</div>
         </div>
         <div class="view-scroll">
-            <div class="grid-linha">
+            <div class="launcher-grid">
                 <div class="app-icon" onclick="abrirApp('view-eu')"><div class="icon-symbol">👤</div><h2>EU</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-contas')"><div class="icon-cifrao">$</div><h2>LANÇAMENTOS</h2></div>
+                <div class="app-icon" onclick="abrirApp('view-contas')"><div class="icon-cifrao">$</div><h2>REGISTROS</h2></div>
                 <div class="app-icon" onclick="abrirApp('view-diario')"><div class="icon-symbol">📓</div><h2>DIÁRIO</h2></div>
-            </div>
-            <div class="grid-linha">
-                <div class="app-icon" onclick="abrirApp('view-negocio')"><div class="icon-symbol">🏢</div><h2>MEU NEGÓCIO</h2></div>
+                <div style="grid-column: span 1;"></div> <div class="divisor-grid"></div>
+
+                <div class="app-icon" onclick="abrirApp('view-negocio')"><div class="icon-symbol">🏢</div><h2>NEGÓCIO</h2></div>
                 <div class="app-icon" onclick="abrirApp('view-clientes')"><div class="icon-symbol">👥</div><h2>CLIENTES</h2></div>
                 <div class="app-icon" onclick="abrirApp('view-estoque')"><div class="icon-symbol">📦</div><h2>ESTOQUE</h2></div>
                 <div class="app-icon" onclick="abrirApp('view-vendas')"><div class="icon-symbol">🤝</div><h2>VENDAS</h2></div>
-            </div>
-            <div class="grid-linha">
+                <div class="divisor-grid"></div>
+
                 <div class="app-icon" onclick="abrirApp('view-dossie')"><div class="icon-symbol">📄</div><h2>RELATÓRIOS</h2></div>
                 <div class="app-icon" onclick="abrirApp('view-radar')"><div class="icon-symbol">📊</div><h2>GRÁFICOS</h2></div>
                 <div class="app-icon" onclick="abrirApp('view-calculadora')"><div class="icon-symbol">🔢</div><h2>CALCULADORA</h2></div>
@@ -214,9 +216,28 @@
         </div>
     </div>
 
+    <div id="view-canal" class="view">
+        <div class="header">
+            <h1>CANAL</h1>
+            <div class="header-acoes"><button class="btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div>
+        </div>
+        <div class="view-scroll">
+            <div class="dados-box" style="border-left: 4px solid #25D366; text-align: center;">
+                <h3 style="color: #25D366; font-size: 1.2rem; margin-bottom: 15px;">📢 WEBFIN OFICIAL</h3>
+                <p style="font-size: 0.9rem; color: #e0e0e0; line-height: 1.5; margin-bottom: 20px;">
+                    Canal oficial do Webapp WEBFIN. Voltado para informar sobre atualizações de recursos e melhorias.<br><br>
+                    O WEBFIN é gratuito, não paguei por ele. Caso queira doar algum valor em forma de agradecimento, no próprio app está o link com a chave Pix de uma conta destinada para isso.
+                </p>
+                <a href="https://whatsapp.com/channel/0029Vb7L8UBIHphDxIjp1E1b" target="_blank" style="text-decoration: none;">
+                    <button class="btn-executar" style="background: #25D366; color: #fff;">ENTRAR NO CANAL</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <div id="view-contas" class="view">
         <div class="header">
-            <h1>LANÇAMENTOS</h1>
+            <h1>REGISTROS</h1>
             <div class="header-acoes"><button class="btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button><button class="btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div>
         </div>
         <div class="view-scroll">
@@ -290,13 +311,13 @@
         </div>
     </div>
 
-    <div id="view-negocio" class="view"><div class="header"><h1>MEU NEGÓCIO</h1><div class="header-acoes"><button class="btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button><button class="btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Módulo em Construção ]</p></div></div>
+    <div id="view-negocio" class="view"><div class="header"><h1>NEGÓCIO</h1><div class="header-acoes"><button class="btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button><button class="btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Módulo em Construção ]</p></div></div>
     <div id="view-clientes" class="view"><div class="header"><h1>CLIENTES</h1><div class="header-acoes"><button class="btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button><button class="btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Módulo em Construção ]</p></div></div>
     <div id="view-estoque" class="view"><div class="header"><h1>ESTOQUE</h1><div class="header-acoes"><button class="btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button><button class="btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Módulo em Construção ]</p></div></div>
     <div id="view-vendas" class="view"><div class="header"><h1>VENDAS</h1><div class="header-acoes"><button class="btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button><button class="btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Módulo em Construção ]</p></div></div>
 
     <div class="footer-fixed">
-        <span>WEBFIN v3.2 | dev by <a href="https://github.com/raphahcbmelo" target="_blank">@raphahcbmelo</a></span>
+        <span>WEBFIN v3.3 | dev by <a href="https://github.com/raphahcbmelo" target="_blank">@raphahcbmelo</a></span>
         <button class="btn-doar" onclick="abrirModalDoacao()">DOAR ☕</button>
     </div>
 </div>
@@ -304,11 +325,11 @@
 <div class="modal-overlay" id="modal-menu-sistema">
     <div class="modal-box">
         <h3 style="color: #aaa; text-align: center;">⚙️ MENU SISTEMA</h3>
-        <button class="btn-dados" style="background: #252525;" onclick="abrirApp('view-dados'); fecharModais()">💾 BANCO DE DADOS (Backup)</button>
+        <button class="btn-dados" style="background: #252525;" onclick="abrirApp('view-dados'); fecharModais()">💾 COFRE DE DADOS</button>
         <button class="btn-dados" style="background: #252525;" onclick="abrirModalInstalacao()">📱 INSTALAÇÃO PWA</button>
-        <button class="btn-dados" style="background: #252525;" onclick="abrirModalDoacao()">☕ APOIE A MISSÃO</button>
+        <button class="btn-dados" style="background: #252525;" onclick="abrirApp('view-canal'); fecharModais()">📢 CANAL OFICIAL</button>
         <button class="btn-dados" style="background: #252525;" onclick="abrirModalAjudaGlobal()">ℹ️ MANUAL DE AJUDA</button>
-        <button class="btn-dados" style="background: transparent; border: 1px solid #ff5252; color: #ff5252;" onclick="forcarAtualizacao()">🔄 UPDATE (Forçar Atualização)</button>
+        <button class="btn-dados" style="background: transparent; border: 1px solid #ff5252; color: #ff5252;" onclick="forcarAtualizacao()">🔄 UPDATE DE VERSÃO</button>
         <button class="btn-cancelar" onclick="fecharModais()" style="margin-top: 10px;">FECHAR MENU</button>
     </div>
 </div>
@@ -347,7 +368,7 @@
         <h3 style="position: sticky; top: -20px; background: #1a1a1a; padding-bottom: 10px;">ℹ️ MANUAL TÁTICO</h3>
         <div style="font-size: 0.8rem; color: #e0e0e0; line-height: 1.6; margin-bottom: 20px;">
             <p><strong style="color:#2196f3">👤 EU:</strong> Seu cofre pessoal. Cadastre dados para montar a assinatura de recebimentos e chaves PIX de acesso rápido.</p>
-            <p><strong style="color:#4caf50">💲 LANÇAMENTOS:</strong> Sua trincheira. Registre entradas e saídas. Use "Recorrente" para automatizar despesas fixas.</p>
+            <p><strong style="color:#4caf50">💲 REGISTROS:</strong> Sua trincheira. Registre entradas e saídas. Use "Recorrente" para automatizar despesas fixas.</p>
             <p><strong style="color:#ffc107">📓 DIÁRIO:</strong> O Livro Razão. Enxergue o fluxo cronológico e use os botões para Editar (✏️) ou Apagar (🗑️) erros.</p>
             <p><strong style="color:#9c27b0">🏢 NEGÓCIO & VENDAS:</strong> Módulos empresariais (Em Construção) para gerir CNPJ, estoque e emitir recibos.</p>
             <p><strong style="color:#ff5252">📄 RELATÓRIOS:</strong> Matriz bruta. Tabela cruzando dias e contas para auditoria.</p>
@@ -446,7 +467,7 @@
     function abrirModalAjudaGlobal() { fecharModais(); document.getElementById('modal-ajuda-global').style.display = 'flex'; }
     function fecharModais() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
 
-    /* LÓGICA DE UPDATE TÁTICO (CACHE BUSTER) */
+    /* LÓGICA DE UPDATE TÁTICO */
     function forcarAtualizacao() {
         if(confirm("ATUALIZAR? O sistema vai forçar a busca da última versão no GitHub. Você não perderá os dados salvos.")) {
             window.location.href = window.location.pathname + '?v=' + new Date().getTime();
@@ -510,10 +531,8 @@
 
     function abrirModalPerfil(editar = false) {
         if(editar && perfilAtual) {
-            document.getElementById('perfil-nome').value = perfilAtual.nome;
-            document.getElementById('perfil-sobrenome').value = perfilAtual.sobrenome;
-            document.getElementById('perfil-cpf').value = perfilAtual.cpf;
-            document.getElementById('perfil-nasc').value = perfilAtual.nasc;
+            document.getElementById('perfil-nome').value = perfilAtual.nome; document.getElementById('perfil-sobrenome').value = perfilAtual.sobrenome;
+            document.getElementById('perfil-cpf').value = perfilAtual.cpf; document.getElementById('perfil-nasc').value = perfilAtual.nasc;
         } else {
             document.getElementById('perfil-nome').value = ''; document.getElementById('perfil-sobrenome').value = ''; document.getElementById('perfil-cpf').value = ''; document.getElementById('perfil-nasc').value = '';
         }
@@ -596,7 +615,7 @@
     }
 
     // ==========================================
-    // FLUXO PRINCIPAL (LANÇAMENTOS E DIÁRIO)
+    // FLUXO PRINCIPAL (REGISTROS E DIÁRIO)
     // ==========================================
     
     function capturarEMandarProBanco() {
@@ -760,16 +779,17 @@
         });
     }
 
-    async function executarImpressaoTatita(htmlConteudo) {
+    /* A MAGIA NEGRA PARA O IOS IMPRIMIR */
+    function executarImpressaoTatita(htmlConteudo) {
         const sala = document.getElementById('sala-branca-print');
         sala.innerHTML = htmlConteudo;
         document.getElementById('loading-pdf').style.display = 'none';
-        document.body.classList.add('modo-impressao');
+        
+        // Em vez de só chamar print() instantâneo, a gente dá um fôlego pro motor de renderização do mobile processar a folha
         setTimeout(() => {
             window.print();
-            document.body.classList.remove('modo-impressao');
-            sala.innerHTML = '';
-        }, 500);
+            sala.innerHTML = ''; // Limpa depois de imprimir
+        }, 800);
     }
 
     async function dispararPdfRadar() {

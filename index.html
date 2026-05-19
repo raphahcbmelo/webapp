@@ -8,9 +8,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="WEBFIN">
-    <link rel="apple-touch-icon" href="https://ui-avatars.com/api/?name=$&background=ffffff&color=4caf50&size=512&font-size=0.6&bold=true">
+    <link rel="apple-touch-icon" href="icon-512.png">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#121212">
+    <meta name="theme-color" content="#FFD600">
 
     <style id="style-orientacao">@page { size: portrait; margin: 10mm; }</style>
 
@@ -20,12 +20,13 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', Courier, monospace !important; }
         
-        body { background-color: #121212; color: #e0e0e0; height: 100dvh; overflow: hidden; display: flex; justify-content: center; width: 100%; }
+        /* Tema de Alta Visibilidade: Verde e Amarelo do Brasil */
+        body { background-color: #121212; color: #121212; height: 100dvh; overflow: hidden; display: flex; justify-content: center; width: 100%; }
         
         #app-container {
             width: 100%; max-width: 400px; height: 100dvh;
-            background-color: #1e1e1e; position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8); border: 1px solid #333;
+            background-color: #FFD600; position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8); border: 1px solid #1b5e20;
             display: flex; flex-direction: column;
             padding-top: env(safe-area-inset-top);
         }
@@ -34,136 +35,113 @@
         .view.active { display: flex; animation: fadeIn 0.15s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* HEADER FIXO - NOVA ARQUITETURA MILITAR */
+        /* HEADER PROFISSIONAL - DUAS LINHAS INFLEXÍVEIS */
         .header { 
-            flex-shrink: 0; background-color: #1a1a1a; 
-            display: flex; flex-direction: column; align-items: flex-start; gap: 12px; 
-            padding: 15px 20px; border-bottom: 2px solid #333; z-index: 50; 
+            flex-shrink: 0; background-color: #1b5e20; 
+            display: flex; flex-direction: column; align-items: flex-start; gap: 10px; 
+            padding: 15px 20px; border-bottom: 3px solid #0a3916; z-index: 50; 
         }
         
-        /* Título Irredutível */
-        .header h1 { font-size: 1.6rem !important; color: #4caf50; letter-spacing: 2px; margin: 0; line-height: 1; text-transform: uppercase; }
+        /* Título com tamanho de fonte unificado */
+        .header h1 { font-size: 1.5rem !important; color: #FFD600; letter-spacing: 1px; margin: 0; line-height: 1; text-transform: uppercase; font-weight: bold; }
         
-        /* Contêiner de Botões */
-        .header-acoes { display: flex; gap: 8px; align-items: center; width: 100%; overflow-x: auto; padding-bottom: 2px; }
+        /* Alinhamento dos botões superiores à esquerda */
+        .header-acoes { display: flex; gap: 8px; align-items: center; width: 100%; justify-content: flex-start; }
         
-        /* O Padrão Ouro de Botão (Altura Travada) */
+        /* Padronização Militar de Altura (38px de Concreto) */
         .btn-header { 
-            height: 38px !important; /* A ALTURA DE CONCRETO QUE VOCÊ PEDIU */
-            padding: 0 15px; font-weight: bold; border-radius: 4px; font-size: 0.85rem; 
+            height: 38px !important; 
+            padding: 0 12px; font-weight: bold; border-radius: 4px; font-size: 0.85rem; 
             display: inline-flex; align-items: center; justify-content: center; 
-            border: 1px solid transparent; cursor: pointer; flex-shrink: 0; white-space: nowrap; transition: 0.1s;
+            background-color: #FFD600; color: #1b5e20; border: 1px solid #FFD600;
+            cursor: pointer; flex-shrink: 0; white-space: nowrap; transition: 0.1s;
         }
         .btn-header:active { transform: scale(0.95); }
         
-        /* Variantes do Botão Superior */
-        .btn-voltar { color: #ff5252; border-color: #ff5252; background: transparent; }
-        .btn-ajuda { background: #333; color: #aaa; border-color: #555; padding: 0 12px; font-size: 1rem; }
-        .btn-acao-azul { background: #2196f3; color: #fff; border-color: #2196f3; font-size: 1.2rem; }
-        .btn-acao-laranja { background: #ff9800; color: #000; border-color: #ff9800; }
-        .btn-config { background: #333; color: #e0e0e0; border-color: #555; }
+        /* Botão Voltar Quadrado com Seta Amarela */
+        .btn-voltar { width: 38px !important; background-color: #121212; color: #FFD600 !important; border-color: #121212; font-size: 1.1rem; padding: 0; }
+        .btn-ajuda { background-color: #121212; color: #ffffff; border-color: #121212; font-size: 1rem; }
+        .btn-acao-azul { background-color: #2196f3; color: #fff; border-color: #2196f3; }
+        .btn-acao-laranja { background-color: #ff9800; color: #000; border-color: #ff9800; }
 
-        /* FOOTER FIXO */
-        .footer-fixed { position: absolute; bottom: 0; left: 0; width: 100%; background: #0a0a0a; text-align: center; padding: 10px 0; border-top: 1px solid #333; font-size: 0.75rem; color: #666; display: flex; justify-content: center; gap: 15px; align-items: center; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 50; }
-        .footer-fixed a { color: #4caf50; text-decoration: none; font-weight: bold; }
-        .btn-doar { background: transparent; border: 1px solid #ffc107; color: #ffc107; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 0.7rem; }
+        /* RODAPÉ BLINDADO (Chumbado diretamente no vidro da tela) */
+        .footer-fixed { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 400px; background: #1b5e20; text-align: center; padding: 12px 0; border-top: 2px solid #0a3916; font-size: 0.75rem; color: #FFD600; display: flex; justify-content: center; align-items: center; padding-bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 100; }
+        .footer-fixed a { color: #ffffff; text-decoration: none; font-weight: bold; }
 
-        /* ÁREA DE ROLAGEM */
-        .view-scroll { flex: 1; overflow-y: auto; padding: 20px; text-align: left; padding-bottom: 70px; }
+        /* ÁREA DE ROLAGEM INTERNA */
+        .view-scroll { flex: 1; overflow-y: auto; padding: 20px; text-align: left; padding-bottom: 90px; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #121212; }
-        ::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+        ::-webkit-scrollbar-track { background: #FFD600; }
+        ::-webkit-scrollbar-thumb { background: #1b5e20; border-radius: 3px; }
 
-        /* Grid Centralizado por Quadrados */
-        .launcher-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+        /* Grid Alinhado por Quadrados Imaginários Sem Borda */
+        .launcher-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+        .grid-linha { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; grid-column: span 4; border-bottom: 1px dashed rgba(27,94,32,0.3); padding-bottom: 15px; margin-bottom: 5px; }
+        .grid-linha:last-child { border-bottom: none; }
+        
         .app-icon { background: transparent; border: none; cursor: pointer; transition: 0.1s; padding: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         .app-icon:active { transform: scale(0.9); }
-        .app-icon h2 { font-size: 0.55rem; margin-top: 8px; font-weight: bold; color: #ccc; width: 100%; word-wrap: break-word; }
+        .app-icon h2 { font-size: 0.55rem; margin-top: 8px; font-weight: bold; color: #1b5e20; width: 100%; word-wrap: break-word; text-transform: uppercase; }
         .icon-symbol { font-size: 2.2rem; }
-        .icon-cifrao { font-size: 2.4rem; font-weight: bold; color: #4caf50; line-height: 1; }
-        .divisor-grid { grid-column: span 4; height: 1px; border-bottom: 1px dashed #333; margin: 10px 0; }
+        .icon-cifrao { font-size: 2.4rem; font-weight: bold; color: #1b5e20; line-height: 1; }
 
-        /* Formulários Padrões */
+        /* Inputs e Componentes Corporativos */
         .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; color: #aaa; font-weight: bold; }
-        .form-control { width: 100%; padding: 10px; background-color: #121212; border: 1px solid #555; color: #fff; border-radius: 5px; }
-        .form-control:focus { outline: none; border-color: #4caf50; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; color: #1b5e20; font-weight: bold; }
+        .form-control { width: 100%; padding: 10px; background-color: #ffffff; border: 2px solid #1b5e20; color: #121212; border-radius: 5px; font-weight: bold; }
+        .form-control:focus { outline: none; border-color: #121212; }
         
         .tipo-toggle { display: flex; gap: 10px; margin-bottom: 15px; }
-        .tipo-btn { flex: 1; padding: 10px; text-align: center; border: 1px solid #555; border-radius: 5px; cursor: pointer; background: #2c2c2c; font-weight: bold; }
-        .tipo-btn.active.receita { background-color: #2e7d32; border-color: #4caf50; color: #fff; }
-        .tipo-btn.active.despesa { background-color: #c62828; border-color: #ff5252; color: #fff; }
+        .tipo-btn { flex: 1; padding: 10px; text-align: center; border: 2px solid #1b5e20; border-radius: 5px; cursor: pointer; background: #ffffff; font-weight: bold; color: #1b5e20; }
+        .tipo-btn.active.receita { background-color: #2e7d32; border-color: #2e7d32; color: #fff; }
+        .tipo-btn.active.despesa { background-color: #c62828; border-color: #c62828; color: #fff; }
 
-        #bloco-recorrencia { display: none; background: #252525; padding: 10px; border-radius: 5px; margin-bottom: 12px; border-left: 3px solid #4caf50; }
-        .btn-executar { width: 100%; padding: 15px; background-color: #4caf50; color: #000; border: none; border-radius: 5px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 15px; text-transform: uppercase; }
-        .btn-executar:active { background-color: #388e3c; }
+        #bloco-recorrencia { display: none; background: #ffffff; padding: 10px; border-radius: 5px; margin-bottom: 12px; border: 2px solid #1b5e20; border-left: 5px solid #1b5e20; }
+        .btn-executar { width: 100%; padding: 15px; background-color: #1b5e20; color: #FFD600; border: none; border-radius: 5px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-executar:active { background-color: #0a3916; }
 
-        .resumo-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; margin-top: 15px; }
-        .resumo-item { background: #252525; padding: 12px 10px; border-radius: 5px; text-align: center; border: 1px solid #333; }
-        .resumo-item.total { grid-column: span 2; background: #1a1a1a; }
-        .resumo-item h4 { font-size: 0.7rem; color: #aaa; margin-bottom: 5px; }
-        .resumo-item p { font-size: 1.1rem; font-weight: bold; }
-        .text-green { color: #4caf50 !important; }
-        .text-red { color: #ff5252 !important; }
-        .text-white { color: #fff !important; }
+        .dados-box { background: #ffffff; border: 2px solid #1b5e20; border-radius: 8px; padding: 15px; margin-bottom: 20px; color: #121212; }
+        .dados-box h3 { color: #1b5e20; font-size: 1rem; margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px; text-transform: uppercase; }
+        .dados-box p { font-size: 0.85rem; line-height: 1.4; }
+        .alerta-padrao { background: rgba(27,94,32,0.1); border-left: 4px solid #1b5e20; padding: 10px; font-size: 0.8rem; color: #0a3916; margin-bottom: 15px; font-weight: bold; }
 
-        .diario-item { background: #1a1a1a; border-left: 4px solid #555; padding: 12px; margin-bottom: 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
-        .diario-item.receita { border-left-color: #4caf50; }
-        .diario-item.despesa { border-left-color: #ff5252; }
+        .diario-item { background: #ffffff; border: 2px solid #1b5e20; border-left: 6px solid #555; padding: 12px; margin-bottom: 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; color: #121212; }
+        .diario-item.receita { border-left-color: #2e7d32; }
+        .diario-item.despesa { border-left-color: #c62828; }
         .diario-info { flex: 1; overflow: hidden; }
-        .diario-data { font-size: 0.7rem; color: #aaa; }
-        .diario-nome { font-weight: bold; font-size: 0.9rem; margin: 3px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .diario-data { font-size: 0.75rem; color: #666; font-weight: bold; }
+        .diario-nome { font-weight: bold; font-size: 0.95rem; margin: 3px 0; }
         .diario-valor { font-size: 1rem; font-weight: bold; }
-        .diario-acoes { display: flex; gap: 10px; margin-left: 10px; }
-        .btn-acao { background: transparent; border: none; font-size: 1.2rem; cursor: pointer; transition: 0.2s; }
-        .btn-acao:active { transform: scale(0.8); }
-
-        .calc-display { width: 100%; padding: 15px; font-size: 2rem; text-align: right; background: #0a0a0a; color: #4caf50; border: 1px solid #444; border-radius: 5px; margin-bottom: 20px; outline: none; letter-spacing: 2px; }
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-        .calc-btn { background: #252525; border: 1px solid #444; color: #fff; font-size: 1.4rem; padding: 18px 0; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.1s; }
-        .calc-btn:active { background: #4caf50; color: #000; border-color: #4caf50; transform: scale(0.95); }
-        .calc-btn.op { background: #1e1e1e; color: #2196f3; border-color: #333; }
-        .calc-btn.action { background: #333; font-size: 1.2rem; color: #aaa; }
-        .calc-btn.equal { background: #2e7d32; color: #fff; border-color: #4caf50; }
-
-        .dados-box { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: left; }
-        .dados-box h3 { color: #fff; font-size: 1rem; margin-bottom: 10px; }
-        .btn-dados { display: block; width: 100%; padding: 12px; font-weight: bold; border-radius: 5px; cursor: pointer; border: none; text-transform: uppercase; text-align: center; margin-bottom: 10px;}
-        .alerta-padrao { background: rgba(255,193,7,0.1); border-left: 4px solid #ffc107; padding: 10px; font-size: 0.8rem; color: #ffe082; margin-bottom: 15px; text-align: left; }
+        .diario-acoes { display: flex; gap: 12px; margin-left: 10px; }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 20px;}
-        .modal-box { background: #1a1a1a; padding: 20px; border-radius: 8px; border: 1px solid #444; width: 100%; max-width: 350px; text-align: left; max-height: 90vh; overflow-y: auto;}
-        .modal-box h3 { color: #2196f3; margin-bottom: 15px; font-size: 1.1rem; border-bottom: 1px solid #333; padding-bottom: 5px; }
-        .btn-cancelar { background: transparent; border: 1px solid #555; color: #aaa; padding: 10px; border-radius: 5px; width: 100%; cursor: pointer; text-align: center;}
-        
-        #loading-pdf { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; color: #4caf50; font-size: 1.2rem; justify-content: center; align-items: center; font-weight: bold; flex-direction: column; text-align: center;}
+        .modal-box { background: #ffffff; padding: 20px; border-radius: 8px; border: 3px solid #1b5e20; width: 100%; max-width: 350px; color: #121212; }
+        .modal-box h3 { color: #1b5e20; margin-bottom: 15px; font-size: 1.1rem; border-bottom: 2px solid #1b5e20; padding-bottom: 5px; text-transform: uppercase; }
+        .btn-cancelar { background: #121212; color: #fff; padding: 10px; border-radius: 5px; width: 100%; cursor: pointer; text-align: center; border: none; font-weight: bold; text-transform: uppercase; }
 
-        /* Estética do Papel de Pré-visualização na tela */
-        .fundo-mesa { background: #333; padding: 20px; min-height: 100%; overflow-y: auto; }
+        /* Mesa de Visualização de Impressão A4 */
+        .fundo-mesa { background: #444; padding: 10px; min-height: 100%; overflow-y: auto; }
         .papel-a4 {
             background: #ffffff; color: #000000;
-            width: 100%; max-width: 210mm; 
-            min-height: 297mm;
+            width: 100%; max-width: 210mm; min-height: 297mm;
             margin: 0 auto; padding: 20px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
             transition: max-width 0.3s ease;
         }
         .view-print-preview.landscape .papel-a4 { max-width: 297mm; min-height: 210mm; }
 
-        /* MAGIA NEGRA DO PDF: Anula todo o layout do celular na impressão */
+        /* IMPRESSÃO DEFINITIVA ANTI-FUNDO-PRETO */
         @media print {
-            body, html { height: auto !important; width: 100% !important; overflow: visible !important; background: #ffffff !important; color: #000000 !important; }
-            #app-container { display: none !important; }
-            #view-print-preview { display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: auto !important; background: #ffffff !important; padding: 0 !important; margin: 0 !important; overflow: visible !important; }
-            #view-print-preview * { visibility: visible !important; color: #000 !important; background: transparent !important; }
-            
-            .header.no-print, .btn-header, .fundo-mesa, .view-scroll { background: #ffffff !important; display: none !important; }
-            
+            body, html, #app-container { height: auto !important; width: 100% !important; overflow: visible !important; display: block !important; background: #ffffff !important; color: #000000 !important; }
+            .view { display: none !important; }
+            #view-print-preview { display: block !important; position: static !important; width: 100% !important; background: #ffffff !important; padding: 0 !important; margin: 0 !important; overflow: visible !important; }
+            .no-print { display: none !important; }
+            .footer-fixed { display: none !important; }
+            * { color: #000000 !important; background: transparent !important; box-shadow: none !important; text-shadow: none !important; }
             .papel-a4 { box-shadow: none !important; border: none !important; padding: 0 !important; width: 100% !important; max-width: none !important; margin: 0 !important; display: block !important; }
             th { background-color: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            table { border-color: #000 !important; width: 100% !important; }
-            td, th { border: 1px solid #000 !important; }
-            .page-break { page-break-before: always; }
+            table { border-color: #000000 !important; width: 100% !important; }
+            td, th { border: 1px solid #000000 !important; }
         }
     </style>
 </head>
@@ -175,29 +153,34 @@
     
     <div id="view-launcher" class="view active">
         <div class="header">
-            <h1>WEBFIN</h1>
-            <div class="header-acoes">
-                <button class="btn-header btn-config" onclick="abrirMenuSistema()">⚙️ MENU DO SISTEMA</button>
-            </div>
+            <h1>WEBFIN v3.10</h1>
         </div>
         <div class="view-scroll">
             <div class="launcher-grid">
-                <div class="app-icon" onclick="abrirApp('view-eu')"><div class="icon-symbol">👤</div><h2>EU</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-contas')"><div class="icon-cifrao">$</div><h2>REGISTROS</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-diario')"><div class="icon-symbol">📓</div><h2>DIÁRIO</h2></div>
-                <div style="grid-column: span 1;"></div>
-                <div class="divisor-grid"></div>
+                <div class="grid-linha">
+                    <div class="app-icon" onclick="abrirApp('view-eu')"><div class="icon-symbol">👤</div><h2>EU</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-contas')"><div class="icon-cifrao">$</div><h2>REGISTROS</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-diario')"><div class="icon-symbol">📓</div><h2>DIÁRIO</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-radar')"><div class="icon-symbol">📊</div><h2>GRÁFICOS</h2></div>
+                </div>
 
-                <div class="app-icon" onclick="abrirApp('view-negocio')"><div class="icon-symbol">🏢</div><h2>NEGÓCIO</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-clientes')"><div class="icon-symbol">👥</div><h2>CLIENTES</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-estoque')"><div class="icon-symbol">📦</div><h2>ESTOQUE</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-vendas')"><div class="icon-symbol">🤝</div><h2>VENDAS</h2></div>
-                <div class="divisor-grid"></div>
+                <div class="grid-linha">
+                    <div class="app-icon" onclick="abrirApp('view-negocio')"><div class="icon-symbol">🏢</div><h2>NEGÓCIO</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-clientes')"><div class="icon-symbol">👥</div><h2>CLIENTES</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-estoque')"><div class="icon-symbol">📦</div><h2>ESTOQUE</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-vendas')"><div class="icon-symbol">🤝</div><h2>VENDAS</h2></div>
+                </div>
 
-                <div class="app-icon" onclick="abrirApp('view-dossie')"><div class="icon-symbol">📄</div><h2>RELATÓRIOS</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-radar')"><div class="icon-symbol">📊</div><h2>GRÁFICOS</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-calculadora')"><div class="icon-symbol">🔢</div><h2>CALCULADORA</h2></div>
-                <div style="grid-column: span 1;"></div>
+                <div class="grid-linha">
+                    <div class="app-icon" onclick="abrirApp('view-dossie')"><div class="icon-symbol">📄</div><h2>RELATÓRIOS</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-calculadora')"><div class="icon-symbol">🔢</div><h2>CALCULADORA</h2></div>
+                </div>
+
+                <div class="grid-linha">
+                    <div class="app-icon" onclick="abrirApp('view-dados')"><div class="icon-symbol">⚙️</div><h2>SISTEMA</h2></div>
+                    <div class="app-icon" onclick="abrirModalDoacao()"><div class="icon-symbol">☕</div><h2>APOIAR</h2></div>
+                    <div class="app-icon" onclick="executarEncerramentoSeguro()"><div class="icon-symbol" style="color: #c62828;">❌</div><h2 style="color: #c62828;">FECHAR</h2></div>
+                </div>
             </div>
         </div>
     </div>
@@ -206,50 +189,61 @@
         <div class="header">
             <h1>EU</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">←</button>
                 <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
             </div>
         </div>
         <div class="view-scroll">
             <div id="bloco-sem-perfil" style="text-align: center; margin-top: 50px;">
-                <button class="btn-executar" style="background: #2196f3; color: #fff;" onclick="abrirModalPerfil()">CADASTRAR DADOS</button>
+                <button class="btn-executar" onclick="abrirModalPerfil()">CADASTRAR INFORMAÇÕES PESSOAIS</button>
             </div>
             <div id="bloco-com-perfil" style="display: none;">
-                <div class="dados-box" style="border-left: 4px solid #2196f3; padding: 15px;">
+                <div class="dados-box" style="border-left: 5px solid #1b5e20;">
                     <div style="display: flex; justify-content: space-between; align-items: start;">
                         <div>
-                            <h3 id="txt-nome-completo" style="color: #2196f3; margin-bottom: 8px;"></h3>
-                            <p style="margin-bottom: 4px; color: #e0e0e0;"><strong>CPF:</strong> <span id="txt-cpf"></span></p>
-                            <p style="margin-bottom: 0; color: #e0e0e0;"><strong>Nasc:</strong> <span id="txt-nasc"></span></p>
+                            <h3 id="txt-nome-completo" style="color: #1b5e20; margin-bottom: 8px;"></h3>
+                            <p style="margin-bottom: 4px;"><strong>CPF:</strong> <span id="txt-cpf"></span></p>
+                            <p><strong>Nascimento:</strong> <span id="txt-nasc"></span></p>
                         </div>
-                        <div style="display: flex; gap: 8px;">
-                            <button class="btn-acao" onclick="abrirModalPerfil(true)">✏️</button>
-                            <button class="btn-acao" onclick="apagarPerfil()">🗑️</button>
+                        <div style="display: flex; gap: 12px;">
+                            <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;" onclick="abrirModalPerfil(true)">✏️</button>
+                            <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;" onclick="apagarPerfil()">🗑️</button>
                         </div>
                     </div>
                 </div>
-                <h3 style="margin-top: 25px; margin-bottom: 10px; color: #4caf50; border-bottom: 1px solid #333; padding-bottom: 5px; font-size: 1rem;">CONTAS BANCÁRIAS</h3>
+                <h3 style="margin-top: 25px; margin-bottom: 10px; color: #1b5e20; border-bottom: 2px solid #1b5e20; padding-bottom: 5px; font-size: 1rem; text-transform: uppercase;">CONTAS BANCÁRIAS</h3>
                 <div id="lista-bancos-eu"></div>
-                <button class="btn-dados" style="margin-top: 15px; background: transparent; border: 1px dashed #4caf50; color: #4caf50;" onclick="abrirModalBanco()">+ NOVA CONTA</button>
+                <button class="btn-dados" style="background: #ffffff; border: 2px dashed #1b5e20; color: #1b5e20;" onclick="abrirModalBanco()">+ ADICIONAR CONTA BANCÁRIA</button>
             </div>
         </div>
     </div>
 
     <div id="view-dados" class="view">
         <div class="header">
-            <h1>DADOS</h1>
+            <h1>SISTEMA</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">←</button>
             </div>
         </div>
         <div class="view-scroll">
             <div class="dados-box">
-                <h3 style="text-align: center;">💾 GESTÃO DE DADOS</h3>
-                <div class="alerta-padrao">Exportação de segurança (.json). Recomendado fazer envios regulares para seu armazenamento pessoal.</div>
-                <button class="btn-dados" style="background: #2196f3; color: #fff;" onclick="exportarBackup()">EXPORTAR DADOS (BACKUP)</button>
+                <h3>💾 COFRE DE SEGURANÇA</h3>
+                <div class="alerta-padrao">Os dados são armazenados localmente. Realize exportações periódicas para garantir a integridade das informações.</div>
+                <button class="btn-dados" style="background: #1b5e20; color: #fff;" onclick="exportarBackup()">EXPORTAR BACKUP (.JSON)</button>
                 <input type="file" id="input-importar" style="display: none;" accept=".json" onchange="processarImportacao(event)">
-                <button class="btn-dados" style="background: #ff9800; color: #000;" onclick="document.getElementById('input-importar').click()">IMPORTAR DADOS (RESTAURAR)</button>
-                <button class="btn-dados" style="background: transparent; border: 1px solid #ff5252; color: #ff5252; margin-top: 20px;" onclick="limparBancoGeral()">APAGAR TODOS OS DADOS</button>
+                <button class="btn-dados" style="background: #ff9800; color: #000;" onclick="document.getElementById('input-importar').click()">RESTAURAR BACKUP (.JSON)</button>
+            </div>
+            
+            <div class="dados-box">
+                <h3>📱 DIRETRIZES DE INSTALAÇÃO</h3>
+                <p style="font-size:0.85rem; margin-bottom:10px;"><strong style="color:#2e7d32;">ANDROID:</strong> Google Chrome > Menu (⋮) > Adicionar à tela inicial.</p>
+                <p style="font-size:0.85rem; margin-bottom:10px;"><strong style="color:#2196f3;">iOS (IPHONE):</strong> Compartilhar > Adicionar à Tela de Início.</p>
+                <button class="btn-dados" style="background: #121212; color: #fff;" onclick="forcarAtualizacao()">🔄 VERIFICAR ATUALIZAÇÕES</button>
+            </div>
+
+            <div class="dados-box" style="border-color: #c62828;">
+                <h3 style="color:#c62828;">EXCLUSÃO PERMANENTE</h3>
+                <button class="btn-dados" style="background: #c62828; color: #fff;" onclick="limparBancoGeral()">LIMPAR BANCO DE DADOS</button>
             </div>
         </div>
     </div>
@@ -257,19 +251,17 @@
     <div id="view-canal" class="view">
         <div class="header">
             <h1>CANAL</h1>
-            <div class="header-acoes">
-                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
-            </div>
+            <div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">←</button></div>
         </div>
         <div class="view-scroll">
-            <div class="dados-box" style="border-left: 4px solid #25D366; text-align: center;">
-                <h3 style="color: #25D366; font-size: 1.2rem; margin-bottom: 15px;">📢 WEBFIN OFICIAL</h3>
-                <p style="font-size: 0.9rem; color: #e0e0e0; line-height: 1.5; margin-bottom: 20px;">
+            <div class="dados-box" style="border-left: 5px solid #25D366; text-align: left;">
+                <h3 style="color: #25D366;">📢 CANAL DE ATUALIZAÇÕES</h3>
+                <p style="font-size: 0.85rem; line-height: 1.5; margin-bottom: 20px;">
                     Canal oficial do aplicativo WEBFIN. Voltado para informar sobre atualizações de recursos e melhorias.<br><br>
-                    O WEBFIN é um sistema gratuito, NÃO PAGUE por ele. Caso queira contribuir financeiramente com o desenvolvimento, no próprio menu do aplicativo está a opção de apoio.
+                    O WEBFIN é um sistema gratuito, NÃO PAGUE por ele. Caso queira contribuir financeiramente com o desenvolvimento, utilize a opção Apoiar no menu principal.
                 </p>
                 <a href="https://whatsapp.com/channel/0029Vb7L8UBIHphDxIjp1E1b" target="_blank" style="text-decoration: none;">
-                    <button class="btn-executar" style="background: #25D366; color: #fff;">ENTRAR NO CANAL</button>
+                    <button class="btn-executar" style="background: #25D366; color: #fff;">ACESSAR CANAL OFICIAL</button>
                 </a>
             </div>
         </div>
@@ -279,18 +271,18 @@
         <div class="header">
             <h1>REGISTROS</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">←</button>
                 <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
             </div>
         </div>
         <div class="view-scroll">
             <div class="tipo-toggle"><div id="form-tipo-receita" class="tipo-btn active receita" onclick="setTipoForm('receita')">RECEITA</div><div id="form-tipo-despesa" class="tipo-btn" onclick="setTipoForm('despesa')">DESPESA</div></div>
             <div class="form-group"><label>NOME DO REGISTRO:</label><input list="lista-contas" id="form-nome" class="form-control"><datalist id="lista-contas"></datalist></div>
-            <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin: 15px 0;"><input type="checkbox" id="form-recorrente" onchange="toggleRecorrenciaForm()" style="transform: scale(1.4);"><label style="margin: 0; color: #fff;">REPETIR LANÇAMENTO?</label></div>
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin: 15px 0;"><input type="checkbox" id="form-recorrente" onchange="toggleRecorrenciaForm()" style="transform: scale(1.4);"><label style="margin: 0; color: #1b5e20;">LANÇAMENTO RECORRENTE?</label></div>
             <div id="bloco-recorrencia"><div class="form-group"><label>FREQUÊNCIA:</label><select id="form-frequencia" class="form-control" onchange="ajustarLabelsData()"><option value="diario">Diário</option><option value="semanal">Semanal</option><option value="mensal" selected>Mensal</option></select></div></div>
-            <div class="form-group"><label id="lbl-data-inicial">DATA:</label><input type="date" id="form-data-inicio" class="form-control"></div>
-            <div class="form-group" id="grp-data-limite" style="display: none;"><label>DATA LIMITE:</label><input type="date" id="form-data-limite" class="form-control"></div>
-            <div class="form-group"><label>VALOR (R$):</label><input type="number" step="0.01" id="form-valor" class="form-control"></div>
+            <div class="form-group"><label id="lbl-data-inicial">DATA DE COMPETÊNCIA:</label><input type="date" id="form-data-inicio" class="form-control"></div>
+            <div class="form-group" id="grp-data-limite" style="display: none;"><label>DATA LIMITE VIGÊNCIA:</label><input type="date" id="form-data-limite" class="form-control"></div>
+            <div class="form-group"><label>VALOR NOMINAL (R$):</label><input type="number" step="0.01" id="form-valor" class="form-control"></div>
             <button class="btn-executar" onclick="capturarEMandarProBanco()">SALVAR REGISTRO</button>
         </div>
     </div>
@@ -299,15 +291,15 @@
         <div class="header">
             <h1>DIÁRIO</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">←</button>
                 <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
             </div>
         </div>
         <div class="view-scroll">
-            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>DATA INICIAL:</label><input type="date" id="diario-data-de" class="form-control"></div><div class="form-group" style="flex:1;"><label>DATA FINAL:</label><input type="date" id="diario-data-ate" class="form-control"></div></div>
-            <div class="form-group" style="display: flex; gap: 15px; margin-bottom: 15px; justify-content: center;"><label style="display:flex; align-items:center; gap:5px; color:#4caf50;"><input type="checkbox" id="chk-diario-receita" checked style="transform: scale(1.3);"> RECEITAS</label><label style="display:flex; align-items:center; gap:5px; color:#ff5252;"><input type="checkbox" id="chk-diario-despesa" checked style="transform: scale(1.3);"> DESPESAS</label></div>
-            <button class="btn-executar" style="padding: 10px; margin-top: 0; margin-bottom: 15px;" onclick="carregarDiario()">APLICAR FILTRO</button>
-            <div id="diario-lista"><p style="text-align: center; color: #555; margin-top: 30px; font-size: 0.8rem;">[ Utilize o filtro para visualizar registros ]</p></div>
+            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>PERÍODO INICIAL:</label><input type="date" id="diario-data-de" class="form-control"></div><div class="form-group" style="flex:1;"><label>PERÍODO FINAL:</label><input type="date" id="diario-data-ate" class="form-control"></div></div>
+            <div class="form-group" style="display: flex; gap: 15px; margin-bottom: 15px; justify-content: center;"><label style="display:flex; align-items:center; gap:5px; color:#2e7d32; font-weight:bold;"><input type="checkbox" id="chk-diario-receita" checked style="transform: scale(1.3);"> RECEITAS</label><label style="display:flex; align-items:center; gap:5px; color:#c62828; font-weight:bold;"><input type="checkbox" id="chk-diario-despesa" checked style="transform: scale(1.3);"> DESPESAS</label></div>
+            <button class="btn-executar" style="padding: 10px; margin-top: 0; margin-bottom: 15px;" onclick="carregarDiario()">FILTRAR LANÇAMENTOS</button>
+            <div id="diario-lista"><p style="text-align: center; color: #555; margin-top: 30px; font-size: 0.8rem;">[ Filtre o período desejado ]</p></div>
         </div>
     </div>
 
@@ -315,36 +307,35 @@
         <div class="header">
             <h1>RELATÓRIOS</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">←</button>
                 <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
             </div>
         </div>
         <div class="view-scroll">
-            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>INÍCIO:</label><input type="date" id="dossie-data-de" class="form-control"></div><div class="form-group" style="flex:1;"><label>FIM:</label><input type="date" id="dossie-data-ate" class="form-control"></div></div>
-            <div class="form-group"><label>FILTRO DE TIPO:</label><select id="dossie-tipo" class="form-control"><option value="todos">Geral (Entradas e Saídas)</option><option value="receita">Somente Entradas</option><option value="despesa">Somente Saídas</option></select></div>
-            <button class="btn-executar" style="padding: 10px; margin-top: 5px;" onclick="gerarRelatorioDossie()">GERAR RELATÓRIO</button>
+            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>DATA DE INÍCIO:</label><input type="date" id="dossie-data-de" class="form-control"></div><div class="form-group" style="flex:1;"><label>DATA DE TÉRMINO:</label><input type="date" id="dossie-data-ate" class="form-control"></div></div>
+            <div class="form-group"><label>FILTRO CONSOLIDADO:</label><select id="dossie-tipo" class="form-control"><option value="todos">Completo (Entradas e Saídas)</option><option value="receita">Apenas Faturamento</option><option value="despesa">Apenas Despesas</option></select></div>
+            <button class="btn-executar" style="padding: 10px; margin-top: 5px;" onclick="gerarRelatorioDossie()">PROCESSAR MATRIZ</button>
             
             <div class="resumo-box" id="dossie-resumo" style="display: none;"><div class="resumo-item"><h4>ENTRADAS</h4><p class="text-green" id="resumo-receitas">R$ 0,00</p></div><div class="resumo-item"><h4>SAÍDAS</h4><p class="text-red" id="resumo-despesas">R$ 0,00</p></div><div class="resumo-item total" id="box-saldo-total"><h4>SALDO DO PERÍODO</h4><p id="resumo-saldo">R$ 0,00</p></div></div>
             
-            <button id="btn-visualizar-impressao" class="btn-executar" style="display:none; background:#2196f3; color:#fff; margin-top: 15px; font-size:0.9rem;" onclick="abrirPreviewImpressao()">VISUALIZAR IMPRESSÃO</button>
+            <button id="btn-visualizar-impressao" class="btn-executar" style="display:none; background:#2196f3; color:#fff; margin-top: 15px;" onclick="abrirPreviewImpressao()">VISUALIZAR IMPRESSÃO</button>
             
-            <div id="lista-dossie"><p style="text-align: center; color: #555; margin-top: 30px; font-size: 0.8rem;">[ Informe o período ]</p></div>
+            <div id="lista-dossie"><p style="text-align: center; color: #555; margin-top: 30px; font-size: 0.8rem;">[ Aguardando parâmetros ]</p></div>
         </div>
     </div>
 
-    <div id="view-print-preview" class="view view-print-preview" style="background: #e0e0e0;">
+    <div id="view-print-preview" class="view view-print-preview">
         <div class="header no-print">
-            <h1>VISUALIZAÇÃO</h1>
+            <h1>PREVIEW</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-voltar" style="color: #fff; border-color: #555;" onclick="abrirApp('view-dossie')">FECHAR</button>
+                <button class="btn-header btn-voltar" style="background:#121212; color:#FFD600 !important;" onclick="abrirApp('view-dossie')">←</button>
                 <button id="btn-orientacao" class="btn-header btn-acao-laranja" onclick="toggleOrientacao()">PAISAGEM</button>
                 <button class="btn-header btn-acao-azul" onclick="window.print()">🖨️/💾</button>
                 <button class="btn-header btn-ajuda" onclick="abrirAjudaImpressao()">?</button>
             </div>
         </div>
-        <div class="fundo-mesa view-scroll no-print" style="padding-bottom: 20px;">
-            <div class="papel-a4" id="print-preview-content">
-                </div>
+        <div class="fundo-mesa view-scroll no-print">
+            <div class="papel-a4" id="print-preview-content"></div>
         </div>
     </div>
 
@@ -352,16 +343,16 @@
         <div class="header">
             <h1>GRÁFICOS</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">←</button>
                 <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
             </div>
         </div>
         <div class="view-scroll">
-            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>INÍCIO:</label><input type="date" id="radar-data-de" class="form-control" onchange="atualizarPainelContas()"></div><div class="form-group" style="flex:1;"><label>FIM:</label><input type="date" id="radar-data-ate" class="form-control" onchange="atualizarPainelContas()"></div></div>
-            <div class="form-group"><label>AGRUPAMENTO DE TEMPO:</label><select id="radar-agrupamento" class="form-control" onchange="verificarTravaGrafico()"><option value="geral">Geral (Acumulado no Período)</option><option value="diario">Evolução Diária</option><option value="semanal">Evolução Semanal</option><option value="mensal">Evolução Mensal</option></select></div>
-            <div class="form-group"><label>MODELO DE GRÁFICO:</label><select id="radar-tipo-grafico" class="form-control" onchange="renderizarGraficoAvancado()"><option value="radar" id="opt-radar">Atributos (Radar)</option><option value="pie" id="opt-pie">Distribuição (Pizza)</option><option value="line" id="opt-line">Linha de Tendência</option><option value="bar" id="opt-bar">Barras de Impacto</option></select></div>
-            <div class="form-group" style="margin-top: 15px; background: #1a1a1a; padding: 10px; border-radius: 5px; border: 1px solid #333;"><label style="color: #4caf50; font-size: 0.8rem; border-bottom: 1px solid #333; padding-bottom: 5px; display: block;">FILTRO DE REGISTROS:</label><div style="display: flex; gap: 5px; margin: 8px 0;"><button onclick="selecionarMassa('receita')" style="flex: 1; padding: 4px; background: #2e7d32; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer;">+ ENTRADAS</button><button onclick="selecionarMassa('despesa')" style="flex: 1; padding: 4px; background: #c62828; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer;">+ SAÍDAS</button><button onclick="limparSelecaoMassa()" style="padding: 4px 8px; background: #444; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer;">LIMPAR</button></div><div id="painel-checkboxes" style="max-height: 140px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 2px;"></div></div>
-            <button class="btn-executar" style="margin-bottom: 15px;" onclick="renderizarGraficoAvancado()">GERAR ANÁLISE</button>
+            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>MENSURAÇÃO INICIAL:</label><input type="date" id="radar-data-de" class="form-control" onchange="atualizarPainelContas()"></div><div class="form-group" style="flex:1;"><label>MENSURAÇÃO FINAL:</label><input type="date" id="radar-data-ate" class="form-control" onchange="atualizarPainelContas()"></div></div>
+            <div class="form-group"><label>AGRUPAMENTO CRONOLÓGICO:</label><select id="radar-agrupamento" class="form-control" onchange="verificarTravaGrafico()"><option value="geral">Consolidado do Período</option><option value="diario">Evolução Diária</option><option value="semanal">Evolução Semanal</option><option value="mensal">Evolução Mensal</option></select></div>
+            <div class="form-group"><label>MÉTODO DE EXIBIÇÃO:</label><select id="radar-tipo-grafico" class="form-control" onchange="renderizarGraficoAvancado()"><option value="radar" id="opt-radar">Análise de Atributos (Radar)</option><option value="pie" id="opt-pie">Distribuição Percentual (Pizza)</option><option value="line" id="opt-line">Linha de Tendência Temporal</option><option value="bar" id="opt-bar">Gráfico de Impacto (Barras)</option></select></div>
+            <div class="form-group" style="margin-top: 15px; background: #ffffff; border: 2px solid #1b5e20; padding: 10px; border-radius: 5px;"><label style="color: #1b5e20; font-size: 0.8rem; border-bottom: 1px solid #ccc; padding-bottom: 5px; display: block; font-weight:bold;">FILTRAR ELEMENTOS DA MATRIZ:</label><div style="display: flex; gap: 5px; margin: 8px 0;"><button onclick="selecionarMassa('receita')" style="flex: 1; padding: 4px; background: #2e7d32; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer; font-weight:bold;">+ ENTRADAS</button><button onclick="selecionarMassa('despesa')" style="flex: 1; padding: 4px; background: #c62828; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer; font-weight:bold;">+ SAÍDAS</button><button onclick="limparSelecaoMassa()" style="padding: 4px 8px; background: #121212; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer; font-weight:bold;">LIMPAR</button></div><div id="painel-checkboxes" style="max-height: 140px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 2px;"></div></div>
+            <button class="btn-executar" style="margin-bottom: 15px;" onclick="renderizarGraficoAvancado()">MANDAR GERAR ANÁLISE</button>
             <div class="chart-wrapper"><canvas id="canvasRadar"></canvas></div>
         </div>
     </div>
@@ -370,7 +361,7 @@
         <div class="header">
             <h1>CALCULADORA</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">←</button>
                 <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
             </div>
         </div>
@@ -386,102 +377,76 @@
         </div>
     </div>
 
-    <div id="view-negocio" class="view"><div class="header"><h1>NEGÓCIO</h1><div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button><button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Em Desenvolvimento ]</p></div></div>
-    <div id="view-clientes" class="view"><div class="header"><h1>CLIENTES</h1><div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button><button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Em Desenvolvimento ]</p></div></div>
-    <div id="view-estoque" class="view"><div class="header"><h1>ESTOQUE</h1><div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button><button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Em Desenvolvimento ]</p></div></div>
-    <div id="view-vendas" class="view"><div class="header"><h1>VENDAS</h1><div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button><button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Em Desenvolvimento ]</p></div></div>
+    <div id="view-negocio" class="view"><div class="header"><h1>NEGÓCIO</h1><div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">←</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Módulo em Desenvolvimento ]</p></div></div>
+    <div id="view-clientes" class="view"><div class="header"><h1>CLIENTES</h1><div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">←</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Módulo em Desenvolvimento ]</p></div></div>
+    <div id="view-estoque" class="view"><div class="header"><h1>ESTOQUE</h1><div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">←</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Módulo em Desenvolvimento ]</p></div></div>
+    <div id="view-vendas" class="view"><div class="header"><h1>VENDAS</h1><div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">←</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Módulo em Desenvolvimento ]</p></div></div>
 
     <div class="footer-fixed">
-        <span>WEBFIN v3.9 | dev by <a href="https://github.com/raphahcbmelo" target="_blank">@raphahcbmelo</a></span>
-    </div>
-</div>
-
-<div class="modal-overlay" id="modal-menu-sistema">
-    <div class="modal-box">
-        <h3 style="color: #aaa; text-align: left; margin-bottom: 20px;">⚙️ PREFERÊNCIAS</h3>
-        <button class="btn-dados" style="background: #252525; color: #fff; text-align: left; padding-left: 15px;" onclick="abrirApp('view-dados'); fecharModais()">💾 GESTÃO DE DADOS</button>
-        <button class="btn-dados" style="background: #252525; color: #fff; text-align: left; padding-left: 15px;" onclick="abrirModalInstalacao()">📱 INSTRUÇÕES DE INSTALAÇÃO</button>
-        <button class="btn-dados" style="background: #252525; color: #fff; text-align: left; padding-left: 15px;" onclick="abrirApp('view-canal'); fecharModais()">📢 CANAL DE ATUALIZAÇÕES</button>
-        <button class="btn-dados" style="background: #252525; color: #fff; text-align: left; padding-left: 15px;" onclick="abrirModalAjudaGlobal()">ℹ️ GUIA DE USO</button>
-        <button class="btn-dados" style="background: #252525; color: #fff; text-align: left; padding-left: 15px;" onclick="abrirModalDoacao()">☕ APOIAR A MISSÃO</button>
-        <button class="btn-dados" style="background: transparent; border: 1px solid #ff5252; color: #ff5252; text-align: left; padding-left: 15px;" onclick="forcarAtualizacao()">🔄 BUSCAR ATUALIZAÇÃO</button>
-        <button class="btn-cancelar" onclick="fecharModais()" style="margin-top: 10px;">FECHAR MENU</button>
+        <span>WEBFIN v3.10 | dev by <a href="https://github.com/raphahcbmelo" target="_blank">@raphahcbmelo</a></span>
     </div>
 </div>
 
 <div class="modal-overlay" id="modal-doacao">
     <div class="modal-box" style="text-align: center;">
-        <h3 style="color: #ffc107;">☕ APOIE O DESENVOLVIMENTO</h3>
-        <p style="font-size: 0.8rem; margin-bottom: 15px; color: #e0e0e0;">Sistema de gestão offline. Se este aplicativo tem sido útil, considere apoiar a manutenção do projeto.</p>
-        <div style="background: #121212; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: left; border: 1px solid #333;">
-            <p style="color: #aaa; font-size: 0.75rem; margin-bottom: 5px;"><strong>NOME:</strong> Raphaelo H C B Melo</p>
-            <p style="color: #aaa; font-size: 0.75rem; margin-bottom: 5px;"><strong>INSTITUIÇÃO:</strong> InfinitePay</p>
-            <p style="color: #aaa; font-size: 0.75rem; margin-bottom: 5px;"><strong>TIPO:</strong> Chave Aleatória</p>
-            <p style="color: #4caf50; font-weight: bold; font-size: 0.75rem; word-break: break-all; margin-top: 10px; text-align: center;">182edc11-4ace-46c1-ad6f-ad3dec83eb32</p>
+        <h3 style="color: #1b5e20;">☕ APOIAR O DESENVOLVIMENTO</h3>
+        <p style="font-size: 0.85rem; margin-bottom: 15px; color: #333;">O WEBFIN é de código aberto e livre de anúncios. Se a ferramenta otimizou seu controle, considere apoiar a manutenção do projeto.</p>
+        <div style="background: #FFD600; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: left; border: 2px solid #1b5e20;">
+            <p style="color: #1b5e20; font-size: 0.8rem; margin-bottom: 5px;"><strong>TITULAR:</strong> Raphaelo H C B Melo</p>
+            <p style="color: #1b5e20; font-size: 0.8rem; margin-bottom: 5px;"><strong>INSTITUIÇÃO:</strong> InfinitePay</p>
+            <p style="color: #1b5e20; font-size: 0.8rem; margin-bottom: 5px;"><strong>TIPO:</strong> Chave Aleatória</p>
+            <p style="color: #121212; font-weight: bold; font-size: 0.75rem; word-break: break-all; margin-top: 10px; text-align: center;">182edc11-4ace-46c1-ad6f-ad3dec83eb32</p>
         </div>
         <div style="display: flex; gap: 10px;">
-            <button class="btn-cancelar" onclick="fecharModais()">FECHAR</button>
-            <button class="btn-exportar" style="flex: 2; background: #ffc107; color: #000; border: none;" onclick="copiarPixDoacao()">COPIAR PIX</button>
+            <button class="btn-cancelar" style="background:#444;" onclick="fecharModais()">FECHAR</button>
+            <button class="btn-header" style="flex: 2; height:40px !important; background: #1b5e20; color: #fff; border: none;" onclick="copiarPixDoacao()">COPIAR CHAVE PIX</button>
         </div>
-    </div>
-</div>
-
-<div class="modal-overlay" id="modal-instalacao">
-    <div class="modal-box">
-        <h3>📱 INSTALAÇÃO DO SISTEMA</h3>
-        <div class="alerta-padrao">Realize o backup dos seus dados antes de criar um novo atalho na tela inicial.</div>
-        <p style="color: #e0e0e0; font-size: 0.85rem; margin-bottom: 10px;"><strong style="color: #4caf50;">SISTEMA ANDROID:</strong> Navegador Chrome > Menu (⋮) > Adicionar à tela inicial.</p>
-        <p style="color: #e0e0e0; font-size: 0.85rem; margin-bottom: 20px;"><strong style="color: #2196f3;">SISTEMA iOS:</strong> Navegador Safari > Compartilhar > Adicionar à Tela de Início.</p>
-        <button class="btn-cancelar" onclick="fecharModais()">FECHAR</button>
     </div>
 </div>
 
 <div class="modal-overlay" id="modal-ajuda-global">
     <div class="modal-box" style="max-height: 85vh; overflow-y: auto;">
-        <h3 style="position: sticky; top: -20px; background: #1a1a1a; padding-bottom: 10px; margin-top:0;">ℹ️ GUIA DE USO</h3>
-        <div style="font-size: 0.8rem; color: #e0e0e0; line-height: 1.6; margin-bottom: 20px;">
-            <p id="texto-ajuda-dinamico">
-            <strong style="color:#2196f3">👤 EU:</strong> Central de dados pessoais. Cadastre contas bancárias para criar atalhos rápidos de cópia de PIX.<br><br>
-            <strong style="color:#4caf50">💲 REGISTROS:</strong> Formulário de fluxo de caixa. Insira receitas e despesas. Permite configuração de repetição automática.<br><br>
-            <strong style="color:#ffc107">📓 DIÁRIO:</strong> Livro Razão. Visualize a linha do tempo financeira. Possui controles para edição (✏️) e exclusão (🗑️).<br><br>
-            <strong style="color:#9c27b0">🏢 MÓDULOS CORPORATIVOS:</strong> Ferramentas para gestão de CNPJ, inventário e controle de clientes.<br><br>
-            <strong style="color:#ff5252">📄 RELATÓRIOS:</strong> Cruzamento de dados para geração de tabelas auditáveis. Otimizado para impressão direta em A4.
-            </p>
+        <h3 style="position: sticky; top: -20px; background: #ffffff; padding-bottom: 10px; margin-top:0;">ℹ️ DIRETRIZES DO SISTEMA</h3>
+        <div style="font-size: 0.85rem; color: #333; line-height: 1.6; margin-bottom: 20px;" id="texto-ajuda-dinamico">
+            <p><strong style="color:#2196f3">👤 EU:</strong> Gerencie dados de identificação pessoal e configure contas para cópia rápida de chaves de transferência corporativas.</p><br>
+            <p><strong style="color:#2e7d32">💲 REGISTROS:</strong> Insira entradas e despesas operacionais da sua movimentação financeira de forma isolada.</p><br>
+            <p><strong style="color:#ff9800">📓 DIÁRIO:</strong> Livro razão geral. Realize auditorias cronológicas com permissões completas para alteração e exclusão de itens errados.</p><br>
+            <p><strong style="color:#b71c1c;">📄 RELATÓRIOS:</strong> Consolidadores de movimentação e balanço mensal, preparados para enquadramento automático de impressão em papel.</p>
         </div>
-        <button class="btn-cancelar" style="width: 100%; border-color: #2196f3; color: #2196f3;" onclick="fecharModais()">FECHAR GUIA</button>
+        <button class="btn-cancelar" onclick="fecharModais()">FECHAR INSTRUÇÕES</button>
     </div>
 </div>
 
 <div class="modal-overlay" id="modal-perfil">
     <div class="modal-box">
-        <h3>👤 DADOS PESSOAIS</h3>
+        <h3>👤 DADOS DE IDENTIFICAÇÃO</h3>
         <div class="form-group"><label>NOME:</label><input type="text" id="perfil-nome" class="form-control"></div>
         <div class="form-group"><label>SOBRENOME:</label><input type="text" id="perfil-sobrenome" class="form-control"></div>
         <div class="form-group"><label>CPF:</label><input type="text" id="perfil-cpf" class="form-control" placeholder="000.000.000-00"></div>
         <div class="form-group"><label>DATA DE NASCIMENTO:</label><input type="date" id="perfil-nasc" class="form-control"></div>
-        <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-exportar" style="flex: 2; background: #2196f3; color: #fff;" onclick="salvarPerfil()">SALVAR</button></div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-header" style="flex: 2; height:40px !important;" onclick="salvarPerfil()">REGISTRAR</button></div>
     </div>
 </div>
 
 <div class="modal-overlay" id="modal-banco">
     <div class="modal-box">
-        <h3>💳 CONTA BANCÁRIA</h3>
+        <h3>💳 REGISTRO DE CONTA</h3>
         <input type="hidden" id="banco-id">
-        <div class="form-group"><label>INSTITUIÇÃO BANCÁRIA:</label><input type="text" id="banco-nome" class="form-control" placeholder="Ex: Nubank, Banco do Brasil..."></div>
-        <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>AGÊNCIA:</label><input type="text" id="banco-ag" class="form-control"></div><div class="form-group" style="flex:2;"><label>CONTA:</label><input type="text" id="banco-cc" class="form-control"></div></div>
-        <div class="form-group"><label>CHAVE PIX (RECEBIMENTO):</label><input type="text" id="banco-pix" class="form-control"></div>
-        <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-exportar" style="flex: 2; background: #4caf50; border-color: #4caf50; color: #000;" onclick="salvarBanco()">SALVAR</button></div>
+        <div class="form-group"><label>INSTITUIÇÃO FINANCEIRA:</label><input type="text" id="banco-nome" class="form-control" placeholder="Ex: Nubank, Inter, Banco do Brasil..."></div>
+        <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>AGÊNCIA:</label><input type="text" id="banco-ag" class="form-control"></div><div class="form-group" style="flex:2;"><label>CONTA CORRENTE:</label><input type="text" id="banco-cc" class="form-control"></div></div>
+        <div class="form-group"><label>CHAVE PIX VINCULADA:</label><input type="text" id="banco-pix" class="form-control"></div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-header" style="flex: 2; height:40px !important; background:#2e7d32; color:#fff; border-color:#2e7d32;" onclick="salvarBanco()">SALVAR CONTA</button></div>
     </div>
 </div>
 
 <div class="modal-overlay" id="modal-editar-diario">
     <div class="modal-box">
-        <h3>✏️ EDITAR REGISTRO</h3>
+        <h3>✏️ RETIFICAR REGISTRO</h3>
         <input type="hidden" id="edit-id"><input type="hidden" id="edit-tipo"><input type="hidden" id="edit-lote">
         <div class="form-group"><label>DATA:</label><input type="date" id="edit-data" class="form-control"></div>
-        <div class="form-group"><label>NOME DO REGISTRO:</label><input list="lista-contas" id="edit-nome" class="form-control"></div>
-        <div class="form-group"><label>VALOR (R$):</label><input type="number" step="0.01" id="edit-valor" class="form-control"></div>
-        <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-exportar" style="flex: 2; background: #4caf50; border-color: #4caf50; color: #000;" onclick="salvarEdicaoDiario()">SALVAR</button></div>
+        <div class="form-group"><label>IDENTIFICAÇÃO:</label><input list="lista-contas" id="edit-nome" class="form-control"></div>
+        <div class="form-group"><label>VALOR REAL (R$):</label><input type="number" step="0.01" id="edit-valor" class="form-control"></div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-header" style="flex: 2; height:40px !important; background:#2e7d32; color:#fff; border-color:#2e7d32;" onclick="salvarEdicaoDiario()">ATUALIZAR</button></div>
     </div>
 </div>
 
@@ -506,19 +471,15 @@
         if(id === 'view-dossie') { 
             document.getElementById('dossie-resumo').style.display = 'none'; 
             document.getElementById('btn-visualizar-impressao').style.display = 'none';
-            document.getElementById('lista-dossie').innerHTML = '<p style="text-align: center; color: #555; margin-top: 30px; font-size: 0.8rem;">[ Informe o período para geração ]</p>'; 
+            document.getElementById('lista-dossie').innerHTML = '<p style="text-align: center; color: #1b5e20; margin-top: 30px; font-size: 0.8rem;">[ Especifique o intervalo cronológico para compilar os dados ]</p>'; 
         } 
         if(id === 'view-diario') { carregarDiario(); } 
         if(id === 'view-eu') { carregarModuloEu(); }
     }
     
     function formatarMoeda(valor) { return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
-    function formatarDataBR(dataStr) { 
-        if(!dataStr) return "";
-        const p = dataStr.split('-'); return `${p[2]}/${p[1]}/${p[0]}`; 
-    }
+    function formatarDataBR(dataStr) { if(!dataStr) return ""; const p = dataStr.split('-'); return `${p[2]}/${p[1]}/${p[0]}`; }
 
-    /* CONTROLES E MODAIS */
     function abrirMenuSistema() { document.getElementById('modal-menu-sistema').style.display = 'flex'; }
     function abrirModalInstalacao() { fecharModais(); document.getElementById('modal-instalacao').style.display = 'flex'; }
     function abrirModalDoacao() { fecharModais(); document.getElementById('modal-doacao').style.display = 'flex'; }
@@ -526,10 +487,10 @@
 
     function abrirModalAjudaGlobal() {
         document.getElementById('texto-ajuda-dinamico').innerHTML = `
-            <strong style="color:#2196f3">👤 EU:</strong> Central de dados pessoais. Cadastre contas bancárias para atalhos de PIX.<br><br>
-            <strong style="color:#4caf50">💲 REGISTROS:</strong> Formulário de fluxo de caixa. Insira receitas e despesas.<br><br>
-            <strong style="color:#ffc107">📓 DIÁRIO:</strong> O Livro Razão. Visualize a linha do tempo financeira. Possui controles para edição (✏️) e exclusão (🗑️).<br><br>
-            <strong style="color:#ff5252">📄 RELATÓRIOS:</strong> Cruzamento de dados auditáveis.<br>
+            <p><strong style="color:#2196f3">👤 EU:</strong> Gerencie dados de identificação pessoal e configure contas para cópia rápida de chaves de transferência corporativas.</p><br>
+            <p><strong style="color:#2e7d32">💲 REGISTROS:</strong> Insira entradas e despesas operacionais da sua movimentação financeira de forma isolada.</p><br>
+            <p><strong style="color:#ff9800">📓 DIÁRIO:</strong> Livro razão geral. Realize auditorias cronológicas com permissões completas para alteração e exclusão de itens errados.</p><br>
+            <p><strong style="color:#b71c1c;">📄 RELATÓRIOS:</strong> Consolidadores de movimentação e balanço mensal, preparados para enquadramento automático de impressão em papel.</p>
         `;
         fecharModais();
         document.getElementById('modal-ajuda-global').style.display = 'flex';
@@ -537,98 +498,87 @@
 
     function abrirAjudaImpressao() {
         document.getElementById('texto-ajuda-dinamico').innerHTML = `
-            <strong>🖨️ VISUALIZAÇÃO DE IMPRESSÃO:</strong><br><br>
-            Confirme como os dados sairão no papel. O sistema dimensiona a fonte automaticamente com base no número de colunas geradas para que as informações não sejam cortadas.<br><br>
-            Use o botão laranja para girar a orientação do papel na sua tela (Retrato/Paisagem).<br><br>
-            <strong>Atenção:</strong> Na tela da impressora do seu aparelho, você deve certificar que a opção Paisagem/Retrato esteja igual à selecionada no aplicativo.
+            <strong>🖨️ INTERFACE DE PRÉ-VISUALIZAÇÃO:</strong><br><br>
+            Confirme o enquadramento estrutural dos dados na folha física. O sistema reduz automaticamente a escala da fonte caso localize um grande número de colunas, prevenindo cortes nas margens.<br><br>
+            Use a opção "PAISAGEM/RETRATO" para ajustar a rotação. Lembre-se de alinhar a mesma orientação nas configurações nativas de impressão do dispositivo.
         `;
         document.getElementById('modal-ajuda-global').style.display = 'flex';
     }
 
     function forcarAtualizacao() {
-        if(confirm("Confirma a verificação de atualizações no servidor?")) {
+        if(confirm("Confirma a atualização forçada de cache do aplicativo no servidor?")) {
             window.location.reload(true);
         }
     }
 
     function copiarPixDoacao() {
         const pixKey = "182edc11-4ace-46c1-ad6f-ad3dec83eb32";
-        navigator.clipboard.writeText(pixKey).then(() => {
-            alert("Chave de transferência copiada com sucesso.");
-        }).catch(err => {
-            alert("Acesso à área de transferência negado pelo navegador.");
-        });
+        navigator.clipboard.writeText(pixKey).then(() => { alert("Chave Pix de suporte copiada com sucesso."); }).catch(err => { alert("Recurso bloqueado pelo navegador."); });
+    }
+
+    /* ENCERRAMENTO SEGURO COM AUTO-BACKUP INJETADO */
+    function executarEncerramentoSeguro() {
+        if(confirm("Deseja realizar o encerramento seguro da sessão? Um backup completo em .json será gerado e baixado automaticamente.")) {
+            const stores = ['lancamentos', 'configuracoes', 'clientes', 'estoque', 'vendas'];
+            let cofreFull = {}; let exportadas = 0;
+            stores.forEach(st => {
+                const tx = db.transaction([st], "readonly");
+                tx.objectStore(st).getAll().onsuccess = (e) => {
+                    cofreFull[st] = e.target.result; exportadas++;
+                    if(exportadas === stores.length) {
+                        const dataStr = JSON.stringify(cofreFull, null, 2); 
+                        const blob = new Blob([dataStr], {type: "application/json"}); 
+                        const url = URL.createObjectURL(blob); 
+                        const a = document.createElement('a'); 
+                        a.href = url; a.download = `WEBFIN_${formatarDataBackup()}.json`; 
+                        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+                        
+                        // Inutilização instantânea do Viewport
+                        document.getElementById('app-container').innerHTML = `
+                            <div style="background: #121212; color: #ff5252; height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;">
+                                <div style="font-size: 4rem; margin-bottom: 20px;">❌</div>
+                                <h2 style="font-size: 1.4rem; margin-bottom: 15px; font-weight: bold; text-transform: uppercase; letter-spacing:1px;">Sessão Encerrada</h2>
+                                <p style="font-size: 0.95rem; color: #aaa; line-height: 1.6; max-width: 320px;">O arquivo de backup de segurança foi gerado e enviado ao armazenamento do dispositivo de forma isolada.<br><br><strong style="color: #ff9800;">Para concluir, feche a aba ou arraste a janela do aplicativo para cima.</strong></p>
+                            </div>
+                        `;
+                    }
+                };
+            });
+        }
     }
 
     let tipoForm = 'receita'; function setTipoForm(tipo) { tipoForm = tipo; document.getElementById('form-tipo-receita').classList.remove('active', 'receita'); document.getElementById('form-tipo-despesa').classList.remove('active', 'despesa'); document.getElementById(`form-tipo-${tipo}`).classList.add('active', tipo); }
     function toggleRecorrenciaForm() { const chk = document.getElementById('form-recorrente').checked; document.getElementById('bloco-recorrencia').style.display = chk ? 'block' : 'none'; document.getElementById('grp-data-limite').style.display = chk ? 'block' : 'none'; ajustarLabelsData(); }
     function ajustarLabelsData() { const chk = document.getElementById('form-recorrente').checked; const f = document.getElementById('form-frequencia').value; const lbl = document.getElementById('lbl-data-inicial'); if(!chk) { lbl.innerText = "DATA DO REGISTRO:"; return; } if(f === 'diario') lbl.innerText = "DATA DE INÍCIO:"; if(f === 'semanal') lbl.innerText = "1º REGISTRO:"; if(f === 'mensal') lbl.innerText = "DATA BASE:"; }
-    
-    function definingDatasPadrao() { 
-        const hoje = new Date().toISOString().split('T')[0]; 
-        document.getElementById('form-data-inicio').value = hoje; 
-        document.getElementById('diario-data-de').value = hoje; document.getElementById('diario-data-ate').value = "2026-12-31"; 
-        document.getElementById('dossie-data-de').value = hoje; document.getElementById('dossie-data-ate').value = "2026-12-31"; 
-    }
+    function definingDatasPadrao() { const hoje = new Date().toISOString().split('T')[0]; document.getElementById('form-data-inicio').value = hoje; document.getElementById('diario-data-de').value = hoje; document.getElementById('diario-data-ate').value = "2026-12-31"; document.getElementById('dossie-data-de').value = hoje; document.getElementById('dossie-data-ate').value = "2026-12-31"; }
 
     // ==========================================
-    // MÓDULO EU (COFRE PESSOAL)
+    // MÓDULO EU
     // ==========================================
     let perfilAtual = null;
-
     function carregarModuloEu() {
-        const t = db.transaction(['configuracoes'], "readonly");
-        const s = t.objectStore('configuracoes');
-        
+        const t = db.transaction(['configuracoes'], "readonly"); const s = t.objectStore('configuracoes');
         s.get('perfil').onsuccess = (e) => {
             perfilAtual = e.target.result;
             if(perfilAtual) {
-                document.getElementById('bloco-sem-perfil').style.display = 'none';
-                document.getElementById('bloco-com-perfil').style.display = 'block';
+                document.getElementById('bloco-sem-perfil').style.display = 'none'; document.getElementById('bloco-com-perfil').style.display = 'block';
                 document.getElementById('txt-nome-completo').innerText = `${perfilAtual.nome} ${perfilAtual.sobrenome}`.toUpperCase();
-                document.getElementById('txt-cpf').innerText = perfilAtual.cpf || 'Não informado';
-                document.getElementById('txt-nasc').innerText = formatarDataBR(perfilAtual.nasc) || 'Não informado';
-            } else {
-                document.getElementById('bloco-sem-perfil').style.display = 'block';
-                document.getElementById('bloco-com-perfil').style.display = 'none';
-            }
+                document.getElementById('txt-cpf').innerText = perfilAtual.cpf || 'Não informado'; document.getElementById('txt-nasc').innerText = formatarDataBR(perfilAtual.nasc) || 'Não informado';
+            } else { document.getElementById('bloco-sem-perfil').style.display = 'block'; document.getElementById('bloco-com-perfil').style.display = 'none'; }
         };
-
-        let bancos = [];
-        s.openCursor().onsuccess = (e) => {
-            let c = e.target.result;
-            if(c) {
-                if(c.value.id.startsWith('banco-')) bancos.push(c.value);
-                c.continue();
-            } else { renderizarBancosEu(bancos); }
-        };
+        let bancos = []; s.openCursor().onsuccess = (e) => { let c = e.target.result; if(c) { if(c.value.id.startsWith('banco-')) bancos.push(c.value); c.continue(); } else { renderizarBancosEu(bancos); } };
     }
-
     function abrirModalPerfil(editar = false) {
-        if(editar && perfilAtual) {
-            document.getElementById('perfil-nome').value = perfilAtual.nome; document.getElementById('perfil-sobrenome').value = perfilAtual.sobrenome;
-            document.getElementById('perfil-cpf').value = perfilAtual.cpf; document.getElementById('perfil-nasc').value = perfilAtual.nasc;
-        } else {
-            document.getElementById('perfil-nome').value = ''; document.getElementById('perfil-sobrenome').value = ''; document.getElementById('perfil-cpf').value = ''; document.getElementById('perfil-nasc').value = '';
-        }
+        if(editar && perfilAtual) { document.getElementById('perfil-nome').value = perfilAtual.nome; document.getElementById('perfil-sobrenome').value = perfilAtual.sobrenome; document.getElementById('perfil-cpf').value = perfilAtual.cpf; document.getElementById('perfil-nasc').value = perfilAtual.nasc; }
+        else { document.getElementById('perfil-nome').value = ''; document.getElementById('perfil-sobrenome').value = ''; document.getElementById('perfil-cpf').value = ''; document.getElementById('perfil-nasc').value = ''; }
         document.getElementById('modal-perfil').style.display = 'flex';
     }
-
     function salvarPerfil() {
-        const nome = document.getElementById('perfil-nome').value.trim(); const sobrenome = document.getElementById('perfil-sobrenome').value.trim();
-        const cpf = document.getElementById('perfil-cpf').value.trim(); const nasc = document.getElementById('perfil-nasc').value;
-        if(!nome || !sobrenome) { alert("Os campos Nome e Sobrenome são obrigatórios."); return; }
-        const t = db.transaction(['configuracoes'], "readwrite");
-        t.objectStore('configuracoes').put({ id: 'perfil', nome, sobrenome, cpf, nasc });
-        t.oncomplete = () => { fecharModais(); carregarModuloEu(); };
+        const nome = document.getElementById('perfil-nome').value.trim(); const sobrenome = document.getElementById('perfil-sobrenome').value.trim(); const cpf = document.getElementById('perfil-cpf').value.trim(); const nasc = document.getElementById('perfil-nasc').value;
+        if(!nome || !sobrenome) { alert("Os campos de identificação nominal são obrigatórios."); return; }
+        const t = db.transaction(['configuracoes'], "readwrite"); t.objectStore('configuracoes').put({ id: 'perfil', nome, sobrenome, cpf, nasc }); t.oncomplete = () => { fecharModais(); carregarModuloEu(); };
     }
-
-    function apagarPerfil() {
-        if(confirm("Deseja remover seus dados de identificação base do sistema?")) {
-            const t = db.transaction(['configuracoes'], "readwrite"); t.objectStore('configuracoes').delete('perfil'); t.oncomplete = () => { carregarModuloEu(); };
-        }
-    }
-
+    function apagarPerfil() { if(confirm("Deseja remover as informações base de perfil?")) { const t = db.transaction(['configuracoes'], "readwrite"); t.objectStore('configuracoes').delete('perfil'); t.oncomplete = () => { carregarModuloEu(); }; } }
     function abrirModalBanco(idBanco = null) {
         if(idBanco) {
             db.transaction(['configuracoes'], "readonly").objectStore('configuracoes').get(idBanco).onsuccess = (e) => {
@@ -636,69 +586,52 @@
                 document.getElementById('banco-ag').value = b.agencia; document.getElementById('banco-cc').value = b.conta; document.getElementById('banco-pix').value = b.pix;
                 document.getElementById('modal-banco').style.display = 'flex';
             };
-        } else {
-            document.getElementById('banco-id').value = ''; document.getElementById('banco-nome').value = ''; document.getElementById('banco-ag').value = '';
-            document.getElementById('banco-cc').value = ''; document.getElementById('banco-pix').value = ''; document.getElementById('modal-banco').style.display = 'flex';
-        }
+        } else { document.getElementById('banco-id').value = ''; document.getElementById('banco-nome').value = ''; document.getElementById('banco-ag').value = ''; document.getElementById('banco-cc').value = ''; document.getElementById('banco-pix').value = ''; document.getElementById('modal-banco').style.display = 'flex'; }
     }
-
     function salvarBanco() {
         let id = document.getElementById('banco-id').value; if(!id) id = 'banco-' + Date.now();
-        const banco = document.getElementById('banco-nome').value.trim().toUpperCase(); const agencia = document.getElementById('banco-ag').value.trim();
-        const conta = document.getElementById('banco-cc').value.trim(); const pix = document.getElementById('banco-pix').value.trim();
-        if(!banco || !pix) { alert("É necessário preencher a Instituição e a Chave PIX."); return; }
-        const t = db.transaction(['configuracoes'], "readwrite");
-        t.objectStore('configuracoes').put({ id, banco, agencia, conta, pix });
-        t.oncomplete = () => { fecharModais(); carregarModuloEu(); };
+        const banco = document.getElementById('banco-nome').value.trim().toUpperCase(); const agencia = document.getElementById('banco-ag').value.trim(); const conta = document.getElementById('banco-cc').value.trim(); const pix = document.getElementById('banco-pix').value.trim();
+        if(!banco || !pix) { alert("Os campos Banco e Chave Pix são obrigatórios."); return; }
+        const t = db.transaction(['configuracoes'], "readwrite"); t.objectStore('configuracoes').put({ id, banco, agencia, conta, pix }); t.oncomplete = () => { fecharModais(); carregarModuloEu(); };
     }
-
     function renderizarBancosEu(bancos) {
-        const lista = document.getElementById('lista-bancos-eu');
-        if(bancos.length === 0) { lista.innerHTML = `<p style="color:#666; font-size:0.8rem;">Nenhum registro bancário localizado.</p>`; return; }
-        let html = '';
-        bancos.forEach(b => {
-            html += `<div class="dados-box" style="padding: 10px; margin-bottom: 10px; border-color: #444; text-align: left;">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 5px;">
-                    <strong style="color: #fff;">🏦 ${b.banco}</strong>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn-acao" style="font-size: 1rem;" onclick="copiarDadosBanco('${b.id}')">📋</button>
-                        <button class="btn-acao" style="font-size: 1rem;" onclick="abrirModalBanco('${b.id}')">✏️</button>
-                        <button class="btn-acao" style="font-size: 1rem;" onclick="apagarBanco('${b.id}')">🗑️</button>
+        const lista = document.getElementById('lista-bancos-eu'); if(bancos.length === 0) { lista.innerHTML = `<p style="color:#666; font-size:0.85rem;">Nenhuma instituição financeira catalogada.</p>`; return; }
+        let html = ''; bancos.forEach(b => {
+            html += `<div class="dados-box" style="padding: 12px; margin-bottom: 10px; border-color:#1b5e20;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 5px;">
+                    <strong style="color: #1b5e20;">🏦 ${b.banco}</strong>
+                    <div style="display: flex; gap: 10px;">
+                        <button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="copiarDadosBanco('${b.id}')">📋</button>
+                        <button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="abrirModalBanco('${b.id}')">✏️</button>
+                        <button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="apagarBanco('${b.id}')">🗑️</button>
                     </div>
                 </div>
-                <div style="font-size: 0.8rem; color: #aaa;">
-                    <p>Ag: ${b.agencia || '-'} | CC: ${b.conta || '-'}</p><p style="color: #4caf50; font-weight: bold; margin-top: 3px;">PIX: ${b.pix}</p>
+                <div style="font-size: 0.8rem; color: #333;">
+                    <p>Ag: ${b.agencia || '-'} | CC: ${b.conta || '-'}</p><p style="color: #2e7d32; font-weight: bold; margin-top: 3px;">PIX: ${b.pix}</p>
                 </div></div>`;
-        });
-        lista.innerHTML = html;
+        }); lista.innerHTML = html;
     }
-
-    function apagarBanco(id) {
-        if(confirm("Confirmar a exclusão desta conta bancária?")) { const t = db.transaction(['configuracoes'], "readwrite"); t.objectStore('configuracoes').delete(id); t.oncomplete = () => { carregarModuloEu(); }; }
-    }
-
+    function apagarBanco(id) { if(confirm("Confirmar a exclusão dos parâmetros desta conta?")) { const t = db.transaction(['configuracoes'], "readwrite"); t.objectStore('configuracoes').delete(id); t.oncomplete = () => { carregarModuloEu(); }; } }
     function copiarDadosBanco(idBanco) {
-        if(!perfilAtual) { alert("Configure seu Perfil de Identificação primeiro."); return; }
+        if(!perfilAtual) { alert("Cadastre os dados de perfil base antes de gerar cópias."); return; }
         db.transaction(['configuracoes'], "readonly").objectStore('configuracoes').get(idBanco).onsuccess = (e) => {
             let b = e.target.result; if(!b) return;
-            let texto = `*DADOS BANCÁRIOS*\nTitular: ${perfilAtual.nome} ${perfilAtual.sobrenome}\nInstituição: ${b.banco}\n`;
-            if(b.agencia) texto += `Agência: ${b.agencia}\n`;
-            if(b.conta) texto += `Conta: ${b.conta}\n`;
-            texto += `*Chave PIX: ${b.pix}*`;
-            navigator.clipboard.writeText(texto).then(() => { alert("Informações de transferência copiadas."); }).catch(err => { alert("Permissão de área de transferência negada."); });
+            let texto = `*DADOS DE TRANSFERÊNCIA COMPLETO*\nTitular: ${perfilAtual.nome} ${perfilAtual.sobrenome}\nBanco: ${b.banco}\n`;
+            if(b.agencia) texto += `Agência: ${b.agencia}\n`; if(b.conta) texto += `Conta: ${b.conta}\n`; texto += `*Chave Pix: ${b.pix}*`;
+            navigator.clipboard.writeText(texto).then(() => { alert("Estrutura de transferência enviada para a área de transferência."); }).catch(err => { alert("Acesso bloqueado."); });
         };
     }
 
     // ==========================================
-    // REGISTROS E DIÁRIO
+    // FLUXO DE REGISTROS E DIÁRIO
     // ==========================================
     function capturarEMandarProBanco() {
         const nome = document.getElementById('form-nome').value.trim().toUpperCase(); const dIni = document.getElementById('form-data-inicio').value; const dLim = document.getElementById('form-data-limite').value; const val = parseFloat(document.getElementById('form-valor').value); const rec = document.getElementById('form-recorrente').checked; const freq = document.getElementById('form-frequencia').value;
-        if(!nome || !dIni || isNaN(val) || val <= 0) { alert("Por favor, verifique os campos do formulário."); return; }
+        if(!nome || !dIni || isNaN(val) || val <= 0) { alert("Por favor, preencha os dados do registro em conformidade."); return; }
         const t = db.transaction(['lancamentos'], "readwrite"); const s = t.objectStore('lancamentos'); const loteId = "LOTE-" + Date.now();
         if (!rec) { s.add({ id: `${dIni.replace(/-/g,'')}-${nome}-${Date.now()}`, lote: loteId, data: dIni, nome: nome, valor: val, tipo: tipoForm }); } 
         else {
-            if(!dLim) { alert("A data limite é necessária para repetições."); return; }
+            if(!dLim) { alert("A definição de data limite é obrigatória."); return; }
             let dAtual = new Date(dIni + 'T00:00:00'); let dFim = new Date(dLim + 'T00:00:00'); let diaOriginal = dAtual.getDate();
             while(dAtual <= dFim) {
                 let dFmt = dAtual.toISOString().split('T')[0]; s.add({ id: `${dFmt.replace(/-/g,'')}-${nome}-${Math.random().toString(36).substr(2, 5)}`, lote: loteId, data: dFmt, nome: nome, valor: val, tipo: tipoForm });
@@ -706,33 +639,23 @@
                 else if(freq === 'mensal') { let mesOrig = dAtual.getMonth(); dAtual.setMonth(dAtual.getMonth() + 1); dAtual.setDate(diaOriginal); if (dAtual.getMonth() !== (mesOrig + 1) % 12) dAtual.setDate(0); }
             }
         }
-        t.oncomplete = () => { alert("Informação salva na base de dados."); document.getElementById('form-nome').value = ''; document.getElementById('form-valor').value = ''; carregarDatalistSugestoes(); };
+        t.oncomplete = () => { alert("Transação armazenada com sucesso."); document.getElementById('form-nome').value = ''; document.getElementById('form-valor').value = ''; carregarDatalistSugestoes(); };
     }
     function carregarDatalistSugestoes() { const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); const n = new Set(); s.openCursor().onsuccess = (e) => { let c = e.target.result; if(c) { n.add(c.value.nome); c.continue(); } else { const dl = document.getElementById('lista-contas'); dl.innerHTML = ''; n.forEach(x => dl.innerHTML += `<option value="${x}">`); } }; }
 
     function carregarDiario() {
-        const de = document.getElementById('diario-data-de').value; const ate = document.getElementById('diario-data-ate').value;
-        const verRec = document.getElementById('chk-diario-receita').checked; const verDes = document.getElementById('chk-diario-despesa').checked;
-        if(!de || !ate) return;
-        const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); let reg = [];
+        const de = document.getElementById('diario-data-de').value; const ate = document.getElementById('diario-data-ate').value; const verRec = document.getElementById('chk-diario-receita').checked; const verDes = document.getElementById('chk-diario-despesa').checked;
+        if(!de || !ate) return; const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); let reg = [];
         s.openCursor().onsuccess = (e) => {
-            let c = e.target.result;
-            if(c) { let r = c.value; if(r.data >= de && r.data <= ate) { if((verRec && r.tipo === 'receita') || (verDes && r.tipo === 'despesa')) { reg.push(r); } } c.continue(); }
+            let c = e.target.result; if(c) { let r = c.value; if(r.data >= de && r.data <= ate) { if((verRec && r.tipo === 'receita') || (verDes && r.tipo === 'despesa')) { reg.push(r); } } c.continue(); }
             else { reg.sort((a,b) => a.data.localeCompare(b.data)); renderizarHTMLDiario(reg); }
         };
     }
     function renderizarHTMLDiario(reg) {
-        const lista = document.getElementById('diario-lista');
-        if(reg.length === 0) { lista.innerHTML = `<p style="text-align: center; color: #666; margin-top: 30px;">[ Nenhum registro localizado. ]</p>`; return; }
-        let html = '';
-        reg.forEach(r => { let corV = r.tipo === 'receita' ? '#4caf50' : '#ff5252'; html += `<div class="diario-item ${r.tipo}"><div class="diario-info"><div class="diario-data">${formatarDataBR(r.data)}</div><div class="diario-nome">${r.nome}</div><div class="diario-valor" style="color: ${corV};">${formatarMoeda(r.valor)}</div></div><div class="diario-acoes"><button class="btn-acao" onclick="abrirModalEditarDiario('${r.id}')">✏️</button><button class="btn-acao" onclick="apagarLancamentoDiario('${r.id}')">🗑️</button></div></div>`; });
-        lista.innerHTML = html;
+        const lista = document.getElementById('diario-lista'); if(reg.length === 0) { lista.innerHTML = `<p style="text-align: center; color: #1b5e20; margin-top: 30px;">[ Base limpa. Sem registros no escopo ]</p>`; return; }
+        let html = ''; reg.forEach(r => { let corV = r.tipo === 'receita' ? '#2e7d32' : '#c62828'; html += `<div class="diario-item ${r.tipo}"><div class="diario-info"><div class="diario-data">${formatarDataBR(r.data)}</div><div class="diario-nome">${r.nome}</div><div class="diario-valor" style="color: ${corV};">${formatarMoeda(r.valor)}</div></div><div class="diario-acoes"><button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="abrirModalEditarDiario('${r.id}')">✏️</button><button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="apagarLancamentoDiario('${r.id}')">🗑️</button></div></div>`; }); lista.innerHTML = html;
     }
-    function apagarLancamentoDiario(id) {
-        if(confirm("O registro será removido permanentemente. Continuar?")) {
-            const t = db.transaction(['lancamentos'], "readwrite"); t.objectStore('lancamentos').delete(id); t.oncomplete = () => { carregarDiario(); carregarDatalistSugestoes(); };
-        }
-    }
+    function apagarLancamentoDiario(id) { if(confirm("Confirmar a remoção definitiva do lançamento do diário?")) { const t = db.transaction(['lancamentos'], "readwrite"); t.objectStore('lancamentos').delete(id); t.oncomplete = () => { carregarDiario(); carregarDatalistSugestoes(); }; } }
     function abrirModalEditarDiario(id) {
         const t = db.transaction(['lancamentos'], "readonly"); const req = t.objectStore('lancamentos').get(id);
         req.onsuccess = () => {
@@ -743,185 +666,129 @@
         };
     }
     function salvarEdicaoDiario() {
-        const id = document.getElementById('edit-id').value; const tipo = document.getElementById('edit-tipo').value; const lote = document.getElementById('edit-lote').value;
-        const data = document.getElementById('edit-data').value; const nome = document.getElementById('edit-nome').value.trim().toUpperCase(); const valor = parseFloat(document.getElementById('edit-valor').value);
-        if(!nome || !data || isNaN(valor) || valor <= 0) { alert("Verifique os valores informados."); return; }
-        const t = db.transaction(['lancamentos'], "readwrite");
-        t.objectStore('lancamentos').put({ id: id, lote: lote, data: data, nome: nome, valor: valor, tipo: tipo });
-        t.oncomplete = () => { fecharModais(); carregarDiario(); carregarDatalistSugestoes(); };
+        const id = document.getElementById('edit-id').value; const tipo = document.getElementById('edit-tipo').value; const lote = document.getElementById('edit-lote').value; const data = document.getElementById('edit-data').value; const nome = document.getElementById('edit-nome').value.trim().toUpperCase(); const valor = parseFloat(document.getElementById('edit-valor').value);
+        if(!nome || !data || isNaN(valor) || valor <= 0) { alert("Valores inconsistentes."); return; }
+        const t = db.transaction(['lancamentos'], "readwrite"); t.objectStore('lancamentos').put({ id: id, lote: lote, data: data, nome: nome, valor: valor, tipo: tipo }); t.oncomplete = () => { fecharModais(); carregarDiario(); carregarDatalistSugestoes(); };
     }
 
     // ==========================================
-    // RELATÓRIOS E PRINT PREVIEW
+    // RELATÓRIOS E MESA DE IMPRESSÃO
     // ==========================================
     let htmlDossieAtual = '';
-    
     function gerarRelatorioDossie() {
         const de = document.getElementById('dossie-data-de').value; const ate = document.getElementById('dossie-data-ate').value; const tipo = document.getElementById('dossie-tipo').value;
-        if(!de || !ate) return;
-        const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); let reg = []; let tR = 0; let tD = 0;
+        if(!de || !ate) return; const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); let reg = []; let tR = 0; let tD = 0;
         s.openCursor().onsuccess = (e) => {
-            let c = e.target.result;
-            if(c) { let r = c.value; if(r.data >= de && r.data <= ate && (tipo === 'todos' || r.tipo === tipo)) { reg.push(r); if(r.tipo === 'receita') tR += r.valor; if(r.tipo === 'despesa') tD += r.valor; } c.continue(); }
+            let c = e.target.result; if(c) { let r = c.value; if(r.data >= de && r.data <= ate && (tipo === 'todos' || r.tipo === tipo)) { reg.push(r); if(r.tipo === 'receita') tR += r.valor; if(r.tipo === 'despesa') tD += r.valor; } c.continue(); }
             else { renderizarHTMLDossie(reg, tR, tD, de, ate); }
         };
     }
-    
     function gerarHTMLTabelaDinamica(reg, corBorda, corTextoBase) {
-        if(reg.length === 0) return `<p style="text-align: center; color: #666; margin-top: 20px;">[ Dados insuficientes ]</p>`;
-        let datas = [...new Set(reg.map(r => r.data))].sort((a,b) => a.localeCompare(b));
-        let contas = [...new Set(reg.map(r => r.nome))].sort();
+        if(reg.length === 0) return `<p style="text-align: center; color: #666; margin-top: 20px;">[ Sem movimentações registradas ]</p>`;
+        let datas = [...new Set(reg.map(r => r.data))].sort((a,b) => a.localeCompare(b)); let contas = [...new Set(reg.map(r => r.nome))].sort();
+        let headerBg = (corTextoBase === '#000') ? '#f2f2f2' : 'rgba(255,255,255,0.1)';
         
-        let headerBg = (corTextoBase === '#000') ? '#f0f0f0' : 'rgba(100,100,100,0.1)';
-        
-        let dynamicFontSize = '0.8rem';
-        if (contas.length > 3) dynamicFontSize = '0.7rem';
-        if (contas.length > 5) dynamicFontSize = '0.6rem';
-        if (contas.length > 7) dynamicFontSize = '0.5rem';
-        
-        let table = `<div style="width: 100%; overflow-x: auto;"><table style="width: 100%; border-collapse: collapse; font-size: ${dynamicFontSize}; text-align: center; color: ${corTextoBase}; table-layout: auto;">`;
-        table += `<thead><tr style="background: ${headerBg};"><th style="padding: 6px 4px; border: 1px solid ${corBorda};">DATA</th>`;
-        contas.forEach(c => table += `<th style="padding: 6px 4px; border: 1px solid ${corBorda};">${c}</th>`);
-        table += `</tr></thead><tbody>`;
-        datas.forEach(d => {
-            table += `<tr><td style="padding: 6px 4px; border: 1px solid ${corBorda}; white-space: nowrap;">${formatarDataBR(d)}</td>`;
-            contas.forEach(c => {
-                let sum = reg.filter(r => r.data === d && r.nome === c).reduce((acc, curr) => acc + curr.valor, 0);
-                let valStr = sum > 0 ? formatarMoeda(sum) : '-';
-                let tipo = reg.find(r => r.nome === c)?.tipo;
-                let color = sum > 0 ? (tipo === 'receita' ? '#4caf50' : '#ff5252') : corTextoBase;
-                if(corTextoBase === '#000' && sum > 0) color = (tipo === 'receita' ? '#1b5e20' : '#b71c1c');
-                table += `<td style="padding: 6px 4px; border: 1px solid ${corBorda}; color: ${color}; word-wrap: break-word;">${valStr}</td>`;
-            });
-            table += `</tr>`;
-        });
-        table += `</tbody></table></div>`;
-        return table;
-    }
+        // AUTO SCALE DINÂMICO DE FONTE CONFORME O VOLUME DE COLUNAS
+        let fontScale = '0.85rem';
+        if(contas.length > 3) fontScale = '0.7rem'; if(contas.length > 5) fontScale = '0.55rem'; if(contas.length > 7) fontScale = '0.45rem';
 
+        let table = `<div style="width: 100%; overflow-x: auto;"><table style="width: 100%; border-collapse: collapse; font-size: ${fontScale}; text-align: center; color: ${corTextoBase};">`;
+        table += `<thead><tr style="background: ${headerBg};"><th style="padding: 6px; border: 1px solid ${corBorda};">DATA</th>`;
+        contas.forEach(c => table += `<th style="padding: 6px; border: 1px solid ${corBorda};">${c}</th>`); table += `</tr></thead><tbody>`;
+        datas.forEach(d => {
+            table += `<tr><td style="padding: 6px; border: 1px solid ${corBorda}; white-space: nowrap;">${formatarDataBR(d)}</td>`;
+            contas.forEach(c => {
+                let sum = reg.filter(r => r.data === d && r.nome === c).reduce((acc, curr) => acc + curr.valor, 0); let valStr = sum > 0 ? formatarMoeda(sum) : '-';
+                let tipo = reg.find(r => r.nome === c)?.tipo; let color = sum > 0 ? (tipo === 'receita' ? '#2e7d32' : '#c62828') : corTextoBase;
+                if(corTextoBase === '#000' && sum > 0) color = (tipo === 'receita' ? '#1b5e20' : '#b71c1c');
+                table += `<td style="padding: 6px; border: 1px solid ${corBorda}; color: ${color}; font-weight: bold;">${valStr}</td>`;
+            }); table += `</tr>`;
+        }); table += `</tbody></table></div>`; return table;
+    }
     function renderizarHTMLDossie(reg, tR, tD, de, ate) {
         document.getElementById('dossie-resumo').style.display = 'grid'; document.getElementById('resumo-receitas').innerText = formatarMoeda(tR); document.getElementById('resumo-despesas').innerText = formatarMoeda(tD);
         let s = tR - tD; let pS = document.getElementById('resumo-saldo'); pS.innerText = formatarMoeda(s);
         pS.classList.remove('text-green', 'text-red', 'text-white'); if(s > 0) pS.classList.add('text-green'); else if(s < 0) pS.classList.add('text-red'); else pS.classList.add('text-white');
-        
-        document.getElementById('lista-dossie').innerHTML = gerarHTMLTabelaDinamica(reg, '#555', '#fff');
-
+        document.getElementById('lista-dossie').innerHTML = gerarHTMLTabelaDinamica(reg, '#1b5e20', '#121212');
         if(reg.length > 0) {
             document.getElementById('btn-visualizar-impressao').style.display = 'block';
             htmlDossieAtual = `
-                <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">
-                    <h1 style="margin-bottom: 5px;">RELATÓRIO FINANCEIRO</h1>
-                    <p style="color: #333;">Período: ${formatarDataBR(de)} a ${formatarDataBR(ate)}</p>
+                <div style="text-align: center; margin-bottom: 25px; border-bottom: 3px solid #000; padding-bottom: 12px;">
+                    <h2 style="font-size: 1.6rem; letter-spacing:1px; margin-bottom: 5px;">DEMONSTRATIVO FINANCEIRO CONSOLIDADO</h2>
+                    <p style="font-size:0.9rem; font-weight:bold; color: #333;">Intervalo de Competência: ${formatarDataBR(de)} até ${formatarDataBR(ate)}</p>
                 </div>
-                <table style="width: 100%; margin-bottom: 20px; text-align: center; border-collapse: collapse; font-weight: bold; font-size: 0.9rem;">
+                <table style="width: 100%; margin-bottom: 25px; text-align: center; border-collapse: collapse; font-weight: bold; font-size: 0.9rem;">
                     <tr>
-                        <td style="border: 1px solid #ccc; padding: 10px; background: #e8f5e9;">ENTRADAS<br><span style="color: #1b5e20;">${formatarMoeda(tR)}</span></td>
-                        <td style="border: 1px solid #ccc; padding: 10px; background: #ffebee;">SAÍDAS<br><span style="color: #b71c1c;">${formatarMoeda(tD)}</span></td>
-                        <td style="border: 1px solid #ccc; padding: 10px; background: #f5f5f5;">SALDO<br><span style="color: ${(tR-tD) >= 0 ? '#1b5e20' : '#b71c1c'}">${formatarMoeda(tR-tD)}</span></td>
+                        <td style="border: 1px solid #000; padding: 12px; background: #e8f5e9;">BALANÇO POSITIVO (CREDITADO)<br><span style="color: #1b5e20; font-size:1.1rem;">${formatarMoeda(tR)}</span></td>
+                        <td style="border: 1px solid #000; padding: 12px; background: #ffebee;">BALANÇO NEGATIVO (DEBITADO)<br><span style="color: #b71c1c; font-size:1.1rem;">${formatarMoeda(tD)}</span></td>
+                        <td style="border: 1px solid #000; padding: 12px; background: #f5f5f5;">SALDO LÍQUIDO ATUARIAL<br><span style="color: ${(tR-tD) >= 0 ? '#1b5e20' : '#b71c1c'}; font-size:1.1rem;">${formatarMoeda(tR-tD)}</span></td>
                     </tr>
                 </table>
-                ${gerarHTMLTabelaDinamica(reg, '#ccc', '#000')}
+                ${gerarHTMLTabelaDinamica(reg, '#000000', '#000000')}
             `;
-        } else {
-            document.getElementById('btn-visualizar-impressao').style.display = 'none';
-        }
+        } else { document.getElementById('btn-visualizar-impressao').style.display = 'none'; }
+    }
+    function abrirPreviewImpressao() { if(!htmlDossieAtual) return; isLandscape = false; document.getElementById('btn-orientacao').innerText = 'PAISAGEM'; document.getElementById('style-orientacao').innerHTML = `@page { size: portrait; margin: 10mm; }`; document.getElementById('view-print-preview').classList.remove('landscape'); document.getElementById('print-preview-content').innerHTML = htmlDossieAtual; abrirApp('view-print-preview'); }
+    function toggleOrientacao() { isLandscape = !isLandscape; document.getElementById('btn-orientacao').innerText = isLandscape ? 'RETRATO' : 'PAISAGEM'; document.getElementById('style-orientacao').innerHTML = `@page { size: ${isLandscape ? 'landscape' : 'portrait'}; margin: 10mm; }`; if(isLandscape) { document.getElementById('view-print-preview').classList.add('landscape'); } else { document.getElementById('view-print-preview').classList.remove('landscape'); } }
+
+    // ==========================================
+    // ENGRENAGENS DE GRÁFICOS
+    // ==========================================
+    function atualizarPainelContas() {
+        const de = document.getElementById('radar-data-de').value; const ate = document.getElementById('radar-data-ate').value; if(!de || !ate) return;
+        const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); let conj = {};
+        s.openCursor().onsuccess = (e) => {
+            let c = e.target.result; if(c) { if(c.value.data >= de && c.value.data <= ate) conj[c.value.nome] = c.value.tipo; c.continue(); }
+            else { const p = document.getElementById('painel-checkboxes'); p.innerHTML = ''; Object.keys(conj).sort().forEach(n => { p.innerHTML += `<label class="cb-item" style="background:#fff; border:1px solid #1b5e20; color:#1b5e20; font-weight:bold; border-left: 5px solid ${conj[n] === 'receita' ? '#2e7d32' : '#c62828'}"><input type="checkbox" class="radar-cb-conta" data-nome="${n}" data-tipo="${conj[n]}" checked> ${n}</label>`; }); }
+        };
+    }
+    function selecionarMassa(tipo) { document.querySelectorAll('.radar-cb-conta').forEach(cb => { if(cb.getAttribute('data-tipo') === tipo) cb.checked = true; }); }
+    function limparSelecaoMassa() { document.querySelectorAll('.radar-cb-conta').forEach(cb => cb.checked = false); }
+    function verificarTravaGrafico() { const g = document.getElementById('radar-agrupamento').value; const s = document.getElementById('radar-tipo-grafico'); if(g !== 'geral') { document.getElementById('opt-radar').disabled = true; document.getElementById('opt-pie').disabled = true; if(s.value === 'radar' || s.value === 'pie') s.value = 'line'; } else { document.getElementById('opt-radar').disabled = false; document.getElementById('opt-pie').disabled = false; } }
+    let chartInstance = null; function obterSegunda(dStr) { let d=new Date(dStr+'T00:00:00'); let dia=d.getDay(); let diff=d.getDate()-dia+(dia==0?-6:1); return new Date(d.setDate(diff)).toISOString().split('T')[0]; }
+    function renderizarGraficoAvancado() {
+        const de = document.getElementById('radar-data-de').value; const ate = document.getElementById('radar-data-ate').value; const agp = document.getElementById('radar-agrupamento').value; const mod = document.getElementById('radar-tipo-grafico').value;
+        let contas = []; document.querySelectorAll('.radar-cb-conta:checked').forEach(cb => contas.push(cb.getAttribute('data-nome'))); const ctx = document.getElementById('canvasRadar').getContext('2d'); if(chartInstance) chartInstance.destroy(); if(contas.length===0) { ctx.clearRect(0,0,400,400); return; }
+        const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); let reg = [];
+        s.openCursor().onsuccess = (e) => {
+            let c = e.target.result; if(c) { if(c.value.data >= de && c.value.data <= ate && contas.includes(c.value.nome)) reg.push(c.value); c.continue(); }
+            else { let chartData = compilarDadosGrafico(agp, contas, reg, '#121212', '#1b5e20'); chartInstance = new Chart(ctx, { type: mod, data: chartData.data, options: { responsive: true, maintainAspectRatio: false, plugins: chartData.plugins, scales: chartData.scales } }); }
+        };
     }
 
-    /* SISTEMA DE ROTAÇÃO E PREVIEW A4 */
-    let isLandscape = false;
-    
-    function abrirPreviewImpressao() {
-        if(!htmlDossieAtual) return;
-        isLandscape = false;
-        document.getElementById('btn-orientacao').innerText = 'PAISAGEM';
-        document.getElementById('style-orientacao').innerHTML = `@page { size: portrait; margin: 10mm; }`;
-        document.getElementById('view-print-preview').classList.remove('landscape');
-        document.getElementById('print-preview-content').innerHTML = htmlDossieAtual;
-        abrirApp('view-print-preview');
-    }
-
-    function toggleOrientacao() {
-        isLandscape = !isLandscape;
-        document.getElementById('btn-orientacao').innerText = isLandscape ? 'RETRATO' : 'PAISAGEM';
-        document.getElementById('style-orientacao').innerHTML = `@page { size: ${isLandscape ? 'landscape' : 'portrait'}; margin: 10mm; }`;
-        
-        if(isLandscape) {
-            document.getElementById('view-print-preview').classList.add('landscape');
-        } else {
-            document.getElementById('view-print-preview').classList.remove('landscape');
-        }
-    }
-
-    /* CALCULADORA */
+    // --- CALCULADORA ---
     function calcInput(val) { const d = document.getElementById('calc-display'); if (d.value === 'Erro') d.value = ''; d.value += val; }
     function calcAction(action) {
-        const d = document.getElementById('calc-display');
-        if (d.value === 'Erro') d.value = '';
-        if (action === 'clear') { d.value = ''; } else if (action === 'back') { d.value = d.value.slice(0, -1); } else if (action === 'eval') {
+        const d = document.getElementById('calc-display'); if (d.value === 'Erro') d.value = ''; if (action === 'clear') { d.value = ''; } else if (action === 'back') { d.value = d.value.slice(0, -1); } else if (action === 'eval') {
             try { let exp = d.value.replace(/,/g, '.').replace(/÷/g, '/').replace(/×/g, '*'); if (exp.trim() === '') return; let res = eval(exp); d.value = Number.isInteger(res) ? res : parseFloat(res.toFixed(4)); } catch (e) { d.value = 'Erro'; }
         }
     }
 
-    /* GESTÃO DE DADOS */
-    function formatarDataBackup() {
-        let d = new Date(); let aa = d.getFullYear().toString().slice(-2); let mm = ('0' + (d.getMonth() + 1)).slice(-2);
-        let dd = ('0' + d.getDate()).slice(-2); let hh = ('0' + d.getHours()).slice(-2); let min = ('0' + d.getMinutes()).slice(-2);
-        return `${aa}${mm}${dd}${hh}${min}`;
-    }
-
+    // --- MANIPULAÇÃO DE COFRE DE DADOS ---
+    function formatarDataBackup() { let d = new Date(); let aa = d.getFullYear().toString().slice(-2); let mm = ('0' + (d.getMonth() + 1)).slice(-2); let dd = ('0' + d.getDate()).slice(-2); let hh = ('0' + d.getHours()).slice(-2); let min = ('0' + d.getMinutes()).slice(-2); return `${aa}${mm}${dd}${hh}${min}`; }
     function exportarBackup() {
-        const stores = ['lancamentos', 'configuracoes', 'clientes', 'estoque', 'vendas'];
-        let cofreFull = {}; let exportadas = 0;
+        const stores = ['lancamentos', 'configuracoes', 'clientes', 'estoque', 'vendas']; let cofreFull = {}; let exportadas = 0;
         stores.forEach(st => {
-            const tx = db.transaction([st], "readonly");
-            tx.objectStore(st).getAll().onsuccess = (e) => {
-                cofreFull[st] = e.target.result; exportadas++;
-                if(exportadas === stores.length) dispararDownloadJson(cofreFull);
-            };
+            db.transaction([st], "readonly").objectStore(st).getAll().onsuccess = (e) => { cofreFull[st] = e.target.result; exportadas++; if(exportadas === stores.length) dispararDownloadJson(cofreFull); };
         });
     }
-
     function dispararDownloadJson(dados) {
-        if(dados.lancamentos.length === 0 && dados.configuracoes.length === 0) { alert("Nenhum dado encontrado para exportação."); return; }
-        const dataStr = JSON.stringify(dados, null, 2); const blob = new Blob([dataStr], {type: "application/json"}); 
-        const url = URL.createObjectURL(blob); const a = document.createElement('a'); 
-        a.href = url; a.download = `WEBFIN_${formatarDataBackup()}.json`; 
-        document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+        if(dados.lancamentos.length === 0 && dados.configuracoes.length === 0) { alert("Nenhum dado localizado para exportação."); return; }
+        const dataStr = JSON.stringify(dados, null, 2); const blob = new Blob([dataStr], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `WEBFIN_${formatarDataBackup()}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
     }
-
     function processarImportacao(event) {
         const file = event.target.files[0]; if(!file) return; const reader = new FileReader();
         reader.onload = function(e) {
             try {
-                const dados = JSON.parse(e.target.result); 
-                let importData = Array.isArray(dados) ? { lancamentos: dados } : dados;
-
-                if(!confirm("Aviso: Isso substituirá todos os dados atuais. Confirma a restauração?")) return;
-                document.getElementById('loading-pdf').style.display = 'flex'; 
-                
-                const stores = ['lancamentos', 'configuracoes', 'clientes', 'estoque', 'vendas'];
-                const t = db.transaction(stores, "readwrite"); 
-                
-                stores.forEach(st => {
-                    const s = t.objectStore(st);
-                    s.clear().onsuccess = () => { if(importData[st]) importData[st].forEach(r => s.add(r)); };
-                });
-
-                t.oncomplete = () => { document.getElementById('loading-pdf').style.display = 'none'; alert("Base de dados restaurada com sucesso."); carregarDatalistSugestoes(); };
-            } catch(err) { alert("Arquivo corrompido ou formato não suportado."); document.getElementById('loading-pdf').style.display = 'none';}
+                const dados = JSON.parse(e.target.result); let importData = Array.isArray(dados) ? { lancamentos: dados } : dados;
+                if(!confirm("Aviso: Essa operação substituirá integralmente os dados do dispositivo. Prosseguir?")) return;
+                document.getElementById('loading-pdf').style.display = 'flex'; const stores = ['lancamentos', 'configuracoes', 'clientes', 'estoque', 'vendas']; const t = db.transaction(stores, "readwrite");
+                stores.forEach(st => { const s = t.objectStore(st); s.clear().onsuccess = () => { if(importData[st]) importData[st].forEach(r => s.add(r)); }; });
+                t.oncomplete = () => { document.getElementById('loading-pdf').style.display = 'none'; alert("Restauração de segurança executada."); carregarDatalistSugestoes(); };
+            } catch(err) { alert("Inconsistência no arquivo fornecido."); document.getElementById('loading-pdf').style.display = 'none'; }
         }; reader.readAsText(file);
     }
-    
-    function limparBancoGeral() { 
-        if(confirm("Aviso: Isso apagará permanentemente todos os registros do seu dispositivo. Deseja formatar o banco de dados?")) { 
-            if(confirm("Confirmação final: Você já exportou um backup recentemente?")) { 
-                const stores = ['lancamentos', 'configuracoes', 'clientes', 'estoque', 'vendas'];
-                const t = db.transaction(stores, "readwrite"); 
-                stores.forEach(st => t.objectStore(st).clear());
-                t.oncomplete = () => { alert("Sistema redefinido."); carregarDatalistSugestoes(); carregarModuloEu(); }; 
-            } 
-        } 
-    }
+    function limparBancoGeral() { if(confirm("Aviso de segurança: Tem certeza que deseja apagar permanentemente todas as tabelas?")) { if(confirm("Confirme se realizou uma exportação .json de segurança recente.")) { const stores = ['lancamentos', 'configuracoes', 'clientes', 'estoque', 'vendas']; const t = db.transaction(stores, "readwrite"); stores.forEach(st => t.objectStore(st).clear()); t.oncomplete = () => { alert("Banco de dados limpo."); carregarDatalistSugestoes(); carregarModuloEu(); }; } } }
 
     window.onload = initDB;
 </script>

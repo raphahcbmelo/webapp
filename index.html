@@ -122,14 +122,13 @@
 
         #loading-pdf { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(27,94,32,0.95); z-index: 9999; color: #FFD600; font-size: 1.2rem; justify-content: center; align-items: center; font-weight: bold; flex-direction: column; text-align: center;}
 
-        /* TELA DE IMPRESSÃO (PREVIEW) */
-        #view-print-preview { display: none; background: #e0e0e0; }
-        .fundo-mesa { background: #444; padding: 20px; min-height: 100%; overflow-y: auto; }
+        /* TELA DE IMPRESSÃO (PREVIEW) - Fundo Branco e Texto Preto */
+        #view-print-preview { display: none; background: #ffffff; color: #000000; }
+        .fundo-mesa { background: #ffffff; padding: 20px; min-height: 100%; overflow-y: auto; }
         .papel-a4 {
             background: #ffffff; color: #000000;
             width: 100%; max-width: 210mm; min-height: 297mm;
-            margin: 0 auto; padding: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            margin: 0 auto; padding: 0;
             transition: max-width 0.3s ease;
         }
         .view-print-preview.landscape .papel-a4 { max-width: 297mm; min-height: 210mm; }
@@ -216,7 +215,7 @@
                         </div>
                     </div>
                 </div>
-                <h3 style="margin-top: 25px; margin-bottom: 10px; color: #1b5e20; border-bottom: 2px solid #1b5e20; padding-bottom: 5px; font-size: 1rem; text-transform: uppercase;">CONTAS BANCÁRIAS</h3>
+                <h3 style="margin-top: 25px; margin-bottom: 10px; color: #1b5e20; border-bottom: 2px solid #1b5e20; padding-bottom: 5px; font-size: 1rem; text-transform: uppercase; font-weight:bold;">CONTAS BANCÁRIAS</h3>
                 <div id="lista-bancos-eu"></div>
                 <button class="btn-dados" style="margin-top: 15px; border-style: dashed;" onclick="abrirModalBanco()">+ ADICIONAR CONTA BANCÁRIA</button>
             </div>
@@ -234,7 +233,7 @@
             <div class="dados-box">
                 <h3 style="text-align: center;">💾 COFRE DE SEGURANÇA</h3>
                 <div class="alerta-padrao">Os dados são armazenados localmente. Realize exportações periódicas para garantir a integridade das informações.</div>
-                <button class="btn-dados" style="background: #1b5e20; color: #fff;" onclick="exportarBackup()">EXPORTAR BACKUP (.JSON)</button>
+                <button class="btn-dados" style="background: #1b5e20; color: #FFD600;" onclick="exportarBackup()">EXPORTAR BACKUP (.JSON)</button>
                 <input type="file" id="input-importar" style="display: none;" accept=".json" onchange="processarImportacao(event)">
                 <button class="btn-dados" style="background: #ff9800; color: #000; border-color: #ff9800;" onclick="document.getElementById('input-importar').click()">RESTAURAR BACKUP (.JSON)</button>
             </div>
@@ -242,7 +241,7 @@
             <div class="dados-box">
                 <h3 style="text-align: center;">📱 DIRETRIZES DE INSTALAÇÃO</h3>
                 <p style="font-size:0.85rem; margin-bottom:10px;"><strong style="color:#2e7d32;">ANDROID:</strong> Google Chrome > Menu (⋮) > Adicionar à tela inicial.</p>
-                <p style="font-size:0.85rem; margin-bottom:10px;"><strong style="color:#2196f3;">iOS (IPHONE):</strong> Compartilhar > Adicionar à Tela de Início.</p>
+                <p style="font-size:0.85rem; margin-bottom:20px;"><strong style="color:#2196f3;">iOS (IPHONE):</strong> Compartilhar > Adicionar à Tela de Início.</p>
                 <button class="btn-dados" style="background: #121212; color: #fff;" onclick="forcarAtualizacao()">🔄 VERIFICAR ATUALIZAÇÕES</button>
             </div>
 
@@ -304,9 +303,9 @@
             
             <div class="resumo-box" id="dossie-resumo" style="display: none;"><div class="resumo-item"><h4>ENTRADAS</h4><p class="text-green" id="resumo-receitas">R$ 0,00</p></div><div class="resumo-item"><h4>SAÍDAS</h4><p class="text-red" id="resumo-despesas">R$ 0,00</p></div><div class="resumo-item total" id="box-saldo-total"><h4>SALDO DO PERÍODO</h4><p id="resumo-saldo">R$ 0,00</p></div></div>
             
-            <button id="btn-visualizar-impressao" class="btn-executar" style="display:none; background:#2196f3 !important; color:#fff !important; margin-top: 15px; box-shadow: 0 4px 0 #0d47a1;" onclick="abrirPreviewImpressao()">VISUALIZAR IMPRESSÃO</button>
+            <button id="btn-visualizar-impressao" class="btn-executar" style="display:none; background:#2196f3; color:#fff; margin-top: 15px; box-shadow: 0 4px 0 #0d47a1;" onclick="abrirPreviewImpressao()">VISUALIZAR IMPRESSÃO</button>
             
-            <div id="lista-dossie"><p style="text-align: center; color: #1b5e20; margin-top: 30px; font-size: 0.8rem; font-weight:bold;">[ Informe o período para geração ]</p></div>
+            <div id="lista-dossie"><p style="text-align: center; color: #555; margin-top: 30px; font-size: 0.8rem;">[ Aguardando parâmetros ]</p></div>
         </div>
     </div>
 
@@ -320,8 +319,8 @@
                 <button class="btn-header" style="background: #ff5252; color: #fff; border: none;" onclick="abrirApp('view-dossie')">⬅</button>
             </div>
         </div>
-        <div class="fundo-mesa view-scroll no-print" style="background: #e0e0e0;">
-            <div class="papel-a4" id="print-preview-content" style="background: #fff; color: #000;"></div>
+        <div class="fundo-mesa view-scroll no-print">
+            <div class="papel-a4" id="print-preview-content"></div>
         </div>
     </div>
 
@@ -330,7 +329,6 @@
             <h1>GRÁFICOS</h1>
             <div class="header-acoes">
                 <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
-                <button class="btn-header" style="background: #2196f3; color: #fff; border-color: #2196f3;" onclick="abrirModalPdfRadar()">PDF</button>
                 <button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button>
             </div>
         </div>
@@ -374,7 +372,7 @@
 <div class="modal-overlay" id="modal-doacao">
     <div class="modal-box" style="text-align: center;">
         <h3 style="color: #1b5e20;">☕ APOIAR O DESENVOLVIMENTO</h3>
-        <p style="font-size: 0.85rem; margin-bottom: 15px; color: #333;">O WEBFIN é de código aberto e livre de anúncios. Se a ferramenta otimizou seu controle, considere apoiar a manutenção do projeto.</p>
+        <p style="font-size: 0.85rem; margin-bottom: 15px; color: #333; font-weight:bold;">O WEBFIN é de código aberto e livre de anúncios. Se a ferramenta otimizou seu controle, considere apoiar a manutenção do projeto.</p>
         <div style="background: #FFD600; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: left; border: 2px solid #1b5e20;">
             <p style="color: #1b5e20; font-size: 0.8rem; margin-bottom: 5px;"><strong>TITULAR:</strong> Raphaelo H C B Melo</p>
             <p style="color: #1b5e20; font-size: 0.8rem; margin-bottom: 5px;"><strong>INSTITUIÇÃO:</strong> InfinitePay</p>
@@ -383,7 +381,7 @@
         </div>
         <div style="display: flex; gap: 10px;">
             <button class="btn-cancelar" style="background:#444;" onclick="fecharModais()">FECHAR</button>
-            <button class="btn-header" style="flex: 2; height:40px !important; background: #1b5e20; color: #fff; border: none;" onclick="copiarPixDoacao()">COPIAR CHAVE PIX</button>
+            <button class="btn-executar" style="margin-top:0; flex: 2;" onclick="copiarPixDoacao()">COPIAR CHAVE PIX</button>
         </div>
     </div>
 </div>
@@ -434,14 +432,6 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="modal-radar-pdf">
-    <div class="modal-box">
-        <h3>EXPORTAR GRÁFICOS</h3>
-        <div class="modal-option"><input type="checkbox" id="chk-pdf-radar" checked><label for="chk-pdf-radar">Atributos RPG (Radar)</label></div><div class="modal-option"><input type="checkbox" id="chk-pdf-pie" checked><label for="chk-pdf-pie">Distribuição (Pizza)</label></div><div class="modal-option"><input type="checkbox" id="chk-pdf-line" checked><label for="chk-pdf-line">Linha de Tendência</label></div><div class="modal-option"><input type="checkbox" id="chk-pdf-bar" checked><label for="chk-pdf-bar">Barras de Impacto</label></div>
-        <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-executar" style="margin-top:0; flex: 2;" onclick="dispararPdfRadar()">GERAR</button></div>
-    </div>
-</div>
-
 <script>
     let db; const dbName = "FinancasDB"; 
     function initDB() { 
@@ -477,17 +467,27 @@
 
     function abrirModalAjudaGlobal() {
         document.getElementById('texto-ajuda-dinamico').innerHTML = `
-            <p><strong style="color:#2196f3">👤 EU:</strong> Gerencie dados de identificação pessoal e configure contas para cópia rápida de chaves de transferência corporativas.</p><br>
-            <p><strong style="color:#2e7d32">💲 REGISTROS:</strong> Insira entradas e despesas operacionais da sua movimentação financeira de forma isolada.</p><br>
-            <p><strong style="color:#ff9800">📓 DIÁRIO:</strong> Livro razão geral. Realize auditorias cronológicas com permissões completas para alteração e exclusão de itens errados.</p><br>
-            <p><strong style="color:#b71c1c;">📄 RELATÓRIOS:</strong> Consolidadores de movimentação e balanço mensal, preparados para enquadramento automático de impressão em papel.</p>
+            <p><strong style="color:#2196f3">👤 EU:</strong> Central de dados pessoais. Cadastre contas bancárias para atalhos de PIX.</p><br>
+            <p><strong style="color:#4caf50">💲 REGISTROS:</strong> Formulário de fluxo de caixa. Insira receitas e despesas.</p><br>
+            <p><strong style="color:#ffc107">📓 DIÁRIO:</strong> O Livro Razão. Visualize a linha do tempo financeira. Possui controles para edição (✏️) e exclusão (🗑️).</p><br>
+            <p><strong style="color:#ff5252">📄 RELATÓRIOS:</strong> Cruzamento de dados auditáveis.</p>
         `;
         fecharModais();
         document.getElementById('modal-ajuda-global').style.display = 'flex';
     }
 
+    function abrirAjudaImpressao() {
+        document.getElementById('texto-ajuda-dinamico').innerHTML = `
+            <strong>🖨️ VISUALIZAÇÃO DE IMPRESSÃO:</strong><br><br>
+            Confirme como os dados sairão no papel. O sistema dimensiona a fonte automaticamente com base no número de colunas geradas para que as informações não sejam cortadas.<br><br>
+            Use o botão laranja para girar a orientação do papel na sua tela (Retrato/Paisagem).<br><br>
+            <strong>Atenção:</strong> Na tela da impressora do seu aparelho, você deve certificar que a opção Paisagem/Retrato esteja igual à selecionada no aplicativo.
+        `;
+        document.getElementById('modal-ajuda-global').style.display = 'flex';
+    }
+
     function forcarAtualizacao() {
-        if(confirm("Confirma a atualização forçada de cache do aplicativo no servidor?")) {
+        if(confirm("Confirma a verificação de atualizações no servidor?")) {
             window.location.reload(true);
         }
     }
@@ -589,7 +589,7 @@
                         <button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="apagarBanco('${b.id}')">🗑️</button>
                     </div>
                 </div>
-                <div style="font-size: 0.8rem; color: #333;">
+                <div style="font-size: 0.8rem; color: #333; font-weight:bold;">
                     <p>Ag: ${b.agencia || '-'} | CC: ${b.conta || '-'}</p><p style="color: #2e7d32; font-weight: bold; margin-top: 3px;">PIX: ${b.pix}</p>
                 </div></div>`;
         }); lista.innerHTML = html;
@@ -712,9 +712,9 @@
                 </div>
                 <table style="width: 100%; margin-bottom: 25px; text-align: center; border-collapse: collapse; font-weight: bold; font-size: 0.9rem;">
                     <tr>
-                        <td style="border: 1px solid #000; padding: 12px;">BALANÇO POSITIVO (CREDITADO)<br><span style="color: #000; font-size:1.1rem;">${formatarMoeda(tR)}</span></td>
-                        <td style="border: 1px solid #000; padding: 12px;">BALANÇO NEGATIVO (DEBITADO)<br><span style="color: #000; font-size:1.1rem;">- ${formatarMoeda(tD)}</span></td>
-                        <td style="border: 1px solid #000; padding: 12px;">SALDO LÍQUIDO ATUARIAL<br><span style="color: #000; font-size:1.1rem;">${(tR-tD) < 0 ? '- ' : ''}${formatarMoeda(Math.abs(tR-tD))}</span></td>
+                        <td style="border: 1px solid #000; padding: 12px; background: #e8f5e9;">BALANÇO POSITIVO (CREDITADO)<br><span style="color: #000; font-size:1.1rem;">${formatarMoeda(tR)}</span></td>
+                        <td style="border: 1px solid #000; padding: 12px; background: #ffebee;">BALANÇO NEGATIVO (DEBITADO)<br><span style="color: #000; font-size:1.1rem;">- ${formatarMoeda(tD)}</span></td>
+                        <td style="border: 1px solid #000; padding: 12px; background: #f5f5f5;">SALDO LÍQUIDO ATUARIAL<br><span style="color: #000; font-size:1.1rem;">${(tR-tD) < 0 ? '- ' : ''}${formatarMoeda(Math.abs(tR-tD))}</span></td>
                     </tr>
                 </table>
                 ${gerarHTMLTabelaDinamica(reg, '#000000', '#000000')}

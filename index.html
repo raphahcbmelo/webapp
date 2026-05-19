@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>WEBFIN</title>
     
+    <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="WEBFIN">
     <link rel="apple-touch-icon" href="icon-512.png">
-    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FFD600">
 
     <style id="style-orientacao">@page { size: portrait; margin: 10mm; }</style>
@@ -20,12 +20,12 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', Courier, monospace !important; }
         
-        /* FÍSICA BLINDADA: Fundo Amarelo, sem rolagem no body */
-        body { background-color: #121212; height: 100dvh; overflow: hidden; display: flex; justify-content: center; width: 100%; }
+        /* FÍSICA BLINDADA: Corpo da tela não rola */
+        body { background-color: #121212; color: #e0e0e0; height: 100dvh; overflow: hidden; display: flex; justify-content: center; width: 100%; }
         
         #app-container {
             width: 100%; max-width: 400px; height: 100dvh;
-            background-color: #FFD600; /* Amarelo Base */
+            background-color: #FFD600; /* Fundo Amarelo Brasil */
             position: relative; display: flex; flex-direction: column;
             box-shadow: 0 0 20px rgba(0,0,0,0.8); border: 1px solid #1b5e20;
             padding-top: env(safe-area-inset-top);
@@ -35,47 +35,33 @@
         .view.active { display: flex; animation: fadeIn 0.15s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* HEADER OTIMIZADO - Verde Escuro */
-        .header { 
-            flex-shrink: 0; background-color: #1b5e20; 
-            padding: 15px 20px; border-bottom: 3px solid #0a3916;
-            display: flex; justify-content: space-between; align-items: center; z-index: 50;
-        }
-        .header h1 { font-size: 1.3rem; color: #FFD600; font-weight: bold; margin: 0; display: flex; align-items: baseline; gap: 8px;}
+        /* HEADER FIXO - Intocável */
+        .header { flex-shrink: 0; background-color: #1b5e20; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 3px solid #0a3916; z-index: 50; }
+        .header h1 { font-size: 1.2rem; color: #FFD600; font-weight: bold; margin: 0; display: flex; align-items: baseline; gap: 8px; text-transform: uppercase;}
         .header h1 span { font-size: 0.8rem; color: #a5d6a7; font-weight: normal; }
-        
         .header-acoes { display: flex; gap: 8px; align-items: center; }
         
-        /* BOTÕES DO HEADER (Seta Voltar e Ajuda) */
-        .btn-header { 
-            height: 36px; min-width: 36px; padding: 0 10px; border-radius: 6px; font-weight: bold; font-size: 1.2rem;
-            display: flex; align-items: center; justify-content: center; border: 2px solid #FFD600; cursor: pointer;
-            background: #FFD600; color: #1b5e20; transition: 0.1s;
-        }
+        /* Padronização Brutal dos Botões do Header */
+        .btn-header { height: 36px; min-width: 36px; padding: 0 10px; border-radius: 6px; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border: 2px solid #FFD600; cursor: pointer; background: #FFD600; color: #1b5e20; transition: 0.1s; }
         .btn-header:active { transform: scale(0.9); }
         .btn-ajuda { background: transparent; color: #FFD600; border-color: #FFD600; font-size: 1rem; }
 
-        /* ÁREA DE ROLAGEM */
-        .view-scroll { flex: 1; overflow-y: auto; padding: 20px; text-align: left; }
+        /* ÁREA DE ROLAGEM - Única área que se move no app */
+        .view-scroll { flex: 1; overflow-y: auto; padding: 20px; text-align: left; padding-bottom: 20px; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #FFD600; }
         ::-webkit-scrollbar-thumb { background: #1b5e20; border-radius: 3px; }
 
-        /* GRID DE ATALHOS */
+        /* Matriz Visual (Grid 4x4) */
         .launcher-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
-        .app-icon { 
-            background: #ffffff; border: 2px solid #1b5e20; border-radius: 8px; 
-            cursor: pointer; padding: 12px 5px; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; text-align: center; box-shadow: 0 4px 0 #1b5e20;
-            transition: 0.1s;
-        }
+        .app-icon { background: #ffffff; border: 2px solid #1b5e20; border-radius: 8px; cursor: pointer; padding: 12px 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: 0 4px 0 #1b5e20; transition: 0.1s; }
         .app-icon:active { transform: translateY(4px); box-shadow: 0 0 0 #1b5e20; }
         .app-icon h2 { font-size: 0.55rem; margin-top: 8px; font-weight: bold; color: #1b5e20; width: 100%; word-wrap: break-word; text-transform: uppercase; }
         .icon-symbol { font-size: 2rem; }
         .icon-cifrao { font-size: 2.2rem; font-weight: bold; color: #1b5e20; line-height: 1; }
         .divisor-grid { grid-column: span 4; height: 2px; background-color: rgba(27,94,32,0.2); margin: 5px 0; }
 
-        /* FORMULÁRIOS E COMPONENTES */
+        /* Formulários Padrões */
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; color: #1b5e20; font-weight: bold; }
         .form-control { width: 100%; padding: 12px; background-color: #ffffff; border: 2px solid #1b5e20; color: #121212; border-radius: 6px; font-weight: bold; font-size: 1rem; }
@@ -90,12 +76,16 @@
         .btn-executar { width: 100%; padding: 15px; background-color: #1b5e20; color: #FFD600; border: none; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 15px; text-transform: uppercase; box-shadow: 0 4px 0 #0a3916; transition: 0.1s; }
         .btn-executar:active { transform: translateY(4px); box-shadow: 0 0 0 #0a3916; }
 
-        /* CAIXAS DE DADOS E DIÁRIO */
-        .dados-box { background: #ffffff; border: 2px solid #1b5e20; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: left; color: #121212; }
-        .dados-box h3 { color: #1b5e20; font-size: 1rem; margin-bottom: 10px; border-bottom: 2px solid #1b5e20; padding-bottom: 5px; text-transform: uppercase; }
-        .btn-dados { display: block; width: 100%; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; border: 2px solid #1b5e20; text-transform: uppercase; text-align: center; margin-bottom: 10px; background: #ffffff; color: #1b5e20; }
-        .btn-dados:active { background: #f0f0f0; }
-        .alerta-padrao { background: rgba(255,214,0,0.3); border-left: 4px solid #ff9800; padding: 10px; font-size: 0.8rem; color: #0a3916; margin-bottom: 15px; font-weight: bold; }
+        .resumo-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; margin-top: 15px; }
+        .resumo-item { background: #ffffff; padding: 12px 10px; border-radius: 6px; text-align: center; border: 2px solid #1b5e20; }
+        .resumo-item.total { grid-column: span 2; background: #1b5e20; color: #FFD600; }
+        .resumo-item.total h4 { color: #a5d6a7; }
+        .resumo-item h4 { font-size: 0.7rem; color: #666; margin-bottom: 5px; font-weight: bold; }
+        .resumo-item p { font-size: 1.2rem; font-weight: bold; }
+        .text-green { color: #2e7d32 !important; }
+        .text-red { color: #c62828 !important; }
+        .text-white { color: #FFD600 !important; }
+        #lista-dossie { overflow-y: auto; padding-right: 5px; margin-top: 15px; }
 
         .diario-item { background: #ffffff; border: 2px solid #1b5e20; border-left: 6px solid #555; padding: 12px; margin-bottom: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; color: #121212; box-shadow: 0 2px 0 rgba(27,94,32,0.2); }
         .diario-item.receita { border-left-color: #2e7d32; }
@@ -108,20 +98,6 @@
         .btn-acao { background: transparent; border: none; font-size: 1.3rem; cursor: pointer; transition: 0.2s; }
         .btn-acao:active { transform: scale(0.8); }
 
-        /* RELATÓRIOS E GRÁFICOS */
-        .resumo-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; margin-top: 15px; }
-        .resumo-item { background: #ffffff; padding: 12px 10px; border-radius: 6px; text-align: center; border: 2px solid #1b5e20; }
-        .resumo-item.total { grid-column: span 2; background: #1b5e20; color: #FFD600; }
-        .resumo-item.total h4 { color: #a5d6a7; }
-        .resumo-item h4 { font-size: 0.7rem; color: #666; margin-bottom: 5px; font-weight: bold; }
-        .resumo-item p { font-size: 1.2rem; font-weight: bold; }
-        .text-green { color: #2e7d32 !important; }
-        .text-red { color: #c62828 !important; }
-        .text-white { color: #FFD600 !important; }
-        #lista-dossie { overflow-y: auto; padding-right: 5px; margin-top: 15px; }
-        .chart-wrapper { background: #ffffff; padding: 10px; border-radius: 8px; border: 2px solid #1b5e20; margin-top: 15px; min-height: 280px; display: flex; align-items: center; justify-content: center; }
-
-        /* CALCULADORA */
         .calc-display { width: 100%; padding: 15px; font-size: 2rem; text-align: right; background: #ffffff; color: #1b5e20; border: 2px solid #1b5e20; border-radius: 6px; margin-bottom: 20px; outline: none; letter-spacing: 2px; font-weight: bold; }
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
         .calc-btn { background: #ffffff; border: 2px solid #1b5e20; color: #1b5e20; font-size: 1.4rem; padding: 18px 0; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.1s; box-shadow: 0 4px 0 #1b5e20; }
@@ -131,7 +107,12 @@
         .calc-btn.action:active { box-shadow: 0 0 0 #c62828; }
         .calc-btn.equal { background: #1b5e20; color: #FFD600; grid-column: span 2; }
 
-        /* MODAIS */
+        .dados-box { background: #ffffff; border: 2px solid #1b5e20; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: left; color: #121212; }
+        .dados-box h3 { color: #1b5e20; font-size: 1rem; margin-bottom: 10px; border-bottom: 2px solid #1b5e20; padding-bottom: 5px; text-transform: uppercase; }
+        .btn-dados { display: block; width: 100%; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; border: 2px solid #1b5e20; text-transform: uppercase; text-align: center; margin-bottom: 10px; background: #ffffff; color: #1b5e20; }
+        .btn-dados:active { background: #f0f0f0; }
+        .alerta-padrao { background: rgba(255,214,0,0.3); border-left: 4px solid #ff9800; padding: 10px; font-size: 0.8rem; color: #0a3916; margin-bottom: 15px; font-weight: bold; }
+
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 20px;}
         .modal-box { background: #ffffff; padding: 20px; border-radius: 8px; border: 4px solid #1b5e20; width: 100%; max-width: 350px; text-align: left; max-height: 90vh; overflow-y: auto; color: #121212; }
         .modal-box h3 { color: #1b5e20; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 2px solid #1b5e20; padding-bottom: 5px; font-weight: bold; text-transform: uppercase; }
@@ -141,12 +122,19 @@
 
         #loading-pdf { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(27,94,32,0.95); z-index: 9999; color: #FFD600; font-size: 1.2rem; justify-content: center; align-items: center; font-weight: bold; flex-direction: column; text-align: center;}
 
-        /* IMPRESSÃO NATIVA */
+        /* TELA DE IMPRESSÃO (PREVIEW) */
         #view-print-preview { display: none; background: #e0e0e0; }
         .fundo-mesa { background: #444; padding: 20px; min-height: 100%; overflow-y: auto; }
-        .papel-a4 { background: #ffffff; color: #000000; width: 100%; max-width: 210mm; min-height: 297mm; margin: 0 auto; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: max-width 0.3s ease; }
+        .papel-a4 {
+            background: #ffffff; color: #000000;
+            width: 100%; max-width: 210mm; min-height: 297mm;
+            margin: 0 auto; padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: max-width 0.3s ease;
+        }
         .view-print-preview.landscape .papel-a4 { max-width: 297mm; min-height: 210mm; }
 
+        /* IMPRESSÃO NATIVA (Oculta tudo, mostra só o papel) */
         @media print {
             body, html, #app-container { height: auto !important; width: 100% !important; overflow: visible !important; display: block !important; background: #ffffff !important; color: #000000 !important; }
             .view { display: none !important; }
@@ -169,7 +157,7 @@
     
     <div id="view-launcher" class="view active">
         <div class="header">
-            <h1>WEBFIN <span>v3.14</span></h1>
+            <h1>WEBFIN <span>v3.15</span></h1>
         </div>
         <div class="view-scroll">
             <div class="launcher-grid">
@@ -194,7 +182,6 @@
 
                 <div class="divisor-grid"></div>
 
-                <!-- NOVA LINHA DE SISTEMA E SAÍDA SEGURA -->
                 <div class="app-icon" onclick="abrirApp('view-dados')"><div class="icon-symbol">⚙️</div><h2>SISTEMA</h2></div>
                 <div class="app-icon" onclick="abrirModalDoacao()"><div class="icon-symbol">☕</div><h2>APOIAR</h2></div>
                 <div style="grid-column: span 1;"></div>
@@ -213,25 +200,25 @@
         </div>
         <div class="view-scroll">
             <div id="bloco-sem-perfil" style="text-align: center; margin-top: 50px;">
-                <button class="btn-executar" onclick="abrirModalPerfil()">CADASTRAR DADOS</button>
+                <button class="btn-executar" onclick="abrirModalPerfil()">CADASTRAR INFORMAÇÕES PESSOAIS</button>
             </div>
             <div id="bloco-com-perfil" style="display: none;">
-                <div class="dados-box" style="border-left: 6px solid #1b5e20;">
+                <div class="dados-box" style="border-left: 5px solid #1b5e20;">
                     <div style="display: flex; justify-content: space-between; align-items: start;">
                         <div>
                             <h3 id="txt-nome-completo" style="color: #1b5e20; margin-bottom: 8px; border:none;"></h3>
                             <p style="margin-bottom: 4px;"><strong>CPF:</strong> <span id="txt-cpf"></span></p>
                             <p style="margin-bottom: 0;"><strong>Nasc:</strong> <span id="txt-nasc"></span></p>
                         </div>
-                        <div style="display: flex; gap: 8px;">
-                            <button class="btn-acao" onclick="abrirModalPerfil(true)">✏️</button>
-                            <button class="btn-acao" onclick="apagarPerfil()">🗑️</button>
+                        <div style="display: flex; gap: 12px;">
+                            <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;" onclick="abrirModalPerfil(true)">✏️</button>
+                            <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;" onclick="apagarPerfil()">🗑️</button>
                         </div>
                     </div>
                 </div>
-                <h3 style="margin-top: 25px; margin-bottom: 10px; color: #1b5e20; border-bottom: 2px solid #1b5e20; padding-bottom: 5px; font-size: 1rem; font-weight:bold;">CONTAS BANCÁRIAS</h3>
+                <h3 style="margin-top: 25px; margin-bottom: 10px; color: #1b5e20; border-bottom: 2px solid #1b5e20; padding-bottom: 5px; font-size: 1rem; text-transform: uppercase;">CONTAS BANCÁRIAS</h3>
                 <div id="lista-bancos-eu"></div>
-                <button class="btn-dados" style="margin-top: 15px; border-style: dashed;" onclick="abrirModalBanco()">+ NOVA CONTA</button>
+                <button class="btn-dados" style="margin-top: 15px; border-style: dashed;" onclick="abrirModalBanco()">+ ADICIONAR CONTA BANCÁRIA</button>
             </div>
         </div>
     </div>
@@ -239,21 +226,29 @@
     <div id="view-dados" class="view">
         <div class="header">
             <h1>SISTEMA</h1>
-            <div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button></div>
+            <div class="header-acoes">
+                <button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button>
+            </div>
         </div>
         <div class="view-scroll">
             <div class="dados-box">
-                <h3 style="text-align: center;">💾 GESTÃO DE DADOS</h3>
-                <div class="alerta-padrao">Exportação de segurança (.json). Recomendado fazer envios regulares para seu armazenamento pessoal.</div>
-                <button class="btn-dados" style="background: #1b5e20; color: #FFD600;" onclick="exportarBackup()">EXPORTAR DADOS (BACKUP)</button>
+                <h3 style="text-align: center;">💾 COFRE DE SEGURANÇA</h3>
+                <div class="alerta-padrao">Os dados são armazenados localmente. Realize exportações periódicas para garantir a integridade das informações.</div>
+                <button class="btn-dados" style="background: #1b5e20; color: #fff;" onclick="exportarBackup()">EXPORTAR BACKUP (.JSON)</button>
                 <input type="file" id="input-importar" style="display: none;" accept=".json" onchange="processarImportacao(event)">
-                <button class="btn-dados" style="background: #ff9800; color: #000; border-color: #ff9800;" onclick="document.getElementById('input-importar').click()">IMPORTAR DADOS (RESTAURAR)</button>
-                <button class="btn-dados" style="background: #c62828; color: #fff; border-color: #c62828; margin-top: 20px;" onclick="limparBancoGeral()">APAGAR TODOS OS DADOS</button>
+                <button class="btn-dados" style="background: #ff9800; color: #000; border-color: #ff9800;" onclick="document.getElementById('input-importar').click()">RESTAURAR BACKUP (.JSON)</button>
             </div>
+            
             <div class="dados-box">
-                <h3 style="text-align: center;">📱 INSTALAÇÃO PWA</h3>
-                <p style="font-size: 0.85rem; margin-bottom: 10px;"><strong>ANDROID:</strong> Chrome > Menu (⋮) > Adicionar à tela inicial.</p>
-                <p style="font-size: 0.85rem; margin-bottom: 20px;"><strong>iOS:</strong> Safari > Compartilhar > Adicionar à Tela de Início.</p>
+                <h3 style="text-align: center;">📱 DIRETRIZES DE INSTALAÇÃO</h3>
+                <p style="font-size:0.85rem; margin-bottom:10px;"><strong style="color:#2e7d32;">ANDROID:</strong> Google Chrome > Menu (⋮) > Adicionar à tela inicial.</p>
+                <p style="font-size:0.85rem; margin-bottom:10px;"><strong style="color:#2196f3;">iOS (IPHONE):</strong> Compartilhar > Adicionar à Tela de Início.</p>
+                <button class="btn-dados" style="background: #121212; color: #fff;" onclick="forcarAtualizacao()">🔄 VERIFICAR ATUALIZAÇÕES</button>
+            </div>
+
+            <div class="dados-box" style="border-color: #c62828;">
+                <h3 style="color:#c62828;">EXCLUSÃO PERMANENTE</h3>
+                <button class="btn-dados" style="background: #c62828; color: #fff;" onclick="limparBancoGeral()">LIMPAR BANCO DE DADOS</button>
             </div>
         </div>
     </div>
@@ -269,11 +264,11 @@
         <div class="view-scroll">
             <div class="tipo-toggle"><div id="form-tipo-receita" class="tipo-btn active receita" onclick="setTipoForm('receita')">RECEITA</div><div id="form-tipo-despesa" class="tipo-btn" onclick="setTipoForm('despesa')">DESPESA</div></div>
             <div class="form-group"><label>NOME DO REGISTRO:</label><input list="lista-contas" id="form-nome" class="form-control"><datalist id="lista-contas"></datalist></div>
-            <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin: 15px 0;"><input type="checkbox" id="form-recorrente" onchange="toggleRecorrenciaForm()" style="transform: scale(1.4);"><label style="margin: 0; color: #1b5e20;">REPETIR LANÇAMENTO?</label></div>
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin: 15px 0;"><input type="checkbox" id="form-recorrente" onchange="toggleRecorrenciaForm()" style="transform: scale(1.4);"><label style="margin: 0; color: #1b5e20;">LANÇAMENTO RECORRENTE?</label></div>
             <div id="bloco-recorrencia"><div class="form-group"><label>FREQUÊNCIA:</label><select id="form-frequencia" class="form-control" onchange="ajustarLabelsData()"><option value="diario">Diário</option><option value="semanal">Semanal</option><option value="mensal" selected>Mensal</option></select></div></div>
-            <div class="form-group"><label id="lbl-data-inicial">DATA:</label><input type="date" id="form-data-inicio" class="form-control"></div>
-            <div class="form-group" id="grp-data-limite" style="display: none;"><label>DATA LIMITE:</label><input type="date" id="form-data-limite" class="form-control"></div>
-            <div class="form-group"><label>VALOR (R$):</label><input type="number" step="0.01" id="form-valor" class="form-control"></div>
+            <div class="form-group"><label id="lbl-data-inicial">DATA DE COMPETÊNCIA:</label><input type="date" id="form-data-inicio" class="form-control"></div>
+            <div class="form-group" id="grp-data-limite" style="display: none;"><label>DATA LIMITE VIGÊNCIA:</label><input type="date" id="form-data-limite" class="form-control"></div>
+            <div class="form-group"><label>VALOR NOMINAL (R$):</label><input type="number" step="0.01" id="form-valor" class="form-control"></div>
             <button class="btn-executar" onclick="capturarEMandarProBanco()">SALVAR REGISTRO</button>
         </div>
     </div>
@@ -287,10 +282,10 @@
             </div>
         </div>
         <div class="view-scroll">
-            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>DATA INICIAL:</label><input type="date" id="diario-data-de" class="form-control"></div><div class="form-group" style="flex:1;"><label>DATA FINAL:</label><input type="date" id="diario-data-ate" class="form-control"></div></div>
+            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>PERÍODO INICIAL:</label><input type="date" id="diario-data-de" class="form-control"></div><div class="form-group" style="flex:1;"><label>PERÍODO FINAL:</label><input type="date" id="diario-data-ate" class="form-control"></div></div>
             <div class="form-group" style="display: flex; gap: 15px; margin-bottom: 15px; justify-content: center;"><label style="display:flex; align-items:center; gap:5px; color:#2e7d32; font-weight:bold;"><input type="checkbox" id="chk-diario-receita" checked style="transform: scale(1.3);"> RECEITAS</label><label style="display:flex; align-items:center; gap:5px; color:#c62828; font-weight:bold;"><input type="checkbox" id="chk-diario-despesa" checked style="transform: scale(1.3);"> DESPESAS</label></div>
-            <button class="btn-executar" style="padding: 10px; margin-top: 0; margin-bottom: 15px;" onclick="carregarDiario()">APLICAR FILTRO</button>
-            <div id="diario-lista"><p style="text-align: center; color: #1b5e20; margin-top: 30px; font-size: 0.8rem; font-weight:bold;">[ Utilize o filtro para visualizar registros ]</p></div>
+            <button class="btn-executar" style="padding: 10px; margin-top: 0; margin-bottom: 15px;" onclick="carregarDiario()">FILTRAR LANÇAMENTOS</button>
+            <div id="diario-lista"><p style="text-align: center; color: #555; margin-top: 30px; font-size: 0.8rem;">[ Filtre o período desejado ]</p></div>
         </div>
     </div>
 
@@ -299,35 +294,34 @@
             <h1>RELATÓRIOS</h1>
             <div class="header-acoes">
                 <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
-                <button class="btn-header" style="background: #2196f3; color: #fff; border-color: #2196f3;" onclick="abrirModalPdfDossie()">PDF</button>
                 <button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button>
             </div>
         </div>
         <div class="view-scroll">
-            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>INÍCIO:</label><input type="date" id="dossie-data-de" class="form-control"></div><div class="form-group" style="flex:1;"><label>FIM:</label><input type="date" id="dossie-data-ate" class="form-control"></div></div>
-            <div class="form-group"><label>FILTRO DE TIPO:</label><select id="dossie-tipo" class="form-control"><option value="todos">Geral (Entradas e Saídas)</option><option value="receita">Somente Entradas</option><option value="despesa">Somente Saídas</option></select></div>
-            <button class="btn-executar" style="padding: 10px; margin-top: 5px;" onclick="gerarRelatorioDossie()">GERAR RELATÓRIO</button>
+            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>DATA DE INÍCIO:</label><input type="date" id="dossie-data-de" class="form-control"></div><div class="form-group" style="flex:1;"><label>DATA DE TÉRMINO:</label><input type="date" id="dossie-data-ate" class="form-control"></div></div>
+            <div class="form-group"><label>FILTRO CONSOLIDADO:</label><select id="dossie-tipo" class="form-control"><option value="todos">Completo (Entradas e Saídas)</option><option value="receita">Apenas Faturamento</option><option value="despesa">Apenas Despesas</option></select></div>
+            <button class="btn-executar" style="padding: 10px; margin-top: 5px;" onclick="gerarRelatorioDossie()">PROCESSAR MATRIZ</button>
             
             <div class="resumo-box" id="dossie-resumo" style="display: none;"><div class="resumo-item"><h4>ENTRADAS</h4><p class="text-green" id="resumo-receitas">R$ 0,00</p></div><div class="resumo-item"><h4>SAÍDAS</h4><p class="text-red" id="resumo-despesas">R$ 0,00</p></div><div class="resumo-item total" id="box-saldo-total"><h4>SALDO DO PERÍODO</h4><p id="resumo-saldo">R$ 0,00</p></div></div>
             
             <button id="btn-visualizar-impressao" class="btn-executar" style="display:none; background:#2196f3 !important; color:#fff !important; margin-top: 15px; box-shadow: 0 4px 0 #0d47a1;" onclick="abrirPreviewImpressao()">VISUALIZAR IMPRESSÃO</button>
             
-            <div id="lista-dossie"><p style="text-align: center; color: #1b5e20; margin-top: 30px; font-size: 0.8rem; font-weight:bold;">[ Informe o período ]</p></div>
+            <div id="lista-dossie"><p style="text-align: center; color: #1b5e20; margin-top: 30px; font-size: 0.8rem; font-weight:bold;">[ Informe o período para geração ]</p></div>
         </div>
     </div>
 
+    <!-- TELA DE PREVIEW DE IMPRESSÃO (BRANCA E PRETA) -->
     <div id="view-print-preview" class="view view-print-preview">
-        <div class="header no-print">
-            <h1>PREVIEW</h1>
+        <div class="header no-print" style="background: #f0f0f0; border-bottom: 2px solid #ccc;">
+            <h1 style="color: #000; font-size: 1rem;">VISUALIZAÇÃO A4</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-ajuda" onclick="abrirAjudaImpressao()">?</button>
-                <button id="btn-orientacao" class="btn-header" style="background: #ff9800; color: #000; border-color: #ff9800;" onclick="toggleOrientacao()">PAISAGEM</button>
-                <button class="btn-header" style="background: #2196f3; color: #fff; border-color: #2196f3; font-size: 1.2rem;" onclick="window.print()">🖨️</button>
-                <button class="btn-header" onclick="abrirApp('view-dossie')">⬅</button>
+                <button class="btn-header" style="background: #fff; color: #000; border: 1px solid #ccc; font-size: 1.2rem;" onclick="toggleOrientacao()">🔄</button>
+                <button class="btn-header" style="background: #2196f3; color: #fff; border: none; font-size: 1.2rem;" onclick="window.print()">💾</button>
+                <button class="btn-header" style="background: #ff5252; color: #fff; border: none;" onclick="abrirApp('view-dossie')">⬅</button>
             </div>
         </div>
-        <div class="fundo-mesa view-scroll no-print">
-            <div class="papel-a4" id="print-preview-content"></div>
+        <div class="fundo-mesa view-scroll no-print" style="background: #e0e0e0;">
+            <div class="papel-a4" id="print-preview-content" style="background: #fff; color: #000;"></div>
         </div>
     </div>
 
@@ -341,11 +335,11 @@
             </div>
         </div>
         <div class="view-scroll">
-            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>INÍCIO:</label><input type="date" id="radar-data-de" class="form-control" onchange="atualizarPainelContas()"></div><div class="form-group" style="flex:1;"><label>FIM:</label><input type="date" id="radar-data-ate" class="form-control" onchange="atualizarPainelContas()"></div></div>
-            <div class="form-group"><label>AGRUPAMENTO DE TEMPO:</label><select id="radar-agrupamento" class="form-control" onchange="verificarTravaGrafico()"><option value="geral">Geral (Acumulado no Período)</option><option value="diario">Evolução Diária</option><option value="semanal">Evolução Semanal</option><option value="mensal">Evolução Mensal</option></select></div>
-            <div class="form-group"><label>MODELO DE GRÁFICO:</label><select id="radar-tipo-grafico" class="form-control" onchange="renderizarGraficoAvancado()"><option value="radar" id="opt-radar">Atributos (Radar)</option><option value="pie" id="opt-pie">Distribuição (Pizza)</option><option value="line" id="opt-line">Linha de Tendência</option><option value="bar" id="opt-bar">Barras de Impacto</option></select></div>
-            <div class="form-group" style="margin-top: 15px; background: #ffffff; padding: 10px; border-radius: 5px; border: 2px solid #1b5e20;"><label style="color: #1b5e20; font-size: 0.8rem; border-bottom: 1px solid #ccc; padding-bottom: 5px; display: block; font-weight:bold;">FILTRO DE REGISTROS:</label><div style="display: flex; gap: 5px; margin: 8px 0;"><button onclick="selecionarMassa('receita')" style="flex: 1; padding: 8px; background: #2e7d32; color: #fff; border: none; border-radius: 4px; font-size: 0.7rem; cursor: pointer; font-weight:bold;">+ ENTRADAS</button><button onclick="selecionarMassa('despesa')" style="flex: 1; padding: 8px; background: #c62828; color: #fff; border: none; border-radius: 4px; font-size: 0.7rem; cursor: pointer; font-weight:bold;">+ SAÍDAS</button><button onclick="limparSelecaoMassa()" style="padding: 8px; background: #121212; color: #fff; border: none; border-radius: 4px; font-size: 0.7rem; cursor: pointer; font-weight:bold;">LIMPAR</button></div><div id="painel-checkboxes" style="max-height: 140px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 2px;"></div></div>
-            <button class="btn-executar" style="margin-bottom: 15px;" onclick="renderizarGraficoAvancado()">GERAR ANÁLISE</button>
+            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>MENSURAÇÃO INICIAL:</label><input type="date" id="radar-data-de" class="form-control" onchange="atualizarPainelContas()"></div><div class="form-group" style="flex:1;"><label>MENSURAÇÃO FINAL:</label><input type="date" id="radar-data-ate" class="form-control" onchange="atualizarPainelContas()"></div></div>
+            <div class="form-group"><label>AGRUPAMENTO CRONOLÓGICO:</label><select id="radar-agrupamento" class="form-control" onchange="verificarTravaGrafico()"><option value="geral">Consolidado do Período</option><option value="diario">Evolução Diária</option><option value="semanal">Evolução Semanal</option><option value="mensal">Evolução Mensal</option></select></div>
+            <div class="form-group"><label>MÉTODO DE EXIBIÇÃO:</label><select id="radar-tipo-grafico" class="form-control" onchange="renderizarGraficoAvancado()"><option value="radar" id="opt-radar">Análise de Atributos (Radar)</option><option value="pie" id="opt-pie">Distribuição Percentual (Pizza)</option><option value="line" id="opt-line">Linha de Tendência Temporal</option><option value="bar" id="opt-bar">Gráfico de Impacto (Barras)</option></select></div>
+            <div class="form-group" style="margin-top: 15px; background: #ffffff; border: 2px solid #1b5e20; padding: 10px; border-radius: 5px;"><label style="color: #1b5e20; font-size: 0.8rem; border-bottom: 1px solid #ccc; padding-bottom: 5px; display: block; font-weight:bold;">FILTRAR ELEMENTOS DA MATRIZ:</label><div style="display: flex; gap: 5px; margin: 8px 0;"><button onclick="selecionarMassa('receita')" style="flex: 1; padding: 4px; background: #2e7d32; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer; font-weight:bold;">+ ENTRADAS</button><button onclick="selecionarMassa('despesa')" style="flex: 1; padding: 4px; background: #c62828; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer; font-weight:bold;">+ SAÍDAS</button><button onclick="limparSelecaoMassa()" style="padding: 4px 8px; background: #121212; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer; font-weight:bold;">LIMPAR</button></div><div id="painel-checkboxes" style="max-height: 140px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 2px;"></div></div>
+            <button class="btn-executar" style="margin-bottom: 15px;" onclick="renderizarGraficoAvancado()">MANDAR GERAR ANÁLISE</button>
             <div class="chart-wrapper"><canvas id="canvasRadar"></canvas></div>
         </div>
     </div>
@@ -380,16 +374,16 @@
 <div class="modal-overlay" id="modal-doacao">
     <div class="modal-box" style="text-align: center;">
         <h3 style="color: #1b5e20;">☕ APOIAR O DESENVOLVIMENTO</h3>
-        <p style="font-size: 0.85rem; margin-bottom: 15px; color: #333; font-weight:bold;">O WEBFIN é de código aberto e livre de anúncios. Se a ferramenta otimizou seu controle, considere apoiar a manutenção do projeto.</p>
-        <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: left; border: 2px solid #1b5e20;">
+        <p style="font-size: 0.85rem; margin-bottom: 15px; color: #333;">O WEBFIN é de código aberto e livre de anúncios. Se a ferramenta otimizou seu controle, considere apoiar a manutenção do projeto.</p>
+        <div style="background: #FFD600; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: left; border: 2px solid #1b5e20;">
             <p style="color: #1b5e20; font-size: 0.8rem; margin-bottom: 5px;"><strong>TITULAR:</strong> Raphaelo H C B Melo</p>
             <p style="color: #1b5e20; font-size: 0.8rem; margin-bottom: 5px;"><strong>INSTITUIÇÃO:</strong> InfinitePay</p>
             <p style="color: #1b5e20; font-size: 0.8rem; margin-bottom: 5px;"><strong>TIPO:</strong> Chave Aleatória</p>
             <p style="color: #121212; font-weight: bold; font-size: 0.75rem; word-break: break-all; margin-top: 10px; text-align: center;">182edc11-4ace-46c1-ad6f-ad3dec83eb32</p>
         </div>
         <div style="display: flex; gap: 10px;">
-            <button class="btn-cancelar" onclick="fecharModais()">FECHAR</button>
-            <button class="btn-executar" style="margin-top:0; flex: 2;" onclick="copiarPixDoacao()">COPIAR CHAVE PIX</button>
+            <button class="btn-cancelar" style="background:#444;" onclick="fecharModais()">FECHAR</button>
+            <button class="btn-header" style="flex: 2; height:40px !important; background: #1b5e20; color: #fff; border: none;" onclick="copiarPixDoacao()">COPIAR CHAVE PIX</button>
         </div>
     </div>
 </div>
@@ -447,13 +441,6 @@
         <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-executar" style="margin-top:0; flex: 2;" onclick="dispararPdfRadar()">GERAR</button></div>
     </div>
 </div>
-<div class="modal-overlay" id="modal-dossie-pdf">
-    <div class="modal-box">
-        <h3>EXPORTAR RELATÓRIO</h3>
-        <div class="modal-option"><input type="radio" name="rad-pdf-grafico" id="rad-pdf-nao" value="nao" checked><label for="rad-pdf-nao">Apenas a tabela</label></div><div class="modal-option"><input type="radio" name="rad-pdf-grafico" id="rad-pdf-mesma" value="mesma"><label for="rad-pdf-mesma">Gráfico no topo</label></div><div class="modal-option"><input type="radio" name="rad-pdf-grafico" id="rad-pdf-ultima" value="ultima"><label for="rad-pdf-ultima">Gráfico na última pág.</label></div>
-        <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-executar" style="margin-top:0; flex: 2;" onclick="dispararPdfDossie()">GERAR</button></div>
-    </div>
-</div>
 
 <script>
     let db; const dbName = "FinancasDB"; 
@@ -482,7 +469,7 @@
         if(id === 'view-eu') { carregarModuloEu(); }
     }
     
-    function formatarMoeda(valor) { return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
+    function formatarMoeda(valor) { return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 }); }
     function formatarDataBR(dataStr) { if(!dataStr) return ""; const p = dataStr.split('-'); return `${p[2]}/${p[1]}/${p[0]}`; }
 
     function abrirModalDoacao() { fecharModais(); document.getElementById('modal-doacao').style.display = 'flex'; }
@@ -496,15 +483,6 @@
             <p><strong style="color:#b71c1c;">📄 RELATÓRIOS:</strong> Consolidadores de movimentação e balanço mensal, preparados para enquadramento automático de impressão em papel.</p>
         `;
         fecharModais();
-        document.getElementById('modal-ajuda-global').style.display = 'flex';
-    }
-
-    function abrirAjudaImpressao() {
-        document.getElementById('texto-ajuda-dinamico').innerHTML = `
-            <strong>🖨️ INTERFACE DE PRÉ-VISUALIZAÇÃO:</strong><br><br>
-            Confirme o enquadramento estrutural dos dados na folha física. O sistema reduz automaticamente a escala da fonte caso localize um grande número de colunas, prevenindo cortes nas margens.<br><br>
-            Use a opção "PAISAGEM/RETRATO" para ajustar a rotação. Lembre-se de alinhar a mesma orientação nas configurações nativas de impressão do dispositivo.
-        `;
         document.getElementById('modal-ajuda-global').style.display = 'flex';
     }
 
@@ -611,7 +589,7 @@
                         <button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="apagarBanco('${b.id}')">🗑️</button>
                     </div>
                 </div>
-                <div style="font-size: 0.8rem; color: #333; font-weight:bold;">
+                <div style="font-size: 0.8rem; color: #333;">
                     <p>Ag: ${b.agencia || '-'} | CC: ${b.conta || '-'}</p><p style="color: #2e7d32; font-weight: bold; margin-top: 3px;">PIX: ${b.pix}</p>
                 </div></div>`;
         }); lista.innerHTML = html;
@@ -658,7 +636,11 @@
     }
     function renderizarHTMLDiario(reg) {
         const lista = document.getElementById('diario-lista'); if(reg.length === 0) { lista.innerHTML = `<p style="text-align: center; color: #1b5e20; margin-top: 30px; font-weight:bold;">[ Base limpa. Sem registros no escopo ]</p>`; return; }
-        let html = ''; reg.forEach(r => { let corV = r.tipo === 'receita' ? '#2e7d32' : '#c62828'; html += `<div class="diario-item ${r.tipo}"><div class="diario-info"><div class="diario-data">${formatarDataBR(r.data)}</div><div class="diario-nome">${r.nome}</div><div class="diario-valor" style="color: ${corV};">${formatarMoeda(r.valor)}</div></div><div class="diario-acoes"><button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="abrirModalEditarDiario('${r.id}')">✏️</button><button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="apagarLancamentoDiario('${r.id}')">🗑️</button></div></div>`; }); lista.innerHTML = html;
+        let html = ''; reg.forEach(r => { 
+            let corV = r.tipo === 'receita' ? '#2e7d32' : '#c62828'; 
+            let sinal = r.tipo === 'despesa' ? '- ' : '';
+            html += `<div class="diario-item ${r.tipo}"><div class="diario-info"><div class="diario-data">${formatarDataBR(r.data)}</div><div class="diario-nome">${r.nome}</div><div class="diario-valor" style="color: ${corV};">${sinal}${formatarMoeda(r.valor)}</div></div><div class="diario-acoes"><button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="abrirModalEditarDiario('${r.id}')">✏️</button><button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="apagarLancamentoDiario('${r.id}')">🗑️</button></div></div>`; 
+        }); lista.innerHTML = html;
     }
     function apagarLancamentoDiario(id) { if(confirm("Confirmar a remoção definitiva do lançamento do diário?")) { const t = db.transaction(['lancamentos'], "readwrite"); t.objectStore('lancamentos').delete(id); t.oncomplete = () => { carregarDiario(); carregarDatalistSugestoes(); }; } }
     function abrirModalEditarDiario(id) {
@@ -691,7 +673,7 @@
     function gerarHTMLTabelaDinamica(reg, corBorda, corTextoBase) {
         if(reg.length === 0) return `<p style="text-align: center; color: #1b5e20; margin-top: 20px; font-weight:bold;">[ Sem movimentações registradas ]</p>`;
         let datas = [...new Set(reg.map(r => r.data))].sort((a,b) => a.localeCompare(b)); let contas = [...new Set(reg.map(r => r.nome))].sort();
-        let headerBg = (corTextoBase === '#000') ? '#f2f2f2' : 'rgba(255,255,255,0.1)';
+        let headerBg = (corTextoBase === '#000000') ? '#f2f2f2' : 'rgba(255,255,255,0.1)';
         
         let fontScale = '0.85rem';
         if(contas.length > 3) fontScale = '0.7rem'; if(contas.length > 5) fontScale = '0.55rem'; if(contas.length > 7) fontScale = '0.45rem';
@@ -702,15 +684,22 @@
         datas.forEach(d => {
             table += `<tr><td style="padding: 6px; border: 1px solid ${corBorda}; white-space: nowrap;">${formatarDataBR(d)}</td>`;
             contas.forEach(c => {
-                let sum = reg.filter(r => r.data === d && r.nome === c).reduce((acc, curr) => acc + curr.valor, 0); let valStr = sum > 0 ? formatarMoeda(sum) : '-';
-                let tipo = reg.find(r => r.nome === c)?.tipo; let color = sum > 0 ? (tipo === 'receita' ? '#2e7d32' : '#c62828') : corTextoBase;
-                if(corTextoBase === '#000' && sum > 0) color = (tipo === 'receita' ? '#1b5e20' : '#b71c1c');
+                let sum = reg.filter(r => r.data === d && r.nome === c).reduce((acc, curr) => acc + curr.valor, 0); 
+                let tipo = reg.find(r => r.nome === c)?.tipo; 
+                let sinal = tipo === 'despesa' ? '- ' : '';
+                let valStr = sum > 0 ? sinal + formatarMoeda(sum) : '-';
+                
+                let color = sum > 0 ? (tipo === 'receita' ? '#2e7d32' : '#c62828') : corTextoBase;
+                if(corTextoBase === '#000000') color = '#000000'; // Força preto na impressão
+                
                 table += `<td style="padding: 6px; border: 1px solid ${corBorda}; color: ${color}; font-weight: bold;">${valStr}</td>`;
             }); table += `</tr>`;
         }); table += `</tbody></table></div>`; return table;
     }
     function renderizarHTMLDossie(reg, tR, tD, de, ate) {
-        document.getElementById('dossie-resumo').style.display = 'grid'; document.getElementById('resumo-receitas').innerText = formatarMoeda(tR); document.getElementById('resumo-despesas').innerText = formatarMoeda(tD);
+        document.getElementById('dossie-resumo').style.display = 'grid'; 
+        document.getElementById('resumo-receitas').innerText = formatarMoeda(tR); 
+        document.getElementById('resumo-despesas').innerText = '- ' + formatarMoeda(tD);
         let s = tR - tD; let pS = document.getElementById('resumo-saldo'); pS.innerText = formatarMoeda(s);
         pS.classList.remove('text-green', 'text-red', 'text-white'); if(s > 0) pS.classList.add('text-green'); else if(s < 0) pS.classList.add('text-red'); else pS.classList.add('text-white');
         document.getElementById('lista-dossie').innerHTML = gerarHTMLTabelaDinamica(reg, '#1b5e20', '#121212');
@@ -719,21 +708,35 @@
             htmlDossieAtual = `
                 <div style="text-align: center; margin-bottom: 25px; border-bottom: 3px solid #000; padding-bottom: 12px;">
                     <h2 style="font-size: 1.6rem; letter-spacing:1px; margin-bottom: 5px;">DEMONSTRATIVO FINANCEIRO CONSOLIDADO</h2>
-                    <p style="font-size:0.9rem; font-weight:bold; color: #333;">Intervalo de Competência: ${formatarDataBR(de)} até ${formatarDataBR(ate)}</p>
+                    <p style="font-size:0.9rem; font-weight:bold; color: #000;">Intervalo de Competência: ${formatarDataBR(de)} até ${formatarDataBR(ate)}</p>
                 </div>
                 <table style="width: 100%; margin-bottom: 25px; text-align: center; border-collapse: collapse; font-weight: bold; font-size: 0.9rem;">
                     <tr>
-                        <td style="border: 1px solid #000; padding: 12px; background: #e8f5e9;">BALANÇO POSITIVO (CREDITADO)<br><span style="color: #1b5e20; font-size:1.1rem;">${formatarMoeda(tR)}</span></td>
-                        <td style="border: 1px solid #000; padding: 12px; background: #ffebee;">BALANÇO NEGATIVO (DEBITADO)<br><span style="color: #b71c1c; font-size:1.1rem;">${formatarMoeda(tD)}</span></td>
-                        <td style="border: 1px solid #000; padding: 12px; background: #f5f5f5;">SALDO LÍQUIDO ATUARIAL<br><span style="color: ${(tR-tD) >= 0 ? '#1b5e20' : '#b71c1c'}; font-size:1.1rem;">${formatarMoeda(tR-tD)}</span></td>
+                        <td style="border: 1px solid #000; padding: 12px;">BALANÇO POSITIVO (CREDITADO)<br><span style="color: #000; font-size:1.1rem;">${formatarMoeda(tR)}</span></td>
+                        <td style="border: 1px solid #000; padding: 12px;">BALANÇO NEGATIVO (DEBITADO)<br><span style="color: #000; font-size:1.1rem;">- ${formatarMoeda(tD)}</span></td>
+                        <td style="border: 1px solid #000; padding: 12px;">SALDO LÍQUIDO ATUARIAL<br><span style="color: #000; font-size:1.1rem;">${(tR-tD) < 0 ? '- ' : ''}${formatarMoeda(Math.abs(tR-tD))}</span></td>
                     </tr>
                 </table>
                 ${gerarHTMLTabelaDinamica(reg, '#000000', '#000000')}
             `;
         } else { document.getElementById('btn-visualizar-impressao').style.display = 'none'; }
     }
-    function abrirPreviewImpressao() { if(!htmlDossieAtual) return; isLandscape = false; document.getElementById('btn-orientacao').innerText = 'PAISAGEM'; document.getElementById('style-orientacao').innerHTML = `@page { size: portrait; margin: 10mm; }`; document.getElementById('view-print-preview').classList.remove('landscape'); document.getElementById('print-preview-content').innerHTML = htmlDossieAtual; abrirApp('view-print-preview'); }
-    function toggleOrientacao() { isLandscape = !isLandscape; document.getElementById('btn-orientacao').innerText = isLandscape ? 'RETRATO' : 'PAISAGEM'; document.getElementById('style-orientacao').innerHTML = `@page { size: ${isLandscape ? 'landscape' : 'portrait'}; margin: 10mm; }`; if(isLandscape) { document.getElementById('view-print-preview').classList.add('landscape'); } else { document.getElementById('view-print-preview').classList.remove('landscape'); } }
+    
+    let isLandscape = false;
+    function abrirPreviewImpressao() { 
+        if(!htmlDossieAtual) return; 
+        isLandscape = false; 
+        document.getElementById('style-orientacao').innerHTML = `@page { size: portrait; margin: 10mm; }`; 
+        document.getElementById('view-print-preview').classList.remove('landscape'); 
+        document.getElementById('print-preview-content').innerHTML = htmlDossieAtual; 
+        abrirApp('view-print-preview'); 
+    }
+    function toggleOrientacao() { 
+        isLandscape = !isLandscape; 
+        document.getElementById('style-orientacao').innerHTML = `@page { size: ${isLandscape ? 'landscape' : 'portrait'}; margin: 10mm; }`; 
+        if(isLandscape) { document.getElementById('view-print-preview').classList.add('landscape'); } 
+        else { document.getElementById('view-print-preview').classList.remove('landscape'); } 
+    }
 
     // ==========================================
     // ENGRENAGENS DE GRÁFICOS
@@ -751,50 +754,4 @@
     function verificarTravaGrafico() { const g = document.getElementById('radar-agrupamento').value; const s = document.getElementById('radar-tipo-grafico'); if(g !== 'geral') { document.getElementById('opt-radar').disabled = true; document.getElementById('opt-pie').disabled = true; if(s.value === 'radar' || s.value === 'pie') s.value = 'line'; } else { document.getElementById('opt-radar').disabled = false; document.getElementById('opt-pie').disabled = false; } }
     let chartInstance = null; function obterSegunda(dStr) { let d=new Date(dStr+'T00:00:00'); let dia=d.getDay(); let diff=d.getDate()-dia+(dia==0?-6:1); return new Date(d.setDate(diff)).toISOString().split('T')[0]; }
     function renderizarGraficoAvancado() {
-        const de = document.getElementById('radar-data-de').value; const ate = document.getElementById('radar-data-ate').value; const agp = document.getElementById('radar-agrupamento').value; const mod = document.getElementById('radar-tipo-grafico').value;
-        let contas = []; document.querySelectorAll('.radar-cb-conta:checked').forEach(cb => contas.push(cb.getAttribute('data-nome'))); const ctx = document.getElementById('canvasRadar').getContext('2d'); if(chartInstance) chartInstance.destroy(); if(contas.length===0) { ctx.clearRect(0,0,400,400); return; }
-        const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); let reg = [];
-        s.openCursor().onsuccess = (e) => {
-            let c = e.target.result; if(c) { if(c.value.data >= de && c.value.data <= ate && contas.includes(c.value.nome)) reg.push(c.value); c.continue(); }
-            else { let chartData = compilarDadosGrafico(agp, contas, reg, '#121212', '#1b5e20'); chartInstance = new Chart(ctx, { type: mod, data: chartData.data, options: { responsive: true, maintainAspectRatio: false, plugins: chartData.plugins, scales: chartData.scales } }); }
-        };
-    }
-
-    // --- CALCULADORA ---
-    function calcInput(val) { const d = document.getElementById('calc-display'); if (d.value === 'Erro') d.value = ''; d.value += val; }
-    function calcAction(action) {
-        const d = document.getElementById('calc-display'); if (d.value === 'Erro') d.value = ''; if (action === 'clear') { d.value = ''; } else if (action === 'back') { d.value = d.value.slice(0, -1); } else if (action === 'eval') {
-            try { let exp = d.value.replace(/,/g, '.').replace(/÷/g, '/').replace(/×/g, '*'); if (exp.trim() === '') return; let res = eval(exp); d.value = Number.isInteger(res) ? res : parseFloat(res.toFixed(4)); } catch (e) { d.value = 'Erro'; }
-        }
-    }
-
-    // --- MANIPULAÇÃO DE COFRE DE DADOS ---
-    function formatarDataBackup() { let d = new Date(); let aa = d.getFullYear().toString().slice(-2); let mm = ('0' + (d.getMonth() + 1)).slice(-2); let dd = ('0' + d.getDate()).slice(-2); let hh = ('0' + d.getHours()).slice(-2); let min = ('0' + d.getMinutes()).slice(-2); return `${aa}${mm}${dd}${hh}${min}`; }
-    function exportarBackup() {
-        const stores = ['lancamentos', 'configuracoes', 'clientes', 'estoque', 'vendas']; let cofreFull = {}; let exportadas = 0;
-        stores.forEach(st => {
-            db.transaction([st], "readonly").objectStore(st).getAll().onsuccess = (e) => { cofreFull[st] = e.target.result; exportadas++; if(exportadas === stores.length) dispararDownloadJson(cofreFull); };
-        });
-    }
-    function dispararDownloadJson(dados) {
-        if(dados.lancamentos.length === 0 && dados.configuracoes.length === 0) { alert("Nenhum dado localizado para exportação."); return; }
-        const dataStr = JSON.stringify(dados, null, 2); const blob = new Blob([dataStr], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `WEBFIN_${formatarDataBackup()}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-    }
-    function processarImportacao(event) {
-        const file = event.target.files[0]; if(!file) return; const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const dados = JSON.parse(e.target.result); let importData = Array.isArray(dados) ? { lancamentos: dados } : dados;
-                if(!confirm("Aviso: Essa operação substituirá integralmente os dados do dispositivo. Prosseguir?")) return;
-                document.getElementById('loading-pdf').style.display = 'flex'; const stores = ['lancamentos', 'configuracoes', 'clientes', 'estoque', 'vendas']; const t = db.transaction(stores, "readwrite");
-                stores.forEach(st => { const s = t.objectStore(st); s.clear().onsuccess = () => { if(importData[st]) importData[st].forEach(r => s.add(r)); }; });
-                t.oncomplete = () => { document.getElementById('loading-pdf').style.display = 'none'; alert("Restauração de segurança executada."); carregarDatalistSugestoes(); };
-            } catch(err) { alert("Inconsistência no arquivo fornecido."); document.getElementById('loading-pdf').style.display = 'none'; }
-        }; reader.readAsText(file);
-    }
-    function limparBancoGeral() { if(confirm("Aviso de segurança: Tem certeza que deseja apagar permanentemente todas as tabelas?")) { if(confirm("Confirme se realizou uma exportação .json de segurança recente.")) { const stores = ['lancamentos', 'configuracoes', 'clientes', 'estoque', 'vendas']; const t = db.transaction(stores, "readwrite"); stores.forEach(st => t.objectStore(st).clear()); t.oncomplete = () => { alert("Banco de dados limpo."); carregarDatalistSugestoes(); carregarModuloEu(); }; } } }
-
-    window.onload = initDB;
-</script>
-</body>
-</html>
+        const de = document.getElementById('radar-data-de').value; const ate = document.getElementById('radar-data-ate').value; const agp = document.getElementById('radar-agrupamento').value; const

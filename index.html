@@ -19,57 +19,95 @@
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', Courier, monospace !important; }
-        body { background-color: #121212; height: 100dvh; overflow: hidden; display: flex; justify-content: center; }
+        
+        body { background-color: #121212; height: 100dvh; overflow: hidden; display: flex; justify-content: center; width: 100%; }
         
         #app-container {
             width: 100%; max-width: 400px; height: 100dvh;
-            background-color: #FFD600; /* Amarelo Base */
+            background-color: #FFD600; /* Fundo Amarelo Brasil */
             position: relative; display: flex; flex-direction: column;
             padding-top: env(safe-area-inset-top);
         }
 
-        .view { display: none; height: 100%; width: 100%; flex-direction: column; overflow: hidden; }
-        .view.active { display: flex; animation: fadeIn 0.15s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .view { display: none; flex: 1; width: 100%; flex-direction: column; overflow: hidden; }
+        .view.active { display: flex; }
 
-        /* HEADER OTIMIZADO */
+        /* HEADER */
         .header { 
             flex-shrink: 0; background-color: #1b5e20; 
-            padding: 10px 15px; border-bottom: 3px solid #0a3916;
-            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 15px; border-bottom: 3px solid #0a3916;
+            display: flex; flex-direction: column; gap: 8px;
         }
-        .header h1 { font-size: 1.2rem; color: #FFD600; font-weight: bold; }
-        .header-acoes { display: flex; gap: 8px; align-items: center; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 1.1rem; color: #FFD600; font-weight: bold; }
+        .header-acoes { display: flex; gap: 6px; align-items: center; }
         
         .btn-header { 
             height: 38px; padding: 0 12px; border-radius: 4px; font-weight: bold; font-size: 0.8rem;
-            display: flex; align-items: center; justify-content: center; border: none; cursor: pointer;
-            background: #FFD600; color: #1b5e20;
+            display: flex; align-items: center; justify-content: center; border: 1px solid transparent; 
+            cursor: pointer; background: #FFD600; color: #1b5e20;
         }
+        .btn-voltar { width: 38px; font-size: 1.2rem; }
 
+        /* ÁREA DE CONTEÚDO */
         .view-scroll { flex: 1; overflow-y: auto; padding: 20px; }
-
-        /* Grid */
-        .launcher-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        .app-icon { background: rgba(255,255,255,0.3); border-radius: 8px; cursor: pointer; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #1b5e20; }
-        .app-icon:active { background: rgba(255,255,255,0.5); }
+        
+        /* GRID DE ATALHOS */
+        .launcher-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .app-icon { 
+            background: #ffffff; border: 2px solid #1b5e20; border-radius: 8px; 
+            cursor: pointer; padding: 8px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center;
+        }
+        .app-icon:active { background: #f0f0f0; }
         .app-icon h2 { font-size: 0.5rem; margin-top: 5px; font-weight: bold; color: #1b5e20; text-align: center; }
-        .icon-symbol { font-size: 1.8rem; }
+        .icon-symbol { font-size: 1.5rem; }
 
-        /* Estilização Geral de Formulários e Componentes para manter o tema Brasil */
-        .form-control { border: 2px solid #1b5e20 !important; background: #fff !important; }
-        .btn-executar { background: #1b5e20 !important; color: #FFD600 !important; }
+        /* MÓDULO DE FECHAMENTO */
+        .btn-fechar-seguro { background: #c62828 !important; color: #fff !important; border: 2px solid #8e0000 !important; }
 
-        /* Impressão */
+        /* COMPONENTES */
+        .form-control { border: 2px solid #1b5e20 !important; background: #fff !important; padding: 10px; border-radius: 5px; width: 100%; font-weight: bold; }
+        .btn-executar { background: #1b5e20 !important; color: #FFD600 !important; border: none; padding: 15px; border-radius: 5px; width: 100%; font-weight: bold; margin-top: 10px; }
+        
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-box { background: #fff; padding: 20px; border-radius: 8px; border: 3px solid #1b5e20; width: 100%; max-width: 350px; }
+        
+        /* IMPRESSÃO */
         @media print {
-            body, html, #app-container { background: #fff !important; }
-            .view { display: none !important; }
+            body { background: #fff !important; }
+            #app-container { display: none !important; }
             #view-print-preview { display: block !important; }
         }
     </style>
 </head>
 <body>
+    <div id="loading-pdf"><div style="font-size: 2rem; margin-bottom: 10px;">⚙️</div>PROCESSANDO...</div>
     <div id="app-container">
+        <div id="view-launcher" class="view active">
+            <div class="header">
+                <div class="header-top">
+                    <h1>WEBFIN v3.12</h1>
+                </div>
+            </div>
+            <div class="view-scroll">
+                <div class="launcher-grid">
+                    <div class="app-icon" onclick="abrirApp('view-eu')"><div class="icon-symbol">👤</div><h2>EU</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-contas')"><div class="icon-symbol">$</div><h2>REGISTROS</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-diario')"><div class="icon-symbol">📓</div><h2>DIÁRIO</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-radar')"><div class="icon-symbol">📊</div><h2>GRÁFICOS</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-negocio')"><div class="icon-symbol">🏢</div><h2>NEGÓCIO</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-clientes')"><div class="icon-symbol">👥</div><h2>CLIENTES</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-estoque')"><div class="icon-symbol">📦</div><h2>ESTOQUE</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-vendas')"><div class="icon-symbol">🤝</div><h2>VENDAS</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-dossie')"><div class="icon-symbol">📄</div><h2>RELATÓRIOS</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-calculadora')"><div class="icon-symbol">🔢</div><h2>CALC</h2></div>
+                    <div class="app-icon" onclick="abrirApp('view-dados')"><div class="icon-symbol">⚙️</div><h2>SISTEMA</h2></div>
+                    <div class="app-icon" onclick="abrirModalDoacao()"><div class="icon-symbol">☕</div><h2>APOIAR</h2></div>
+                    <div class="app-icon btn-fechar-seguro" onclick="executarEncerramentoSeguro()"><div class="icon-symbol" style="color:white;">❌</div><h2 style="color:white;">FECHAR</h2></div>
+                </div>
+            </div>
+        </div>
         </div>
 </body>
 </html>

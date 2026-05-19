@@ -34,19 +34,34 @@
         .view.active { display: flex; animation: fadeIn 0.15s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* HEADER FIXO */
-        .header { flex-shrink: 0; background-color: #1a1a1a; display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 2px solid #333; z-index: 50; }
-        .header h1 { font-size: 1.2rem; color: #4caf50; letter-spacing: 2px; margin: 0; }
-        .header-acoes { display: flex; gap: 8px; align-items: center; }
+        /* HEADER FIXO - NOVA ARQUITETURA MILITAR */
+        .header { 
+            flex-shrink: 0; background-color: #1a1a1a; 
+            display: flex; flex-direction: column; align-items: flex-start; gap: 12px; 
+            padding: 15px 20px; border-bottom: 2px solid #333; z-index: 50; 
+        }
         
-        /* Padronização Brutal dos Botões do Header */
-        .btn-header { background: transparent; padding: 6px 12px; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; height: 32px; border: none; }
-        .btn-voltar { color: #ff5252; border: 1px solid #ff5252; }
-        .btn-ajuda { background: #333; color: #aaa; border: 1px solid #555; }
-        .btn-acao-azul { background: #2196f3; color: #fff; }
-        .btn-acao-laranja { background: #ff9800; color: #000; }
-        .btn-config { font-size: 1.5rem; cursor: pointer; color: #666; transition: 0.2s; background: none; border: none; padding: 0; height: auto; }
-        .btn-config:active { color: #4caf50; }
+        /* Título Irredutível */
+        .header h1 { font-size: 1.6rem !important; color: #4caf50; letter-spacing: 2px; margin: 0; line-height: 1; text-transform: uppercase; }
+        
+        /* Contêiner de Botões */
+        .header-acoes { display: flex; gap: 8px; align-items: center; width: 100%; overflow-x: auto; padding-bottom: 2px; }
+        
+        /* O Padrão Ouro de Botão (Altura Travada) */
+        .btn-header { 
+            height: 38px !important; /* A ALTURA DE CONCRETO QUE VOCÊ PEDIU */
+            padding: 0 15px; font-weight: bold; border-radius: 4px; font-size: 0.85rem; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            border: 1px solid transparent; cursor: pointer; flex-shrink: 0; white-space: nowrap; transition: 0.1s;
+        }
+        .btn-header:active { transform: scale(0.95); }
+        
+        /* Variantes do Botão Superior */
+        .btn-voltar { color: #ff5252; border-color: #ff5252; background: transparent; }
+        .btn-ajuda { background: #333; color: #aaa; border-color: #555; padding: 0 12px; font-size: 1rem; }
+        .btn-acao-azul { background: #2196f3; color: #fff; border-color: #2196f3; font-size: 1.2rem; }
+        .btn-acao-laranja { background: #ff9800; color: #000; border-color: #ff9800; }
+        .btn-config { background: #333; color: #e0e0e0; border-color: #555; }
 
         /* FOOTER FIXO */
         .footer-fixed { position: absolute; bottom: 0; left: 0; width: 100%; background: #0a0a0a; text-align: center; padding: 10px 0; border-top: 1px solid #333; font-size: 0.75rem; color: #666; display: flex; justify-content: center; gap: 15px; align-items: center; padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 50; }
@@ -113,7 +128,7 @@
 
         .dados-box { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: left; }
         .dados-box h3 { color: #fff; font-size: 1rem; margin-bottom: 10px; }
-        .btn-dados { display: block; width: 100%; padding: 12px; font-weight: bold; border-radius: 5px; cursor: pointer; border: none; text-transform: uppercase; margin-bottom: 10px;}
+        .btn-dados { display: block; width: 100%; padding: 12px; font-weight: bold; border-radius: 5px; cursor: pointer; border: none; text-transform: uppercase; text-align: center; margin-bottom: 10px;}
         .alerta-padrao { background: rgba(255,193,7,0.1); border-left: 4px solid #ffc107; padding: 10px; font-size: 0.8rem; color: #ffe082; margin-bottom: 15px; text-align: left; }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 20px;}
@@ -142,11 +157,9 @@
             #view-print-preview { display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; height: auto !important; background: #ffffff !important; padding: 0 !important; margin: 0 !important; overflow: visible !important; }
             #view-print-preview * { visibility: visible !important; color: #000 !important; background: transparent !important; }
             
-            /* Oculta os botões na folha de impressão */
-            .header.no-print, .btn-header, .fundo-mesa, .view-scroll { background: #ffffff !important; }
-            .header.no-print { display: none !important; }
+            .header.no-print, .btn-header, .fundo-mesa, .view-scroll { background: #ffffff !important; display: none !important; }
             
-            .papel-a4 { box-shadow: none !important; border: none !important; padding: 0 !important; width: 100% !important; max-width: none !important; margin: 0 !important; }
+            .papel-a4 { box-shadow: none !important; border: none !important; padding: 0 !important; width: 100% !important; max-width: none !important; margin: 0 !important; display: block !important; }
             th { background-color: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             table { border-color: #000 !important; width: 100% !important; }
             td, th { border: 1px solid #000 !important; }
@@ -163,7 +176,9 @@
     <div id="view-launcher" class="view active">
         <div class="header">
             <h1>WEBFIN</h1>
-            <button class="btn-config" onclick="abrirMenuSistema()">⚙️</button>
+            <div class="header-acoes">
+                <button class="btn-header btn-config" onclick="abrirMenuSistema()">⚙️ MENU DO SISTEMA</button>
+            </div>
         </div>
         <div class="view-scroll">
             <div class="launcher-grid">
@@ -191,8 +206,8 @@
         <div class="header">
             <h1>EU</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
                 <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+                <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
             </div>
         </div>
         <div class="view-scroll">
@@ -223,7 +238,9 @@
     <div id="view-dados" class="view">
         <div class="header">
             <h1>DADOS</h1>
-            <div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div>
+            <div class="header-acoes">
+                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+            </div>
         </div>
         <div class="view-scroll">
             <div class="dados-box">
@@ -240,7 +257,9 @@
     <div id="view-canal" class="view">
         <div class="header">
             <h1>CANAL</h1>
-            <div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div>
+            <div class="header-acoes">
+                <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+            </div>
         </div>
         <div class="view-scroll">
             <div class="dados-box" style="border-left: 4px solid #25D366; text-align: center;">
@@ -260,8 +279,8 @@
         <div class="header">
             <h1>REGISTROS</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
                 <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+                <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
             </div>
         </div>
         <div class="view-scroll">
@@ -280,8 +299,8 @@
         <div class="header">
             <h1>DIÁRIO</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
                 <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+                <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
             </div>
         </div>
         <div class="view-scroll">
@@ -296,8 +315,8 @@
         <div class="header">
             <h1>RELATÓRIOS</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
                 <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+                <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
             </div>
         </div>
         <div class="view-scroll">
@@ -314,13 +333,13 @@
     </div>
 
     <div id="view-print-preview" class="view view-print-preview" style="background: #e0e0e0;">
-        <div class="header no-print" style="background: #1a1a1a; padding: 10px 15px; border-bottom: 2px solid #333;">
-            <h1 style="color: #fff; font-size: 1rem; margin: 0;">VISUALIZAÇÃO</h1>
-            <div class="header-acoes" style="display:flex; gap:8px; align-items:center;">
-                <button class="btn-header btn-ajuda" onclick="abrirAjudaImpressao()">?</button>
+        <div class="header no-print">
+            <h1>VISUALIZAÇÃO</h1>
+            <div class="header-acoes">
+                <button class="btn-header btn-voltar" style="color: #fff; border-color: #555;" onclick="abrirApp('view-dossie')">FECHAR</button>
                 <button id="btn-orientacao" class="btn-header btn-acao-laranja" onclick="toggleOrientacao()">PAISAGEM</button>
-                <button class="btn-header btn-acao-azul" style="font-size: 1.1rem; padding: 4px 10px;" onclick="window.print()">🖨️/💾</button>
-                <button class="btn-header btn-voltar" style="color: #fff; border-color: #555; font-size: 0.75rem;" onclick="abrirApp('view-dossie')">FECHAR</button>
+                <button class="btn-header btn-acao-azul" onclick="window.print()">🖨️/💾</button>
+                <button class="btn-header btn-ajuda" onclick="abrirAjudaImpressao()">?</button>
             </div>
         </div>
         <div class="fundo-mesa view-scroll no-print" style="padding-bottom: 20px;">
@@ -333,8 +352,8 @@
         <div class="header">
             <h1>GRÁFICOS</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
                 <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+                <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
             </div>
         </div>
         <div class="view-scroll">
@@ -351,8 +370,8 @@
         <div class="header">
             <h1>CALCULADORA</h1>
             <div class="header-acoes">
-                <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
                 <button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button>
+                <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
             </div>
         </div>
         <div class="view-scroll">
@@ -367,13 +386,13 @@
         </div>
     </div>
 
-    <div id="view-negocio" class="view"><div class="header"><h1>NEGÓCIO</h1><div class="header-acoes"><button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Em Desenvolvimento ]</p></div></div>
-    <div id="view-clientes" class="view"><div class="header"><h1>CLIENTES</h1><div class="header-acoes"><button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Em Desenvolvimento ]</p></div></div>
-    <div id="view-estoque" class="view"><div class="header"><h1>ESTOQUE</h1><div class="header-acoes"><button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Em Desenvolvimento ]</p></div></div>
-    <div id="view-vendas" class="view"><div class="header"><h1>VENDAS</h1><div class="header-acoes"><button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Em Desenvolvimento ]</p></div></div>
+    <div id="view-negocio" class="view"><div class="header"><h1>NEGÓCIO</h1><div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button><button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Em Desenvolvimento ]</p></div></div>
+    <div id="view-clientes" class="view"><div class="header"><h1>CLIENTES</h1><div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button><button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Em Desenvolvimento ]</p></div></div>
+    <div id="view-estoque" class="view"><div class="header"><h1>ESTOQUE</h1><div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button><button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Em Desenvolvimento ]</p></div></div>
+    <div id="view-vendas" class="view"><div class="header"><h1>VENDAS</h1><div class="header-acoes"><button class="btn-header btn-voltar" onclick="abrirApp('view-launcher')">VOLTAR</button><button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #555;">[ Em Desenvolvimento ]</p></div></div>
 
     <div class="footer-fixed">
-        <span>WEBFIN v3.8 | dev by <a href="https://github.com/raphahcbmelo" target="_blank">@raphahcbmelo</a></span>
+        <span>WEBFIN v3.9 | dev by <a href="https://github.com/raphahcbmelo" target="_blank">@raphahcbmelo</a></span>
     </div>
 </div>
 
@@ -528,7 +547,6 @@
 
     function forcarAtualizacao() {
         if(confirm("Confirma a verificação de atualizações no servidor?")) {
-            // Recarrega a página forçando o bypass do cache local, sem matar a query string/full screen
             window.location.reload(true);
         }
     }

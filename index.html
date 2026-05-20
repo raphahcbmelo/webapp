@@ -12,18 +12,20 @@
     <link rel="apple-touch-icon" href="icon-512.png">
     <meta name="theme-color" content="#1b5e20">
 
+    <style id="style-orientacao">@page { size: portrait; margin: 10mm; }</style>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', Courier, monospace !important; }
         
-        /* FÍSICA BLINDADA: Fundo escuro no desktop, App Amarelo no centro */
+        /* FÍSICA BLINDADA */
         body { background-color: #121212; height: 100dvh; overflow: hidden; display: flex; justify-content: center; width: 100%; }
         
         #app-container {
             width: 100%; max-width: 400px; height: 100dvh;
-            background-color: #FFD600; /* Amarelo Brasil */
+            background-color: #FFD600; 
             position: relative; display: flex; flex-direction: column;
             box-shadow: 0 0 20px rgba(0,0,0,0.8); border: 1px solid #1b5e20;
             padding-top: env(safe-area-inset-top);
@@ -33,7 +35,7 @@
         .view.active { display: flex; animation: fadeIn 0.15s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* HEADER FIXO - Verde Bandeira */
+        /* HEADER FIXO */
         .header { 
             flex-shrink: 0; background-color: #1b5e20; 
             padding: 15px 20px; border-bottom: 3px solid #0a3916;
@@ -43,7 +45,6 @@
         .header h1 span { font-size: 0.8rem; color: #a5d6a7; font-weight: normal; }
         .header-acoes { display: flex; gap: 8px; align-items: center; }
         
-        /* Botões do Header */
         .btn-header { 
             height: 36px; min-width: 36px; padding: 0 10px; border-radius: 6px; font-weight: bold; font-size: 1.2rem;
             display: flex; align-items: center; justify-content: center; border: 2px solid #FFD600; cursor: pointer;
@@ -72,7 +73,7 @@
         .icon-cifrao { font-size: 2.2rem; font-weight: bold; color: #1b5e20; line-height: 1; }
         .divisor-grid { grid-column: span 4; height: 2px; background-color: rgba(27,94,32,0.2); margin: 5px 0; }
 
-        /* FORMULÁRIOS E CAIXAS BRANCAS */
+        /* FORMULÁRIOS */
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; margin-bottom: 5px; font-size: 0.85rem; color: #1b5e20; font-weight: bold; }
         .form-control { width: 100%; padding: 12px; background-color: #ffffff; border: 2px solid #1b5e20; color: #121212; border-radius: 6px; font-weight: bold; font-size: 1rem; }
@@ -82,6 +83,13 @@
         .tipo-btn { flex: 1; padding: 12px; text-align: center; border: 2px solid #1b5e20; border-radius: 6px; cursor: pointer; background: #ffffff; font-weight: bold; color: #1b5e20; }
         .tipo-btn.active.receita { background-color: #2e7d32; border-color: #2e7d32; color: #fff; }
         .tipo-btn.active.despesa { background-color: #c62828; border-color: #c62828; color: #fff; }
+
+        /* BOTÕES DE FILTRO DO GRÁFICO */
+        .filtro-toggle-container { display: flex; gap: 10px; margin: 8px 0; }
+        .filtro-btn { flex: 1; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; cursor: pointer; transition: 0.2s; border: 2px solid #888; background: #f5f5f5; color: #888; text-transform: uppercase; }
+        .filtro-btn.receita.active { background: #2e7d32; border-color: #2e7d32; color: #fff; box-shadow: 0 3px 0 #1b5e20; }
+        .filtro-btn.despesa.active { background: #c62828; border-color: #c62828; color: #fff; box-shadow: 0 3px 0 #8e0000; }
+        .filtro-btn.active:active { transform: translateY(3px); box-shadow: 0 0 0 transparent; }
 
         #bloco-recorrencia { display: none; background: #ffffff; padding: 10px; border-radius: 6px; margin-bottom: 12px; border: 2px solid #1b5e20; border-left: 6px solid #1b5e20; }
         .btn-executar { width: 100%; padding: 15px; background-color: #1b5e20; color: #FFD600; border: none; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 15px; text-transform: uppercase; box-shadow: 0 4px 0 #0a3916; transition: 0.1s; }
@@ -115,7 +123,13 @@
         .text-red { color: #c62828 !important; }
         .text-white { color: #FFD600 !important; }
         #lista-dossie { overflow-y: auto; padding-right: 5px; margin-top: 15px; }
-        .chart-wrapper { background: #ffffff; padding: 10px; border-radius: 8px; border: 2px solid #1b5e20; margin-top: 15px; min-height: 280px; display: flex; align-items: center; justify-content: center; }
+        .chart-wrapper { background: #ffffff; padding: 20px 10px 10px 10px; border-radius: 8px; border: 2px solid #1b5e20; margin-top: 15px; min-height: 380px; display: flex; align-items: center; justify-content: center; width: 100%; }
+
+        /* CHECKBOXES DO GRÁFICO */
+        .cb-item { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; padding: 6px; border-radius: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: bold; }
+        .cb-item input { transform: scale(1.2); margin-right: 5px; }
+        .btn-mini { background: #f0f0f0; border: 1px solid #ccc; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; cursor: pointer; font-weight: bold; color: #333; }
+        .btn-mini:active { background: #ddd; }
 
         /* CALCULADORA */
         .calc-display { width: 100%; padding: 15px; font-size: 2rem; text-align: right; background: #ffffff; color: #1b5e20; border: 2px solid #1b5e20; border-radius: 6px; margin-bottom: 20px; outline: none; letter-spacing: 2px; font-weight: bold; }
@@ -137,27 +151,25 @@
 
         #loading-pdf { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(27,94,32,0.95); z-index: 9999; color: #FFD600; font-size: 1.2rem; justify-content: center; align-items: center; font-weight: bold; flex-direction: column; text-align: center;}
 
-        /* ==========================================
-           TELA DE IMPRESSÃO (PREVIEW A4 COM SCALE)
-           ========================================== */
-        /* Removido o display: none do ID para evitar conflito de especificidade */
-        #view-print-preview { background: #333; }
-        
-        /* A mesa de fundo permite rolagem livre */
+        /* TELA DE IMPRESSÃO (PREVIEW A4 COM SCALE) */
+        #view-print-preview { display: none; background: #333; flex-direction: column; height: 100%; width: 100%; }
         .fundo-mesa { flex: 1; overflow: auto; padding: 20px; display: flex; justify-content: center; align-items: flex-start; }
-        
-        /* O Wrapper que aplica o Scale para caber na tela do celular */
         .preview-scale-wrapper { transform-origin: top center; transition: transform 0.3s ease; }
+        .papel-a4 { background: #ffffff; color: #000000; width: 794px; min-height: 1123px; margin: 0 auto; padding: 40px; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+        .papel-a4.landscape { width: 1123px; min-height: 794px; }
 
-        /* A Folha A4 Branca - Tamanho Fixo Absoluto em Pixels (96 DPI) */
-        .papel-a4 {
-            background: #ffffff; color: #000000;
-            width: 794px; min-height: 1123px; /* A4 Retrato */
-            margin: 0 auto; padding: 40px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+        /* IMPRESSÃO NATIVA */
+        #print-zone { display: none; }
+        @media print {
+            body, html, #app-container { background: #ffffff !important; height: auto !important; overflow: visible !important; display: block !important; }
+            .view { display: none !important; }
+            #print-zone { display: block !important; width: 100%; background: #ffffff; color: #000000; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            th { background-color: #f0f0f0 !important; }
+            table { border-color: #000000 !important; width: 100% !important; border-collapse: collapse !important; }
+            td, th { border: 1px solid #000000 !important; padding: 8px !important; }
+            .page-break { page-break-before: always; }
         }
-        .papel-a4.landscape { width: 1123px; min-height: 794px; /* A4 Paisagem */ }
-
     </style>
 </head>
 <body>
@@ -171,7 +183,7 @@
     
     <div id="view-launcher" class="view active">
         <div class="header">
-            <h1>WEBFIN <span>v3.21</span></h1>
+            <h1>WEBFIN <span>v3.24</span></h1>
         </div>
         <div class="view-scroll">
             <div class="launcher-grid">
@@ -319,7 +331,7 @@
             
             <div class="resumo-box" id="dossie-resumo" style="display: none;"><div class="resumo-item"><h4>ENTRADAS</h4><p class="text-green" id="resumo-receitas">R$ 0,00</p></div><div class="resumo-item"><h4>SAÍDAS</h4><p class="text-red" id="resumo-despesas">R$ 0,00</p></div><div class="resumo-item total" id="box-saldo-total"><h4>SALDO DO PERÍODO</h4><p id="resumo-saldo">R$ 0,00</p></div></div>
             
-            <button id="btn-visualizar-impressao" class="btn-executar" style="display:none; background:#2196f3; color:#fff; margin-top: 15px; box-shadow: 0 4px 0 #0d47a1;" onclick="abrirPreviewImpressao()">VISUALIZAR IMPRESSÃO</button>
+            <button id="btn-visualizar-impressao" class="btn-executar" style="display:none; background:#2196f3 !important; color:#fff !important; margin-top: 15px; box-shadow: 0 4px 0 #0d47a1;" onclick="abrirPreviewImpressao()">VISUALIZAR IMPRESSÃO</button>
             
             <div id="lista-dossie"><p style="text-align: center; color: #1b5e20; margin-top: 30px; font-size: 0.8rem; font-weight:bold;">[ Informe o período para geração ]</p></div>
         </div>
@@ -327,7 +339,7 @@
 
     <!-- TELA DE PREVIEW DE IMPRESSÃO (A4 ABSOLUTO COM SCALE) -->
     <div id="view-print-preview" class="view">
-        <div class="header" style="background: #1b5e20; border-bottom: 2px solid #0a3916;">
+        <div class="header no-print" style="background: #1b5e20; border-bottom: 2px solid #0a3916;">
             <h1 style="color: #FFD600; font-size: 1rem;">VISUALIZAÇÃO A4</h1>
             <div class="header-acoes">
                 <button id="btn-orientacao" class="btn-header" style="background: #ff9800; color: #000; border: none; font-size: 0.8rem;" onclick="toggleOrientacao()">PAISAGEM</button>
@@ -351,11 +363,43 @@
             </div>
         </div>
         <div class="view-scroll">
-            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>MENSURAÇÃO INICIAL:</label><input type="date" id="radar-data-de" class="form-control" onchange="atualizarPainelContas()"></div><div class="form-group" style="flex:1;"><label>MENSURAÇÃO FINAL:</label><input type="date" id="radar-data-ate" class="form-control" onchange="atualizarPainelContas()"></div></div>
-            <div class="form-group"><label>AGRUPAMENTO CRONOLÓGICO:</label><select id="radar-agrupamento" class="form-control" onchange="verificarTravaGrafico()"><option value="geral">Consolidado do Período</option><option value="diario">Evolução Diária</option><option value="semanal">Evolução Semanal</option><option value="mensal">Evolução Mensal</option></select></div>
-            <div class="form-group"><label>MÉTODO DE EXIBIÇÃO:</label><select id="radar-tipo-grafico" class="form-control" onchange="renderizarGraficoAvancado()"><option value="radar" id="opt-radar">Análise de Atributos (Radar)</option><option value="pie" id="opt-pie">Distribuição Percentual (Pizza)</option><option value="line" id="opt-line">Linha de Tendência Temporal</option><option value="bar" id="opt-bar">Gráfico de Impacto (Barras)</option></select></div>
-            <div class="form-group" style="margin-top: 15px; background: #ffffff; border: 2px solid #1b5e20; padding: 10px; border-radius: 5px;"><label style="color: #1b5e20; font-size: 0.8rem; border-bottom: 1px solid #ccc; padding-bottom: 5px; display: block; font-weight:bold;">FILTRAR ELEMENTOS DA MATRIZ:</label><div style="display: flex; gap: 5px; margin: 8px 0;"><button onclick="selecionarMassa('receita')" style="flex: 1; padding: 4px; background: #2e7d32; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer; font-weight:bold;">+ ENTRADAS</button><button onclick="selecionarMassa('despesa')" style="flex: 1; padding: 4px; background: #c62828; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer; font-weight:bold;">+ SAÍDAS</button><button onclick="limparSelecaoMassa()" style="padding: 4px 8px; background: #121212; color: #fff; border: none; border-radius: 3px; font-size: 0.65rem; cursor: pointer; font-weight:bold;">LIMPAR</button></div><div id="painel-checkboxes" style="max-height: 140px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 2px;"></div></div>
-            <button class="btn-executar" style="margin-bottom: 15px;" onclick="renderizarGraficoAvancado()">MANDAR GERAR ANÁLISE</button>
+            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>DATA INICIAL:</label><input type="date" id="radar-data-de" class="form-control" onchange="atualizarPainelContas()"></div><div class="form-group" style="flex:1;"><label>DATA FINAL:</label><input type="date" id="radar-data-ate" class="form-control" onchange="atualizarPainelContas()"></div></div>
+            <div class="form-group"><label>TIPO DE PERÍODO:</label><select id="radar-agrupamento" class="form-control" onchange="verificarTravaGrafico()"><option value="geral">TODO</option><option value="diario">DIÁRIO</option><option value="semanal">SEMANAL</option><option value="mensal">MENSAL</option></select></div>
+            <div class="form-group"><label>TIPO DE GRÁFICO:</label><select id="radar-tipo-grafico" class="form-control" onchange="renderizarGraficoAvancado()"><option value="doughnut" id="opt-pie">Distribuição em Anel</option><option value="bar" id="opt-bar">Barras de Comparação</option><option value="line" id="opt-line">Linha de Tendência</option><option value="radar" id="opt-radar">Teia de Atributos</option></select></div>
+            
+            <div class="form-group" style="margin-top: 15px; background: #ffffff; border: 2px solid #1b5e20; padding: 15px; border-radius: 8px;">
+                
+                <!-- BLOCO RECEITAS -->
+                <div style="margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 2px solid #2e7d32; padding-bottom: 5px;">
+                        <strong style="color: #2e7d32; font-size: 0.9rem;">🟢 ENTRADAS</strong>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn-mini" onclick="marcarTodos('receita', true)">TODOS</button>
+                            <button class="btn-mini" onclick="marcarTodos('receita', false)">NENHUM</button>
+                        </div>
+                    </div>
+                    <div id="painel-receitas" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; max-height: 120px; overflow-y: auto;"></div>
+                </div>
+
+                <!-- BLOCO DESPESAS -->
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 2px solid #c62828; padding-bottom: 5px;">
+                        <strong style="color: #c62828; font-size: 0.9rem;">🔴 SAÍDAS</strong>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn-mini" onclick="marcarTodos('despesa', true)">TODOS</button>
+                            <button class="btn-mini" onclick="marcarTodos('despesa', false)">NENHUM</button>
+                        </div>
+                    </div>
+                    <div id="painel-despesas" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; max-height: 120px; overflow-y: auto;"></div>
+                </div>
+
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button class="btn-executar" style="margin-top: 0; flex: 1;" onclick="renderizarGraficoAvancado()">GERAR ANÁLISE</button>
+                <button id="btn-pdf-grafico" class="btn-executar" style="margin-top: 0; display: none; background: #2196f3 !important; color: #fff !important; border: 2px solid #0d47a1; box-shadow: 0 4px 0 #0d47a1; width: auto; padding: 15px 20px;" onclick="alert('Módulo PDF em desenvolvimento.')">PDF</button>
+            </div>
+            
             <div class="chart-wrapper"><canvas id="canvasRadar"></canvas></div>
         </div>
     </div>
@@ -450,7 +494,13 @@
     </div>
 </div>
 
+<!-- ZONA DE IMPRESSÃO INVISÍVEL -->
+<iframe id="print-iframe" style="display:none;"></iframe>
+
 <script>
+    // REGISTRO GLOBAL DO PLUGIN DE DATALABELS
+    Chart.register(ChartDataLabels);
+
     let db; const dbName = "FinancasDB"; 
     function initDB() { 
         try {
@@ -481,6 +531,7 @@
         if(id === 'view-diario') { carregarDiario(); } 
         if(id === 'view-eu') { carregarModuloEu(); }
         if(id === 'view-print-preview') { ajustarEscalaPreview(); }
+        if(id === 'view-radar') { atualizarPainelContas(); }
     }
     
     function formatarMoeda(valor) { return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 }); }
@@ -497,6 +548,16 @@
             <p><strong style="color:#b71c1c;">📄 RELATÓRIOS:</strong> Consolidadores de movimentação e balanço mensal, preparados para enquadramento automático de impressão em papel.</p>
         `;
         fecharModais();
+        document.getElementById('modal-ajuda-global').style.display = 'flex';
+    }
+
+    function abrirAjudaImpressao() {
+        document.getElementById('texto-ajuda-dinamico').innerHTML = `
+            <strong>🖨️ VISUALIZAÇÃO DE IMPRESSÃO:</strong><br><br>
+            Confirme o enquadramento estrutural dos dados na folha física. O sistema reduz automaticamente a escala da fonte caso localize um grande número de colunas, prevenindo cortes nas margens.<br><br>
+            Use o botão de rotação (🔄) para ajustar a orientação do papel na sua tela (Retrato/Paisagem).<br><br>
+            <strong>Atenção:</strong> Na tela da impressora do seu aparelho, você deve certificar que a opção Paisagem/Retrato esteja igual à selecionada no aplicativo.
+        `;
         document.getElementById('modal-ajuda-global').style.display = 'flex';
     }
 
@@ -547,7 +608,13 @@
     let tipoForm = 'receita'; function setTipoForm(tipo) { tipoForm = tipo; document.getElementById('form-tipo-receita').classList.remove('active', 'receita'); document.getElementById('form-tipo-despesa').classList.remove('active', 'despesa'); document.getElementById(`form-tipo-${tipo}`).classList.add('active', tipo); }
     function toggleRecorrenciaForm() { const chk = document.getElementById('form-recorrente').checked; document.getElementById('bloco-recorrencia').style.display = chk ? 'block' : 'none'; document.getElementById('grp-data-limite').style.display = chk ? 'block' : 'none'; ajustarLabelsData(); }
     function ajustarLabelsData() { const chk = document.getElementById('form-recorrente').checked; const f = document.getElementById('form-frequencia').value; const lbl = document.getElementById('lbl-data-inicial'); if(!chk) { lbl.innerText = "DATA DO REGISTRO:"; return; } if(f === 'diario') lbl.innerText = "DATA DE INÍCIO:"; if(f === 'semanal') lbl.innerText = "1º REGISTRO:"; if(f === 'mensal') lbl.innerText = "DATA BASE:"; }
-    function definingDatasPadrao() { const hoje = new Date().toISOString().split('T')[0]; document.getElementById('form-data-inicio').value = hoje; document.getElementById('diario-data-de').value = hoje; document.getElementById('diario-data-ate').value = "2026-12-31"; document.getElementById('dossie-data-de').value = hoje; document.getElementById('dossie-data-ate').value = "2026-12-31"; }
+    function definingDatasPadrao() { 
+        const hoje = new Date().toISOString().split('T')[0]; 
+        document.getElementById('form-data-inicio').value = hoje; 
+        document.getElementById('diario-data-de').value = hoje; document.getElementById('diario-data-ate').value = "2026-12-31"; 
+        document.getElementById('dossie-data-de').value = hoje; document.getElementById('dossie-data-ate').value = "2026-12-31"; 
+        document.getElementById('radar-data-de').value = hoje; document.getElementById('radar-data-ate').value = "2026-12-31"; 
+    }
 
     // ==========================================
     // MÓDULO EU
@@ -673,7 +740,7 @@
     }
 
     // ==========================================
-    // RELATÓRIOS E MESA DE IMPRESSÃO (IFRAME FANTASMA)
+    // RELATÓRIOS E MESA DE IMPRESSÃO
     // ==========================================
     let htmlDossieAtual = '';
     function gerarRelatorioDossie() {
@@ -684,13 +751,15 @@
             else { renderizarHTMLDossie(reg, tR, tD, de, ate); }
         };
     }
-    
     function gerarHTMLTabelaDinamica(reg, corBorda, corTextoBase) {
         if(reg.length === 0) return `<p style="text-align: center; color: #1b5e20; margin-top: 20px; font-weight:bold;">[ Sem movimentações registradas ]</p>`;
         let datas = [...new Set(reg.map(r => r.data))].sort((a,b) => a.localeCompare(b)); let contas = [...new Set(reg.map(r => r.nome))].sort();
         let headerBg = (corTextoBase === '#000000') ? '#f2f2f2' : 'rgba(255,255,255,0.1)';
         
-        let table = `<table style="width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: center; color: ${corTextoBase};">`;
+        let fontScale = '0.85rem';
+        if(contas.length > 3) fontScale = '0.7rem'; if(contas.length > 5) fontScale = '0.55rem'; if(contas.length > 7) fontScale = '0.45rem';
+
+        let table = `<table style="width: 100%; border-collapse: collapse; font-size: ${fontScale}; text-align: center; color: ${corTextoBase};">`;
         table += `<thead><tr style="background: ${headerBg};"><th style="padding: 6px; border: 1px solid ${corBorda};">DATA</th>`;
         contas.forEach(c => table += `<th style="padding: 6px; border: 1px solid ${corBorda};">${c}</th>`); table += `</tr></thead><tbody>`;
         datas.forEach(d => {
@@ -728,9 +797,9 @@
                 </div>
                 <table style="width: 100%; margin-bottom: 25px; text-align: center; border-collapse: collapse; font-weight: bold; font-size: 0.9rem;">
                     <tr>
-                        <td style="border: 1px solid #000; padding: 12px;">BALANÇO POSITIVO (CREDITADO)<br><span style="color: #000; font-size:1.1rem;">${formatarMoeda(tR)}</span></td>
-                        <td style="border: 1px solid #000; padding: 12px;">BALANÇO NEGATIVO (DEBITADO)<br><span style="color: #000; font-size:1.1rem;">- ${formatarMoeda(tD)}</span></td>
-                        <td style="border: 1px solid #000; padding: 12px;">SALDO LÍQUIDO ATUARIAL<br><span style="color: #000; font-size:1.1rem;">${(tR-tD) < 0 ? '- ' : ''}${formatarMoeda(Math.abs(tR-tD))}</span></td>
+                        <td style="border: 1px solid #000; padding: 12px; background: #e8f5e9;">BALANÇO POSITIVO (CREDITADO)<br><span style="color: #000; font-size:1.1rem;">${formatarMoeda(tR)}</span></td>
+                        <td style="border: 1px solid #000; padding: 12px; background: #ffebee;">BALANÇO NEGATIVO (DEBITADO)<br><span style="color: #000; font-size:1.1rem;">- ${formatarMoeda(tD)}</span></td>
+                        <td style="border: 1px solid #000; padding: 12px; background: #f5f5f5;">SALDO LÍQUIDO ATUARIAL<br><span style="color: #000; font-size:1.1rem;">${(tR-tD) < 0 ? '- ' : ''}${formatarMoeda(Math.abs(tR-tD))}</span></td>
                     </tr>
                 </table>
                 ${gerarHTMLTabelaDinamica(reg, '#000000', '#000000')}
@@ -745,16 +814,11 @@
         const isLand = papel.classList.contains('landscape');
         const targetWidth = isLand ? 1123 : 794;
         
-        // Pega a largura real da tela, mas limita ao tamanho do app-container (400px)
         const containerWidth = Math.min(window.innerWidth, 400);
-        
-        // Calcula a escala descontando o padding (40px)
         let scale = (containerWidth - 40) / targetWidth;
         if(scale > 1) scale = 1;
         
         wrapper.style.transform = `scale(${scale})`;
-        
-        // Ajusta a altura do wrapper para não sobrar buraco cinza no fundo
         const targetHeight = isLand ? 794 : 1123;
         wrapper.style.height = `${targetHeight * scale}px`;
         wrapper.style.width = `${targetWidth * scale}px`;
@@ -764,6 +828,7 @@
         if(!htmlDossieAtual) return; 
         isLandscape = false; 
         document.getElementById('btn-orientacao').innerText = 'PAISAGEM';
+        document.getElementById('style-orientacao').innerHTML = `@page { size: portrait; margin: 10mm; }`; 
         const papel = document.getElementById('print-preview-content');
         papel.classList.remove('landscape'); 
         papel.innerHTML = htmlDossieAtual; 
@@ -773,6 +838,7 @@
     function toggleOrientacao() { 
         isLandscape = !isLandscape; 
         document.getElementById('btn-orientacao').innerText = isLandscape ? 'RETRATO' : 'PAISAGEM'; 
+        document.getElementById('style-orientacao').innerHTML = `@page { size: ${isLandscape ? 'landscape' : 'portrait'}; margin: 10mm; }`; 
         const papel = document.getElementById('print-preview-content');
         if(isLandscape) { papel.classList.add('landscape'); } else { papel.classList.remove('landscape'); } 
         ajustarEscalaPreview();
@@ -807,6 +873,229 @@
             iframe.contentWindow.focus();
             iframe.contentWindow.print();
         }, 250);
+    }
+
+    // ==========================================
+    // ENGRENAGENS DE GRÁFICOS (NOVO FILTRO)
+    // ==========================================
+    let filtrosGrafico = { receita: true, despesa: true };
+    
+    function toggleFiltroGrafico(tipo) {
+        filtrosGrafico[tipo] = !filtrosGrafico[tipo];
+        const btn = document.getElementById(`btn-filtro-${tipo}`);
+        if(filtrosGrafico[tipo]) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+        renderizarGraficoAvancado();
+    }
+
+    function verificarTravaGrafico() { 
+        const g = document.getElementById('radar-agrupamento').value; 
+        const s = document.getElementById('radar-tipo-grafico'); 
+        if(g !== 'geral') { 
+            document.getElementById('opt-radar').disabled = true; 
+            document.getElementById('opt-pie').disabled = true; 
+            if(s.value === 'radar' || s.value === 'doughnut') s.value = 'line'; 
+        } else { 
+            document.getElementById('opt-radar').disabled = false; 
+            document.getElementById('opt-pie').disabled = false; 
+        } 
+        renderizarGraficoAvancado();
+    }
+    
+    let chartInstance = null; 
+    function obterSegunda(dStr) { let d=new Date(dStr+'T00:00:00'); let dia=d.getDay(); let diff=d.getDate()-dia+(dia==0?-6:1); return new Date(d.setDate(diff)).toISOString().split('T')[0]; }
+    
+    function atualizarPainelContas() {
+        const de = document.getElementById('radar-data-de').value; 
+        const ate = document.getElementById('radar-data-ate').value; 
+        if(!de || !ate) return;
+        
+        const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); 
+        let conjReceitas = new Set();
+        let conjDespesas = new Set();
+        
+        s.openCursor().onsuccess = (e) => {
+            let c = e.target.result; 
+            if(c) { 
+                if(c.value.data >= de && c.value.data <= ate) {
+                    if(c.value.tipo === 'receita') conjReceitas.add(c.value.nome);
+                    else conjDespesas.add(c.value.nome);
+                }
+                c.continue(); 
+            } else { 
+                const pRec = document.getElementById('painel-receitas'); 
+                const pDes = document.getElementById('painel-despesas'); 
+                pRec.innerHTML = ''; pDes.innerHTML = '';
+                
+                Array.from(conjReceitas).sort().forEach(n => { 
+                    pRec.innerHTML += `<label class="cb-item" style="background:#e8f5e9; border:1px solid #2e7d32; color:#2e7d32; font-weight:bold;"><input type="checkbox" class="radar-cb-conta receita" value="${n}" checked> ${n}</label>`; 
+                });
+                if(conjReceitas.size === 0) pRec.innerHTML = '<span style="font-size:0.7rem; color:#666;">Sem receitas no período.</span>';
+
+                Array.from(conjDespesas).sort().forEach(n => { 
+                    pDes.innerHTML += `<label class="cb-item" style="background:#ffebee; border:1px solid #c62828; color:#c62828; font-weight:bold;"><input type="checkbox" class="radar-cb-conta despesa" value="${n}" checked> ${n}</label>`; 
+                });
+                if(conjDespesas.size === 0) pDes.innerHTML = '<span style="font-size:0.7rem; color:#666;">Sem despesas no período.</span>';
+            }
+        };
+    }
+
+    function marcarTodos(tipo, estado) {
+        document.querySelectorAll(`.radar-cb-conta.${tipo}`).forEach(cb => cb.checked = estado);
+    }
+
+    function renderizarGraficoAvancado() {
+        const de = document.getElementById('radar-data-de').value; 
+        const ate = document.getElementById('radar-data-ate').value; 
+        const agp = document.getElementById('radar-agrupamento').value; 
+        const mod = document.getElementById('radar-tipo-grafico').value;
+        
+        let contasSelecionadas = [];
+        document.querySelectorAll('.radar-cb-conta:checked').forEach(cb => contasSelecionadas.push(cb.value));
+
+        const ctx = document.getElementById('canvasRadar').getContext('2d'); 
+        if(chartInstance) chartInstance.destroy(); 
+        
+        if(contasSelecionadas.length === 0) { 
+            ctx.clearRect(0,0,400,400); 
+            document.getElementById('btn-pdf-grafico').style.display = 'none';
+            return; 
+        }
+        
+        const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); 
+        let reg = [];
+        s.openCursor().onsuccess = (e) => {
+            let c = e.target.result; 
+            if(c) { 
+                if(c.value.data >= de && c.value.data <= ate && contasSelecionadas.includes(c.value.nome)) {
+                    reg.push(c.value); 
+                }
+                c.continue(); 
+            } else { 
+                if(reg.length > 0) {
+                    document.getElementById('btn-pdf-grafico').style.display = 'block';
+                } else {
+                    document.getElementById('btn-pdf-grafico').style.display = 'none';
+                }
+
+                let chartData = compilarDadosGrafico(agp, contasSelecionadas, reg, mod); 
+                
+                chartInstance = new Chart(ctx, { 
+                    type: mod, 
+                    data: chartData.data, 
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        layout: { padding: { top: 30, bottom: 10, left: 10, right: 10 } },
+                        plugins: chartData.plugins, 
+                        scales: chartData.scales 
+                    },
+                    plugins: [ChartDataLabels] 
+                }); 
+            }
+        };
+    }
+
+    function compilarDadosGrafico(agp, contas, reg, tipoGrafico) {
+        let isCircular = (tipoGrafico === 'radar' || tipoGrafico === 'doughnut' || tipoGrafico === 'pie');
+
+        let tipoContaMap = {};
+        reg.forEach(r => tipoContaMap[r.nome] = r.tipo);
+
+        let pluginsObj = { 
+            legend: { 
+                position: 'bottom',
+                labels: { color: '#1b5e20', font: {family: 'Courier New', weight: 'bold', size: 10}, padding: 15 } 
+            }, 
+            tooltip: { enabled: false }, 
+            datalabels: { 
+                display: true, 
+                color: isCircular ? '#ffffff' : '#1b5e20', 
+                anchor: isCircular ? 'center' : 'end', 
+                align: isCircular ? 'center' : 'top', 
+                offset: isCircular ? 0 : 6,
+                font: { size: 11, family: 'Courier New', weight: 'bold' }, 
+                formatter: function(v, context) { 
+                    if(v === 0 || v === null || v === undefined) return '';
+                    
+                    let accountName = agp === 'geral' ? context.chart.data.labels[context.dataIndex] : context.dataset.label;
+                    let prefix = tipoContaMap[accountName] === 'despesa' ? '- ' : '';
+
+                    if(v >= 100000) return prefix + (v/1000).toFixed(0) + 'k';
+                    return prefix + v.toLocaleString('pt-BR', {minimumFractionDigits: 2}); 
+                } 
+            } 
+        };
+        
+        const gerarCor = (index) => {
+            let hue = (index * 137.5) % 360;
+            if (hue > 330 || hue < 20) hue = (hue + 100) % 360; 
+            return `hsl(${hue}, 75%, 45%)`; 
+        };
+        const gerarCorBg = (index) => {
+            let hue = (index * 137.5) % 360;
+            if (hue > 330 || hue < 20) hue = (hue + 100) % 360;
+            return `hsla(${hue}, 75%, 45%, 0.7)`;
+        };
+
+        if(agp === 'geral') {
+            let tot = {}; 
+            contas.forEach(c => tot[c] = 0);
+            reg.forEach(r => tot[r.nome] += r.valor);
+            
+            let labels = contas;
+            let data = contas.map(c => tot[c]);
+            let bgColors = contas.map((c, i) => gerarCorBg(i));
+            let borderColors = contas.map((c, i) => gerarCor(i));
+
+            return { 
+                data: { 
+                    labels: labels, 
+                    datasets: [{ 
+                        data: data, 
+                        backgroundColor: bgColors, 
+                        borderColor: borderColors, 
+                        borderWidth: 2 
+                    }] 
+                }, 
+                scales: isCircular ? {} : { x: { display: false }, y: { display: false } }, 
+                plugins: pluginsObj 
+            };
+        } else {
+            let chaves = new Set(); 
+            reg.forEach(r => { 
+                if(agp==='diario') r.p = formatarDataBR(r.data).substring(0,5); 
+                if(agp==='semanal') r.p = formatarDataBR(obterSegunda(r.data)).substring(0,5); 
+                if(agp==='mensal') { let p = r.data.split('-'); r.p = `${p[1]}/${p[0].substring(2,4)}`; } 
+                chaves.add(r.p); 
+            });
+            let lbls = Array.from(chaves).sort(); 
+            
+            let dts = contas.map((c, i) => { 
+                return { 
+                    label: c, 
+                    data: lbls.map(pCh => reg.filter(r => r.nome === c && r.p === pCh).reduce((s,curr)=>s+curr.valor,0)), 
+                    borderColor: gerarCor(i), 
+                    backgroundColor: isCircular ? gerarCorBg(i) : (tipoGrafico === 'line' ? 'transparent' : gerarCorBg(i)), 
+                    tension: 0.3,
+                    borderWidth: 2,
+                    pointBackgroundColor: gerarCor(i),
+                    pointRadius: 3
+                }; 
+            });
+            
+            return { 
+                data: { labels: lbls, datasets: dts }, 
+                scales: isCircular ? {} : { 
+                    x: { grid: { color: '#e0e0e0' }, ticks: { color: '#1b5e20', font: {family: 'Courier New', weight: 'bold', size: 9} } }, 
+                    y: { grid: { color: '#e0e0e0' }, ticks: { color: '#1b5e20', font: {family: 'Courier New', weight: 'bold', size: 9} } } 
+                }, 
+                plugins: pluginsObj 
+            };
+        }
     }
 
     // --- CALCULADORA ---

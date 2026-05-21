@@ -10,7 +10,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="WEBFIN">
     <link rel="apple-touch-icon" href="icon-512.png">
-    <meta name="theme-color" content="#1b5e20">
+    <meta name="theme-color" content="#FFD600">
+
+    <style id="style-orientacao">@page { size: portrait; margin: 10mm; }</style>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
@@ -63,7 +65,7 @@
             background: #ffffff; border: 2px solid #1b5e20; border-radius: 8px; 
             cursor: pointer; padding: 12px 5px; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; text-align: center; box-shadow: 0 4px 0 #1b5e20;
-            transition: 0.1s;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
         }
         .app-icon:active { transform: translateY(4px); box-shadow: 0 0 0 #1b5e20; }
         .app-icon h2 { font-size: 0.55rem; margin-top: 8px; font-weight: bold; color: #1b5e20; width: 100%; word-wrap: break-word; text-transform: uppercase; }
@@ -93,10 +95,9 @@
         .btn-executar { width: 100%; padding: 15px; background-color: #1b5e20; color: #FFD600; border: none; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 15px; text-transform: uppercase; box-shadow: 0 4px 0 #0a3916; transition: 0.1s; }
         .btn-executar:active { transform: translateY(4px); box-shadow: 0 0 0 #0a3916; }
 
-        /* CAIXAS DE DADOS E DIÁRIO */
         .dados-box { background: #ffffff; border: 2px solid #1b5e20; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: left; color: #121212; }
         .dados-box h3 { color: #1b5e20; font-size: 1rem; margin-bottom: 10px; border-bottom: 2px solid #1b5e20; padding-bottom: 5px; text-transform: uppercase; }
-        .btn-dados { display: block; width: 100%; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; border: 2px solid #1b5e20; text-transform: uppercase; text-align: center; background: #ffffff; color: #1b5e20; }
+        .btn-dados { display: block; width: 100%; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; border: 2px solid #1b5e20; text-transform: uppercase; text-align: center; margin-bottom: 10px; background: #ffffff; color: #1b5e20; }
         .btn-dados:active { background: #f0f0f0; }
         .alerta-padrao { background: rgba(255,214,0,0.3); border-left: 4px solid #ff9800; padding: 10px; font-size: 0.8rem; color: #0a3916; margin-bottom: 15px; font-weight: bold; }
 
@@ -149,6 +150,26 @@
         .btn-cancelar { background: #121212; color: #fff; padding: 15px; border-radius: 6px; width: 100%; cursor: pointer; text-align: center; border: none; font-weight: bold; text-transform: uppercase; margin-top: 10px; }
 
         #loading-pdf { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(27,94,32,0.95); z-index: 9999; color: #FFD600; font-size: 1.2rem; justify-content: center; align-items: center; font-weight: bold; flex-direction: column; text-align: center;}
+
+        /* TELA DE IMPRESSÃO (PREVIEW A4 COM SCALE) */
+        #view-print-preview { display: none; background: #333; flex-direction: column; height: 100%; width: 100%; }
+        .fundo-mesa { flex: 1; overflow: auto; padding: 20px; display: flex; justify-content: center; align-items: flex-start; }
+        .preview-scale-wrapper { transform-origin: top center; transition: transform 0.3s ease; }
+        .papel-a4 { background: #ffffff; color: #000000; width: 794px; min-height: 1123px; margin: 0 auto; padding: 40px; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+        .papel-a4.landscape { width: 1123px; min-height: 794px; }
+
+        /* IMPRESSÃO NATIVA */
+        #print-zone { display: none; }
+        @media print {
+            body, html, #app-container { background: #ffffff !important; height: auto !important; overflow: visible !important; display: block !important; }
+            .view { display: none !important; }
+            #print-zone { display: block !important; width: 100%; background: #ffffff; color: #000000; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            th { background-color: #f0f0f0 !important; }
+            table { border-color: #000000 !important; width: 100% !important; border-collapse: collapse !important; }
+            td, th { border: 1px solid #000000 !important; padding: 8px !important; }
+            .page-break { page-break-before: always; }
+        }
     </style>
 </head>
 <body>
@@ -162,73 +183,41 @@
     
     <div id="view-launcher" class="view active">
         <div class="header">
-            <h1>WEBFIN <span>v3.25</span></h1>
+            <h1>WEBFIN <span>v3.28</span></h1>
         </div>
         <div class="view-scroll">
             <div class="launcher-grid">
-                <div class="app-icon" onclick="abrirApp('view-eu')"><div class="icon-symbol">👤</div><h2>EU</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-contas')"><div class="icon-cifrao">$</div><h2>REGISTROS</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-diario')"><div class="icon-symbol">📓</div><h2>DIÁRIO</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-eu'))"><div class="icon-symbol">👤</div><h2>EU</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-contas'))"><div class="icon-cifrao">$</div><h2>REGISTROS</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-diario'))"><div class="icon-symbol">📓</div><h2>DIÁRIO</h2></div>
                 <div style="grid-column: span 1;"></div>
                 
                 <div class="divisor-grid"></div>
 
-                <div class="app-icon" onclick="abrirApp('view-negocio')"><div class="icon-symbol">🏢</div><h2>NEGÓCIO</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-clientes')"><div class="icon-symbol">👥</div><h2>CLIENTES</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-estoque')"><div class="icon-symbol">📦</div><h2>ESTOQUE</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-vendas')"><div class="icon-symbol">🤝</div><h2>VENDAS</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-negocio'))"><div class="icon-symbol">🏢</div><h2>NEGÓCIO</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-clientes'))"><div class="icon-symbol">👥</div><h2>CLIENTES</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-estoque'))"><div class="icon-symbol">📦</div><h2>ESTOQUE</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-vendas'))"><div class="icon-symbol">🤝</div><h2>VENDAS</h2></div>
                 
                 <div class="divisor-grid"></div>
 
-                <div class="app-icon" onclick="abrirApp('view-dossie')"><div class="icon-symbol">📄</div><h2>RELATÓRIOS</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-radar')"><div class="icon-symbol">📊</div><h2>GRÁFICOS</h2></div>
-                <div class="app-icon" onclick="abrirApp('view-calculadora')"><div class="icon-symbol">🔢</div><h2>CALCULADORA</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-dossie-launcher'))"><div class="icon-symbol">📄</div><h2>RELATÓRIOS</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-radar-launcher'))"><div class="icon-symbol">📊</div><h2>GRÁFICOS</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-calculadora'))"><div class="icon-symbol">🔢</div><h2>CALCULADORA</h2></div>
                 <div style="grid-column: span 1;"></div>
 
                 <div class="divisor-grid"></div>
 
-                <div class="app-icon" onclick="abrirApp('view-dados')"><div class="icon-symbol">⚙️</div><h2>SISTEMA</h2></div>
-                <div class="app-icon" onclick="abrirModalDoacao()"><div class="icon-symbol">☕</div><h2>APOIAR</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-sistema-launcher'))"><div class="icon-symbol">⚙️</div><h2>SISTEMA</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirModalDoacao())"><div class="icon-symbol">☕</div><h2>APOIAR</h2></div>
                 <div style="grid-column: span 1;"></div>
-                <div class="app-icon" style="border-color: #c62828; background: #ffebee;" onclick="executarEncerramentoSeguro()"><div class="icon-symbol" style="color: #c62828;">❌</div><h2 style="color: #c62828;">FECHAR</h2></div>
+                <div class="app-icon" style="border-color: #c62828; background: #ffebee;" onclick="acaoBotao(() => executarEncerramentoSeguro())"><div class="icon-symbol" style="color: #c62828;">❌</div><h2 style="color: #c62828;">FECHAR</h2></div>
             </div>
         </div>
     </div>
 
-    <div id="view-eu" class="view">
-        <div class="header">
-            <h1>EU</h1>
-            <div class="header-acoes">
-                <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
-                <button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button>
-            </div>
-        </div>
-        <div class="view-scroll">
-            <div id="bloco-sem-perfil" style="text-align: center; margin-top: 50px;">
-                <button class="btn-executar" onclick="abrirModalPerfil()">CADASTRAR INFORMAÇÕES PESSOAIS</button>
-            </div>
-            <div id="bloco-com-perfil" style="display: none;">
-                <div class="dados-box" style="border-left: 5px solid #1b5e20;">
-                    <div style="display: flex; justify-content: space-between; align-items: start;">
-                        <div>
-                            <h3 id="txt-nome-completo" style="color: #1b5e20; margin-bottom: 8px; border:none;"></h3>
-                            <p style="margin-bottom: 4px;"><strong>CPF:</strong> <span id="txt-cpf"></span></p>
-                            <p style="margin-bottom: 0;"><strong>Nasc:</strong> <span id="txt-nasc"></span></p>
-                        </div>
-                        <div style="display: flex; gap: 12px;">
-                            <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;" onclick="abrirModalPerfil(true)">✏️</button>
-                            <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;" onclick="apagarPerfil()">🗑️</button>
-                        </div>
-                    </div>
-                </div>
-                <h3 style="margin-top: 25px; margin-bottom: 10px; color: #1b5e20; border-bottom: 2px solid #1b5e20; padding-bottom: 5px; font-size: 1rem; text-transform: uppercase; font-weight:bold;">CONTAS BANCÁRIAS</h3>
-                <div id="lista-bancos-eu"></div>
-                <button class="btn-dados" style="margin-top: 15px; border-style: dashed;" onclick="abrirModalBanco()">+ ADICIONAR CONTA BANCÁRIA</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="view-dados" class="view">
+    <!-- SUB-LAUNCHER: SISTEMA -->
+    <div id="view-sistema-launcher" class="view">
         <div class="header">
             <h1>SISTEMA</h1>
             <div class="header-acoes">
@@ -236,7 +225,60 @@
             </div>
         </div>
         <div class="view-scroll">
-            
+            <div class="launcher-grid">
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-dados'))"><div class="icon-symbol">💾</div><h2>BACKUP</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-sobre'))"><div class="icon-symbol">ℹ️</div><h2>SOBRE</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-comunidade'))"><div class="icon-symbol">📢</div><h2>COMUNIDADE</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-desenvolvedor'))"><div class="icon-symbol">👨‍💻</div><h2>DEV</h2></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUB-LAUNCHER: GRÁFICOS -->
+    <div id="view-radar-launcher" class="view">
+        <div class="header">
+            <h1>GRÁFICOS</h1>
+            <div class="header-acoes">
+                <button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button>
+            </div>
+        </div>
+        <div class="view-scroll">
+            <div class="launcher-grid">
+                <div class="app-icon" onclick="acaoBotao(() => abrirGraficoEspecifico('radar'))"><div class="icon-symbol">🕸️</div><h2>RADAR</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirGraficoEspecifico('pie'))"><div class="icon-symbol">🍕</div><h2>PIZZA</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirGraficoEspecifico('line'))"><div class="icon-symbol">📈</div><h2>LINHA</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirGraficoEspecifico('bar'))"><div class="icon-symbol">📊</div><h2>BARRAS</h2></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUB-LAUNCHER: RELATÓRIOS -->
+    <div id="view-dossie-launcher" class="view">
+        <div class="header">
+            <h1>RELATÓRIOS</h1>
+            <div class="header-acoes">
+                <button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button>
+            </div>
+        </div>
+        <div class="view-scroll">
+            <div class="launcher-grid">
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-dossie'))"><div class="icon-symbol">💲</div><h2>REGISTROS</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-clientes'))"><div class="icon-symbol">👥</div><h2>CLIENTES</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-estoque'))"><div class="icon-symbol">📦</div><h2>ESTOQUE</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-vendas'))"><div class="icon-symbol">🤝</div><h2>VENDAS</h2></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APP: BACKUP -->
+    <div id="view-dados" class="view">
+        <div class="header">
+            <h1>BACKUP</h1>
+            <div class="header-acoes">
+                <button class="btn-header" onclick="abrirApp('view-sistema-launcher')">⬅</button>
+            </div>
+        </div>
+        <div class="view-scroll">
             <div class="alerta-padrao">O sistema opera em gavetas isoladas. Você pode fazer backup ou restaurar módulos específicos sem afetar o resto do aplicativo.</div>
 
             <div class="dados-box" style="border-color: #2196f3; background: #e3f2fd;">
@@ -304,6 +346,108 @@
         </div>
     </div>
 
+    <!-- APP: SOBRE -->
+    <div id="view-sobre" class="view">
+        <div class="header">
+            <h1>SOBRE</h1>
+            <div class="header-acoes">
+                <button class="btn-header" onclick="abrirApp('view-sistema-launcher')">⬅</button>
+            </div>
+        </div>
+        <div class="view-scroll">
+            <div class="dados-box" style="text-align: center;">
+                <h3 style="font-size: 1.5rem;">WEBFIN</h3>
+                <p style="font-weight: bold; color: #1b5e20; margin-bottom: 20px;">Versão 3.28</p>
+                <p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;">
+                    O WEBFIN é um sistema de código aberto, autônomo, sem mensalidade e sem roubo de dados. É um projeto gratuito, <strong>NÃO PAGUE por ele</strong>. Caso queira contribuir financeiramente com o desenvolvimento, utilize a opção APOIAR no menu principal.
+                </p>
+                <button class="btn-executar" style="background: #ffc107; color: #000; box-shadow: 0 4px 0 #c79100; margin-top: 0;" onclick="abrirModalDoacao()">OU CLIQUE AQUI ☕</button>
+            </div>
+            <div class="dados-box">
+                <h3 style="text-align: center;">📱 INSTALAÇÃO PWA</h3>
+                <div class="alerta-padrao">Faça backup antes de instalar a versão definitiva na tela inicial.</div>
+                <p style="font-size: 0.85rem; margin-bottom: 10px;"><strong>ANDROID:</strong> Chrome > Menu (⋮) > Adicionar à tela inicial.</p>
+                <p style="font-size: 0.85rem; margin-bottom: 20px;"><strong>iOS:</strong> Safari > Compartilhar > Adicionar à Tela de Início.</p>
+                <button class="btn-dados" style="background: #121212; color: #fff;" onclick="forcarAtualizacao()">🔄 VERIFICAR ATUALIZAÇÕES</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- APP: COMUNIDADE -->
+    <div id="view-comunidade" class="view">
+        <div class="header">
+            <h1>COMUNIDADE</h1>
+            <div class="header-acoes">
+                <button class="btn-header" onclick="abrirApp('view-sistema-launcher')">⬅</button>
+            </div>
+        </div>
+        <div class="view-scroll">
+            <div class="dados-box" style="border-left: 5px solid #25D366; text-align: center;">
+                <h3 style="color: #25D366; font-size: 1.2rem; margin-bottom: 15px; border-color: #25D366;">📢 CANAL OFICIAL</h3>
+                <p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;">
+                    Canal oficial do aplicativo WEBFIN. Voltado para informar sobre atualizações de recursos e melhorias.
+                </p>
+                <a href="https://whatsapp.com/channel/0029Vb7L8UBIHphDxIjp1E1b" target="_blank" style="text-decoration: none;">
+                    <button class="btn-executar" style="background: #25D366; color: #fff; box-shadow: 0 4px 0 #128C7E;">ENTRAR NO CANAL</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- APP: DESENVOLVEDOR -->
+    <div id="view-desenvolvedor" class="view">
+        <div class="header">
+            <h1>DEV</h1>
+            <div class="header-acoes">
+                <button class="btn-header" onclick="abrirApp('view-sistema-launcher')">⬅</button>
+            </div>
+        </div>
+        <div class="view-scroll">
+            <div class="dados-box" style="border-left: 5px solid #333; text-align: center;">
+                <h3 style="color: #333; font-size: 1.2rem; margin-bottom: 15px; border-color: #333;">👨‍💻 CÓDIGO-FONTE</h3>
+                <p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;">
+                    Projeto mantido e desenvolvido por <strong>Raphaelo H C B Melo</strong>. Acesse o repositório oficial para acompanhar o código-fonte e as atualizações técnicas.
+                </p>
+                <a href="https://github.com/raphahcbmelo" target="_blank" style="text-decoration: none;">
+                    <button class="btn-executar" style="background: #333; color: #fff; box-shadow: 0 4px 0 #000;">ACESSAR GITHUB</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-eu" class="view">
+        <div class="header">
+            <h1>EU</h1>
+            <div class="header-acoes">
+                <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
+                <button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button>
+            </div>
+        </div>
+        <div class="view-scroll">
+            <div id="bloco-sem-perfil" style="text-align: center; margin-top: 50px;">
+                <button class="btn-executar" onclick="abrirModalPerfil()">CADASTRAR INFORMAÇÕES PESSOAIS</button>
+            </div>
+            <div id="bloco-com-perfil" style="display: none;">
+                <div class="dados-box" style="border-left: 5px solid #1b5e20;">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div>
+                            <h3 id="txt-nome-completo" style="color: #1b5e20; margin-bottom: 8px; border:none;"></h3>
+                            <p style="margin-bottom: 4px;"><strong>CPF:</strong> <span id="txt-cpf"></span></p>
+                            <p style="margin-bottom: 0;"><strong>Nasc:</strong> <span id="txt-nasc"></span></p>
+                        </div>
+                        <div style="display: flex; gap: 12px;">
+                            <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;" onclick="abrirModalPerfil(true)">✏️</button>
+                            <button style="background:none; border:none; font-size:1.2rem; cursor:pointer;" onclick="apagarPerfil()">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+                <h3 style="margin-top: 25px; margin-bottom: 10px; color: #1b5e20; border-bottom: 2px solid #1b5e20; padding-bottom: 5px; font-size: 1rem; text-transform: uppercase; font-weight:bold;">CONTAS BANCÁRIAS</h3>
+                <div id="lista-bancos-eu"></div>
+                <button class="btn-dados" style="margin-top: 15px; border-style: dashed;" onclick="abrirModalBanco()">+ ADICIONAR CONTA BANCÁRIA</button>
+            </div>
+        </div>
+    </div>
+
     <div id="view-contas" class="view">
         <div class="header">
             <h1>REGISTROS</h1>
@@ -345,7 +489,7 @@
             <h1>RELATÓRIOS</h1>
             <div class="header-acoes">
                 <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
-                <button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button>
+                <button class="btn-header" onclick="abrirApp('view-dossie-launcher')">⬅</button>
             </div>
         </div>
         <div class="view-scroll">
@@ -355,24 +499,42 @@
             
             <div class="resumo-box" id="dossie-resumo" style="display: none;"><div class="resumo-item"><h4>ENTRADAS</h4><p class="text-green" id="resumo-receitas">R$ 0,00</p></div><div class="resumo-item"><h4>SAÍDAS</h4><p class="text-red" id="resumo-despesas">R$ 0,00</p></div><div class="resumo-item total" id="box-saldo-total"><h4>SALDO DO PERÍODO</h4><p id="resumo-saldo">R$ 0,00</p></div></div>
             
-            <button id="btn-visualizar-impressao" class="btn-executar" style="display:none; background:#2196f3 !important; color:#fff !important; margin-top: 15px; box-shadow: 0 4px 0 #0d47a1;" onclick="abrirModalPdfDossie()">EXPORTAR PDF</button>
+            <button id="btn-visualizar-impressao" class="btn-executar" style="display:none; background:#2196f3 !important; color:#fff !important; margin-top: 15px; box-shadow: 0 4px 0 #0d47a1;" onclick="abrirPreviewImpressao()">VISUALIZAR IMPRESSÃO</button>
             
             <div id="lista-dossie"><p style="text-align: center; color: #1b5e20; margin-top: 30px; font-size: 0.8rem; font-weight:bold;">[ Informe o período para geração ]</p></div>
         </div>
     </div>
 
+    <!-- TELA DE PREVIEW DE IMPRESSÃO (A4 ABSOLUTO COM SCALE) -->
+    <div id="view-print-preview" class="view">
+        <div class="header no-print" style="background: #1b5e20; border-bottom: 2px solid #0a3916;">
+            <h1 style="color: #FFD600; font-size: 1rem;">VISUALIZAÇÃO A4</h1>
+            <div class="header-acoes">
+                <button id="btn-orientacao" class="btn-header" style="background: #ff9800; color: #000; border: none; font-size: 0.8rem;" onclick="toggleOrientacao()">PAISAGEM</button>
+                <button class="btn-header" style="background: #2196f3; color: #fff; border: none; font-size: 1.2rem;" onclick="imprimirDocumento()">💾</button>
+                <button class="btn-header" onclick="abrirApp('view-dossie')">⬅</button>
+            </div>
+        </div>
+        <div class="fundo-mesa">
+            <div class="preview-scale-wrapper" id="preview-wrapper">
+                <div class="papel-a4 portrait" id="print-preview-content"></div>
+            </div>
+        </div>
+    </div>
+
     <div id="view-radar" class="view">
         <div class="header">
-            <h1>GRÁFICOS</h1>
+            <h1 id="titulo-grafico-atual">GRÁFICOS</h1>
             <div class="header-acoes">
                 <button class="btn-header btn-ajuda" onclick="abrirModalAjudaGlobal()">?</button>
-                <button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button>
+                <button class="btn-header" onclick="abrirApp('view-radar-launcher')">⬅</button>
             </div>
         </div>
         <div class="view-scroll">
-            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>MENSURAÇÃO INICIAL:</label><input type="date" id="radar-data-de" class="form-control" onchange="atualizarPainelContas()"></div><div class="form-group" style="flex:1;"><label>MENSURAÇÃO FINAL:</label><input type="date" id="radar-data-ate" class="form-control" onchange="atualizarPainelContas()"></div></div>
-            <div class="form-group"><label>AGRUPAMENTO CRONOLÓGICO:</label><select id="radar-agrupamento" class="form-control" onchange="verificarTravaGrafico()"><option value="geral">Consolidado do Período</option><option value="diario">Evolução Diária</option><option value="semanal">Evolução Semanal</option><option value="mensal">Evolução Mensal</option></select></div>
-            <div class="form-group"><label>MÉTODO DE EXIBIÇÃO:</label><select id="radar-tipo-grafico" class="form-control" onchange="renderizarGraficoAvancado()"><option value="doughnut" id="opt-pie">Distribuição em Anel</option><option value="bar" id="opt-bar">Barras de Comparação</option><option value="line" id="opt-line">Linha de Tendência</option><option value="radar" id="opt-radar">Teia de Atributos</option></select></div>
+            <input type="hidden" id="radar-tipo-grafico" value="radar">
+            
+            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>DATA INICIAL:</label><input type="date" id="radar-data-de" class="form-control" onchange="atualizarPainelContas()"></div><div class="form-group" style="flex:1;"><label>DATA FINAL:</label><input type="date" id="radar-data-ate" class="form-control" onchange="atualizarPainelContas()"></div></div>
+            <div class="form-group"><label>TIPO DE PERÍODO:</label><select id="radar-agrupamento" class="form-control" onchange="verificarTravaGrafico()"><option value="geral">TODO</option><option value="diario">DIÁRIO</option><option value="semanal">SEMANAL</option><option value="mensal">MENSAL</option></select></div>
             
             <div class="form-group" style="margin-top: 15px; background: #ffffff; border: 2px solid #1b5e20; padding: 15px; border-radius: 8px;">
                 
@@ -432,9 +594,9 @@
     </div>
 
     <div id="view-negocio" class="view"><div class="header"><h1>NEGÓCIO</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #1b5e20; font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
-    <div id="view-clientes" class="view"><div class="header"><h1>CLIENTES</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #1b5e20; font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
-    <div id="view-estoque" class="view"><div class="header"><h1>ESTOQUE</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #1b5e20; font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
-    <div id="view-vendas" class="view"><div class="header"><h1>VENDAS</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #1b5e20; font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
+    <div id="view-clientes" class="view"><div class="header"><h1>CLIENTES</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-dossie-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #1b5e20; font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
+    <div id="view-estoque" class="view"><div class="header"><h1>ESTOQUE</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-dossie-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #1b5e20; font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
+    <div id="view-vendas" class="view"><div class="header"><h1>VENDAS</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-dossie-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #1b5e20; font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
 
 </div>
 
@@ -449,7 +611,7 @@
             <p style="color: #121212; font-weight: bold; font-size: 0.75rem; word-break: break-all; margin-top: 10px; text-align: center;">182edc11-4ace-46c1-ad6f-ad3dec83eb32</p>
         </div>
         <div style="display: flex; gap: 10px;">
-            <button class="btn-cancelar" onclick="fecharModais()">FECHAR</button>
+            <button class="btn-cancelar" style="background:#444;" onclick="fecharModais()">FECHAR</button>
             <button class="btn-executar" style="margin-top:0; flex: 2;" onclick="copiarPixDoacao()">COPIAR CHAVE PIX</button>
         </div>
     </div>
@@ -510,15 +672,6 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="modal-dossie-pdf">
-    <div class="modal-box">
-        <h3>EXPORTAR RELATÓRIO</h3>
-        <div class="modal-option"><input type="radio" name="rad-pdf-orientacao-dossie" id="rad-pdf-retrato-dossie" value="portrait" checked><label for="rad-pdf-retrato-dossie">Retrato (Vertical)</label></div>
-        <div class="modal-option"><input type="radio" name="rad-pdf-orientacao-dossie" id="rad-pdf-paisagem-dossie" value="landscape"><label for="rad-pdf-paisagem-dossie">Paisagem (Horizontal)</label></div>
-        <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-executar" style="margin-top:0; flex: 2; background: #2196f3; border-color: #0d47a1; box-shadow: 0 4px 0 #0d47a1;" onclick="dispararPdfDossie()">GERAR PDF</button></div>
-    </div>
-</div>
-
 <!-- IFRAME FANTASMA PARA IMPRESSÃO NATIVA BLINDADA -->
 <iframe id="print-iframe" style="display:none;"></iframe>
 
@@ -533,12 +686,11 @@
             req.onsuccess = (e) => { db = e.target.result; carregarDatalistSugestoes(); definingDatasPadrao(); }; 
             req.onupgradeneeded = (e) => { 
                 let d = e.target.result; 
-                if (!d.objectStoreNames.contains('financas_pessoais')) d.createObjectStore('financas_pessoais', { keyPath: "id" }); 
-                if (!d.objectStoreNames.contains('dados_usuario')) d.createObjectStore('dados_usuario', { keyPath: "id" }); 
-                if (!d.objectStoreNames.contains('dados_empresa')) d.createObjectStore('dados_empresa', { keyPath: "id" }); 
-                if (!d.objectStoreNames.contains('dados_clientes')) d.createObjectStore('dados_clientes', { keyPath: "id" }); 
-                if (!d.objectStoreNames.contains('dados_produtos')) d.createObjectStore('dados_produtos', { keyPath: "id" }); 
-                if (!d.objectStoreNames.contains('dados_vendas')) d.createObjectStore('dados_vendas', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('lancamentos')) d.createObjectStore('lancamentos', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('configuracoes')) d.createObjectStore('configuracoes', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('clientes')) d.createObjectStore('clientes', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('estoque')) d.createObjectStore('estoque', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('vendas')) d.createObjectStore('vendas', { keyPath: "id" }); 
             }; 
         } catch(err) {
             console.error("Erro na inicialização do banco:", err);
@@ -546,6 +698,11 @@
         }
     }
     
+    // FUNÇÃO DE NAVEGAÇÃO COM DELAY TÁTIL (250ms)
+    function acaoBotao(callback) {
+        setTimeout(callback, 250);
+    }
+
     function abrirApp(id) { 
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); 
         document.getElementById(id).classList.add('active'); 
@@ -556,7 +713,23 @@
         } 
         if(id === 'view-diario') { carregarDiario(); } 
         if(id === 'view-eu') { carregarModuloEu(); }
+        if(id === 'view-print-preview') { ajustarEscalaPreview(); }
         if(id === 'view-radar') { atualizarPainelContas(); }
+    }
+
+    function abrirGraficoEspecifico(tipo) {
+        document.getElementById('radar-tipo-grafico').value = tipo;
+        
+        // Ajusta o título da tela baseado no tipo
+        const titulos = {
+            'radar': 'RADAR',
+            'pie': 'PIZZA',
+            'line': 'LINHA',
+            'bar': 'BARRAS'
+        };
+        document.getElementById('titulo-grafico-atual').innerText = titulos[tipo];
+        
+        abrirApp('view-radar');
     }
     
     function formatarMoeda(valor) { return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 2 }); }
@@ -567,6 +740,16 @@
 
     function abrirModalAjudaGlobal() {
         fecharModais();
+        document.getElementById('modal-ajuda-global').style.display = 'flex';
+    }
+
+    function abrirAjudaImpressao() {
+        document.getElementById('texto-ajuda-dinamico').innerHTML = `
+            <strong>🖨️ VISUALIZAÇÃO DE IMPRESSÃO:</strong><br><br>
+            Confirme o enquadramento estrutural dos dados na folha física. O sistema reduz automaticamente a escala da fonte caso localize um grande número de colunas, prevenindo cortes nas margens.<br><br>
+            Use o botão de rotação (🔄) para ajustar a orientação do papel na sua tela (Retrato/Paisagem).<br><br>
+            <strong>Atenção:</strong> Na tela da impressora do seu aparelho, você deve certificar que a opção Paisagem/Retrato esteja igual à selecionada no aplicativo.
+        `;
         document.getElementById('modal-ajuda-global').style.display = 'flex';
     }
 
@@ -863,16 +1046,42 @@
             `;
         } else { document.getElementById('btn-visualizar-impressao').style.display = 'none'; }
     }
-
-    function abrirModalPdfDossie() {
-        if(!htmlDossieAtual) { alert("Gera a tabela na tela primeiro!"); return; }
-        document.getElementById('modal-dossie-pdf').style.display = 'flex';
+    
+    let isLandscape = false;
+    function ajustarEscalaPreview() {
+        const wrapper = document.getElementById('preview-wrapper');
+        const papel = document.getElementById('print-preview-content');
+        const isLand = papel.classList.contains('landscape');
+        const targetWidth = isLand ? 1123 : 794;
+        
+        const containerWidth = Math.min(window.innerWidth, 400);
+        let scale = (containerWidth - 40) / targetWidth;
+        if(scale > 1) scale = 1;
+        
+        wrapper.style.transform = `scale(${scale})`;
+        const targetHeight = isLand ? 794 : 1123;
+        wrapper.style.height = `${targetHeight * scale}px`;
+        wrapper.style.width = `${targetWidth * scale}px`;
     }
 
-    function dispararPdfDossie() {
-        fecharModais();
-        const orientacao = document.querySelector('input[name="rad-pdf-orientacao-dossie"]:checked').value;
-        acionarMotorPDF(htmlDossieAtual, orientacao, 'relatorio-consolidado');
+    function abrirPreviewImpressao() { 
+        if(!htmlDossieAtual) return; 
+        isLandscape = false; 
+        document.getElementById('btn-orientacao').innerText = 'PAISAGEM';
+        document.getElementById('style-orientacao').innerHTML = `@page { size: portrait; margin: 10mm; }`; 
+        const papel = document.getElementById('print-preview-content');
+        papel.classList.remove('landscape'); 
+        papel.innerHTML = htmlDossieAtual; 
+        abrirApp('view-print-preview'); 
+    }
+
+    function toggleOrientacao() { 
+        isLandscape = !isLandscape; 
+        document.getElementById('btn-orientacao').innerText = isLandscape ? 'RETRATO' : 'PAISAGEM'; 
+        document.getElementById('style-orientacao').innerHTML = `@page { size: ${isLandscape ? 'landscape' : 'portrait'}; margin: 10mm; }`; 
+        const papel = document.getElementById('print-preview-content');
+        if(isLandscape) { papel.classList.add('landscape'); } else { papel.classList.remove('landscape'); } 
+        ajustarEscalaPreview();
     }
 
     // ==========================================
@@ -883,7 +1092,11 @@
     function toggleFiltroGrafico(tipo) {
         filtrosGrafico[tipo] = !filtrosGrafico[tipo];
         const btn = document.getElementById(`btn-filtro-${tipo}`);
-        if(filtrosGrafico[tipo]) { btn.classList.add('active'); } else { btn.classList.remove('active'); }
+        if(filtrosGrafico[tipo]) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
         renderizarGraficoAvancado();
     }
 
@@ -1209,6 +1422,7 @@
     }
 
     window.onload = initDB;
+    window.addEventListener('resize', () => { if(document.getElementById('view-print-preview').classList.contains('active')) ajustarEscalaPreview(); });
 </script>
 </body>
 </html>

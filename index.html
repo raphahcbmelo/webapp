@@ -12,8 +12,6 @@
     <link rel="apple-touch-icon" href="icon-512.png">
     <meta name="theme-color" content="#1b5e20">
 
-    <style id="style-orientacao">@page { size: portrait; margin: 10mm; }</style>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     
@@ -95,9 +93,10 @@
         .btn-executar { width: 100%; padding: 15px; background-color: #1b5e20; color: #FFD600; border: none; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 15px; text-transform: uppercase; box-shadow: 0 4px 0 #0a3916; transition: 0.1s; }
         .btn-executar:active { transform: translateY(4px); box-shadow: 0 0 0 #0a3916; }
 
+        /* CAIXAS DE DADOS E DIÁRIO */
         .dados-box { background: #ffffff; border: 2px solid #1b5e20; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: left; color: #121212; }
         .dados-box h3 { color: #1b5e20; font-size: 1rem; margin-bottom: 10px; border-bottom: 2px solid #1b5e20; padding-bottom: 5px; text-transform: uppercase; }
-        .btn-dados { display: block; width: 100%; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; border: 2px solid #1b5e20; text-transform: uppercase; text-align: center; margin-bottom: 10px; background: #ffffff; color: #1b5e20; }
+        .btn-dados { display: block; width: 100%; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; border: 2px solid #1b5e20; text-transform: uppercase; text-align: center; background: #ffffff; color: #1b5e20; }
         .btn-dados:active { background: #f0f0f0; }
         .alerta-padrao { background: rgba(255,214,0,0.3); border-left: 4px solid #ff9800; padding: 10px; font-size: 0.8rem; color: #0a3916; margin-bottom: 15px; font-weight: bold; }
 
@@ -150,26 +149,6 @@
         .btn-cancelar { background: #121212; color: #fff; padding: 15px; border-radius: 6px; width: 100%; cursor: pointer; text-align: center; border: none; font-weight: bold; text-transform: uppercase; margin-top: 10px; }
 
         #loading-pdf { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(27,94,32,0.95); z-index: 9999; color: #FFD600; font-size: 1.2rem; justify-content: center; align-items: center; font-weight: bold; flex-direction: column; text-align: center;}
-
-        /* TELA DE IMPRESSÃO (PREVIEW A4 COM SCALE) */
-        #view-print-preview { display: none; background: #333; flex-direction: column; height: 100%; width: 100%; }
-        .fundo-mesa { flex: 1; overflow: auto; padding: 20px; display: flex; justify-content: center; align-items: flex-start; }
-        .preview-scale-wrapper { transform-origin: top center; transition: transform 0.3s ease; }
-        .papel-a4 { background: #ffffff; color: #000000; width: 794px; min-height: 1123px; margin: 0 auto; padding: 40px; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
-        .papel-a4.landscape { width: 1123px; min-height: 794px; }
-
-        /* IMPRESSÃO NATIVA */
-        #print-zone { display: none; }
-        @media print {
-            body, html, #app-container { background: #ffffff !important; height: auto !important; overflow: visible !important; display: block !important; }
-            .view { display: none !important; }
-            #print-zone { display: block !important; width: 100%; background: #ffffff; color: #000000; }
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-            th { background-color: #f0f0f0 !important; }
-            table { border-color: #000000 !important; width: 100% !important; border-collapse: collapse !important; }
-            td, th { border: 1px solid #000000 !important; padding: 8px !important; }
-            .page-break { page-break-before: always; }
-        }
     </style>
 </head>
 <body>
@@ -183,7 +162,7 @@
     
     <div id="view-launcher" class="view active">
         <div class="header">
-            <h1>WEBFIN <span>v3.24</span></h1>
+            <h1>WEBFIN <span>v3.25</span></h1>
         </div>
         <div class="view-scroll">
             <div class="launcher-grid">
@@ -208,7 +187,6 @@
 
                 <div class="divisor-grid"></div>
 
-                <!-- NOVA LINHA DE SISTEMA E SAÍDA SEGURA -->
                 <div class="app-icon" onclick="abrirApp('view-dados')"><div class="icon-symbol">⚙️</div><h2>SISTEMA</h2></div>
                 <div class="app-icon" onclick="abrirModalDoacao()"><div class="icon-symbol">☕</div><h2>APOIAR</h2></div>
                 <div style="grid-column: span 1;"></div>
@@ -258,24 +236,70 @@
             </div>
         </div>
         <div class="view-scroll">
-            <div class="dados-box">
-                <h3 style="text-align: center;">💾 COFRE DE SEGURANÇA</h3>
-                <div class="alerta-padrao">Os dados são armazenados localmente. Realize exportações periódicas para garantir a integridade das informações.</div>
-                <button class="btn-dados" style="background: #1b5e20; color: #FFD600;" onclick="exportarBackup()">EXPORTAR BACKUP (.JSON)</button>
-                <input type="file" id="input-importar" style="display: none;" accept=".json" onchange="processarImportacao(event)">
-                <button class="btn-dados" style="background: #ff9800; color: #000; border-color: #ff9800;" onclick="document.getElementById('input-importar').click()">RESTAURAR BACKUP (.JSON)</button>
-            </div>
             
-            <div class="dados-box">
-                <h3 style="text-align: center;">📱 DIRETRIZES DE INSTALAÇÃO</h3>
-                <p style="font-size:0.85rem; margin-bottom:10px;"><strong style="color:#2e7d32;">ANDROID:</strong> Google Chrome > Menu (⋮) > Adicionar à tela inicial.</p>
-                <p style="font-size:0.85rem; margin-bottom:20px;"><strong style="color:#2196f3;">iOS (IPHONE):</strong> Compartilhar > Adicionar à Tela de Início.</p>
-                <button class="btn-dados" style="background: #121212; color: #fff;" onclick="forcarAtualizacao()">🔄 VERIFICAR ATUALIZAÇÕES</button>
+            <div class="alerta-padrao">O sistema opera em gavetas isoladas. Você pode fazer backup ou restaurar módulos específicos sem afetar o resto do aplicativo.</div>
+
+            <div class="dados-box" style="border-color: #2196f3; background: #e3f2fd;">
+                <h3 style="text-align: center; color: #1565c0; border-color: #1565c0;">🌐 SISTEMA COMPLETO (TUDO)</h3>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-dados" style="background:#1565c0; color:#fff; border-color:#1565c0; margin-bottom:0;" onclick="exportarBackup('tudo')">FAZER</button>
+                    <button class="btn-dados" style="background:#fff; color:#1565c0; border-color:#1565c0; margin-bottom:0;" onclick="acionarImportacao('tudo')">RESTAURAR</button>
+                </div>
             </div>
 
-            <div class="dados-box" style="border-color: #c62828;">
-                <h3 style="color:#c62828;">EXCLUSÃO PERMANENTE</h3>
-                <button class="btn-dados" style="background: #c62828; color: #fff;" onclick="limparBancoGeral()">LIMPAR BANCO DE DADOS</button>
+            <div class="dados-box">
+                <h3 style="text-align: center;">👤 DADOS DO USUÁRIO</h3>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-dados" style="margin-bottom:0;" onclick="exportarBackup('dados_usuario')">FAZER</button>
+                    <button class="btn-dados" style="background:#f5f5f5; margin-bottom:0;" onclick="acionarImportacao('dados_usuario')">RESTAURAR</button>
+                </div>
+            </div>
+
+            <div class="dados-box">
+                <h3 style="text-align: center;">💲 FINANÇAS PESSOAIS</h3>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-dados" style="margin-bottom:0;" onclick="exportarBackup('financas_pessoais')">FAZER</button>
+                    <button class="btn-dados" style="background:#f5f5f5; margin-bottom:0;" onclick="acionarImportacao('financas_pessoais')">RESTAURAR</button>
+                </div>
+            </div>
+
+            <div class="dados-box">
+                <h3 style="text-align: center;">🏢 DADOS DA EMPRESA</h3>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-dados" style="margin-bottom:0;" onclick="exportarBackup('dados_empresa')">FAZER</button>
+                    <button class="btn-dados" style="background:#f5f5f5; margin-bottom:0;" onclick="acionarImportacao('dados_empresa')">RESTAURAR</button>
+                </div>
+            </div>
+
+            <div class="dados-box">
+                <h3 style="text-align: center;">👥 CLIENTES</h3>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-dados" style="margin-bottom:0;" onclick="exportarBackup('dados_clientes')">FAZER</button>
+                    <button class="btn-dados" style="background:#f5f5f5; margin-bottom:0;" onclick="acionarImportacao('dados_clientes')">RESTAURAR</button>
+                </div>
+            </div>
+
+            <div class="dados-box">
+                <h3 style="text-align: center;">📦 ESTOQUE</h3>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-dados" style="margin-bottom:0;" onclick="exportarBackup('dados_produtos')">FAZER</button>
+                    <button class="btn-dados" style="background:#f5f5f5; margin-bottom:0;" onclick="acionarImportacao('dados_produtos')">RESTAURAR</button>
+                </div>
+            </div>
+
+            <div class="dados-box">
+                <h3 style="text-align: center;">🤝 VENDAS</h3>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-dados" style="margin-bottom:0;" onclick="exportarBackup('dados_vendas')">FAZER</button>
+                    <button class="btn-dados" style="background:#f5f5f5; margin-bottom:0;" onclick="acionarImportacao('dados_vendas')">RESTAURAR</button>
+                </div>
+            </div>
+
+            <input type="file" id="input-importar" style="display: none;" accept=".json" onchange="processarImportacao(event)">
+
+            <div class="dados-box" style="border-color: #c62828; margin-top: 40px;">
+                <h3 style="color:#c62828; text-align: center;">EXCLUSÃO PERMANENTE</h3>
+                <button class="btn-dados" style="background: #c62828; color: #fff; border-color: #c62828;" onclick="limparBancoGeral()">APAGAR TUDO</button>
             </div>
         </div>
     </div>
@@ -331,26 +355,9 @@
             
             <div class="resumo-box" id="dossie-resumo" style="display: none;"><div class="resumo-item"><h4>ENTRADAS</h4><p class="text-green" id="resumo-receitas">R$ 0,00</p></div><div class="resumo-item"><h4>SAÍDAS</h4><p class="text-red" id="resumo-despesas">R$ 0,00</p></div><div class="resumo-item total" id="box-saldo-total"><h4>SALDO DO PERÍODO</h4><p id="resumo-saldo">R$ 0,00</p></div></div>
             
-            <button id="btn-visualizar-impressao" class="btn-executar" style="display:none; background:#2196f3 !important; color:#fff !important; margin-top: 15px; box-shadow: 0 4px 0 #0d47a1;" onclick="abrirPreviewImpressao()">VISUALIZAR IMPRESSÃO</button>
+            <button id="btn-visualizar-impressao" class="btn-executar" style="display:none; background:#2196f3 !important; color:#fff !important; margin-top: 15px; box-shadow: 0 4px 0 #0d47a1;" onclick="abrirModalPdfDossie()">EXPORTAR PDF</button>
             
             <div id="lista-dossie"><p style="text-align: center; color: #1b5e20; margin-top: 30px; font-size: 0.8rem; font-weight:bold;">[ Informe o período para geração ]</p></div>
-        </div>
-    </div>
-
-    <!-- TELA DE PREVIEW DE IMPRESSÃO (A4 ABSOLUTO COM SCALE) -->
-    <div id="view-print-preview" class="view">
-        <div class="header no-print" style="background: #1b5e20; border-bottom: 2px solid #0a3916;">
-            <h1 style="color: #FFD600; font-size: 1rem;">VISUALIZAÇÃO A4</h1>
-            <div class="header-acoes">
-                <button id="btn-orientacao" class="btn-header" style="background: #ff9800; color: #000; border: none; font-size: 0.8rem;" onclick="toggleOrientacao()">PAISAGEM</button>
-                <button class="btn-header" style="background: #2196f3; color: #fff; border: none; font-size: 1.2rem;" onclick="imprimirDocumento()">💾</button>
-                <button class="btn-header" onclick="abrirApp('view-dossie')">⬅</button>
-            </div>
-        </div>
-        <div class="fundo-mesa">
-            <div class="preview-scale-wrapper" id="preview-wrapper">
-                <div class="papel-a4 portrait" id="print-preview-content"></div>
-            </div>
         </div>
     </div>
 
@@ -363,9 +370,9 @@
             </div>
         </div>
         <div class="view-scroll">
-            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>DATA INICIAL:</label><input type="date" id="radar-data-de" class="form-control" onchange="atualizarPainelContas()"></div><div class="form-group" style="flex:1;"><label>DATA FINAL:</label><input type="date" id="radar-data-ate" class="form-control" onchange="atualizarPainelContas()"></div></div>
-            <div class="form-group"><label>TIPO DE PERÍODO:</label><select id="radar-agrupamento" class="form-control" onchange="verificarTravaGrafico()"><option value="geral">TODO</option><option value="diario">DIÁRIO</option><option value="semanal">SEMANAL</option><option value="mensal">MENSAL</option></select></div>
-            <div class="form-group"><label>TIPO DE GRÁFICO:</label><select id="radar-tipo-grafico" class="form-control" onchange="renderizarGraficoAvancado()"><option value="doughnut" id="opt-pie">Distribuição em Anel</option><option value="bar" id="opt-bar">Barras de Comparação</option><option value="line" id="opt-line">Linha de Tendência</option><option value="radar" id="opt-radar">Teia de Atributos</option></select></div>
+            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>MENSURAÇÃO INICIAL:</label><input type="date" id="radar-data-de" class="form-control" onchange="atualizarPainelContas()"></div><div class="form-group" style="flex:1;"><label>MENSURAÇÃO FINAL:</label><input type="date" id="radar-data-ate" class="form-control" onchange="atualizarPainelContas()"></div></div>
+            <div class="form-group"><label>AGRUPAMENTO CRONOLÓGICO:</label><select id="radar-agrupamento" class="form-control" onchange="verificarTravaGrafico()"><option value="geral">Consolidado do Período</option><option value="diario">Evolução Diária</option><option value="semanal">Evolução Semanal</option><option value="mensal">Evolução Mensal</option></select></div>
+            <div class="form-group"><label>MÉTODO DE EXIBIÇÃO:</label><select id="radar-tipo-grafico" class="form-control" onchange="renderizarGraficoAvancado()"><option value="doughnut" id="opt-pie">Distribuição em Anel</option><option value="bar" id="opt-bar">Barras de Comparação</option><option value="line" id="opt-line">Linha de Tendência</option><option value="radar" id="opt-radar">Teia de Atributos</option></select></div>
             
             <div class="form-group" style="margin-top: 15px; background: #ffffff; border: 2px solid #1b5e20; padding: 15px; border-radius: 8px;">
                 
@@ -397,7 +404,7 @@
             
             <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                 <button class="btn-executar" style="margin-top: 0; flex: 1;" onclick="renderizarGraficoAvancado()">GERAR ANÁLISE</button>
-                <button id="btn-pdf-grafico" class="btn-executar" style="margin-top: 0; display: none; background: #2196f3 !important; color: #fff !important; border: 2px solid #0d47a1; box-shadow: 0 4px 0 #0d47a1; width: auto; padding: 15px 20px;" onclick="alert('Módulo PDF em desenvolvimento.')">PDF</button>
+                <button id="btn-pdf-grafico" class="btn-executar" style="margin-top: 0; display: none; background: #2196f3 !important; color: #fff !important; border: 2px solid #0d47a1; box-shadow: 0 4px 0 #0d47a1; width: auto; padding: 15px 20px;" onclick="abrirModalPdfRadar()">PDF</button>
             </div>
             
             <div class="chart-wrapper"><canvas id="canvasRadar"></canvas></div>
@@ -442,7 +449,7 @@
             <p style="color: #121212; font-weight: bold; font-size: 0.75rem; word-break: break-all; margin-top: 10px; text-align: center;">182edc11-4ace-46c1-ad6f-ad3dec83eb32</p>
         </div>
         <div style="display: flex; gap: 10px;">
-            <button class="btn-cancelar" style="background:#444;" onclick="fecharModais()">FECHAR</button>
+            <button class="btn-cancelar" onclick="fecharModais()">FECHAR</button>
             <button class="btn-executar" style="margin-top:0; flex: 2;" onclick="copiarPixDoacao()">COPIAR CHAVE PIX</button>
         </div>
     </div>
@@ -494,7 +501,25 @@
     </div>
 </div>
 
-<!-- ZONA DE IMPRESSÃO INVISÍVEL -->
+<div class="modal-overlay" id="modal-radar-pdf">
+    <div class="modal-box">
+        <h3>EXPORTAR GRÁFICOS</h3>
+        <div class="modal-option"><input type="radio" name="rad-pdf-orientacao" id="rad-pdf-retrato" value="portrait" checked><label for="rad-pdf-retrato">Retrato (Vertical)</label></div>
+        <div class="modal-option"><input type="radio" name="rad-pdf-orientacao" id="rad-pdf-paisagem" value="landscape"><label for="rad-pdf-paisagem">Paisagem (Horizontal)</label></div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-executar" style="margin-top:0; flex: 2; background: #2196f3; border-color: #0d47a1; box-shadow: 0 4px 0 #0d47a1;" onclick="dispararPdfRadar()">GERAR PDF</button></div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modal-dossie-pdf">
+    <div class="modal-box">
+        <h3>EXPORTAR RELATÓRIO</h3>
+        <div class="modal-option"><input type="radio" name="rad-pdf-orientacao-dossie" id="rad-pdf-retrato-dossie" value="portrait" checked><label for="rad-pdf-retrato-dossie">Retrato (Vertical)</label></div>
+        <div class="modal-option"><input type="radio" name="rad-pdf-orientacao-dossie" id="rad-pdf-paisagem-dossie" value="landscape"><label for="rad-pdf-paisagem-dossie">Paisagem (Horizontal)</label></div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-executar" style="margin-top:0; flex: 2; background: #2196f3; border-color: #0d47a1; box-shadow: 0 4px 0 #0d47a1;" onclick="dispararPdfDossie()">GERAR PDF</button></div>
+    </div>
+</div>
+
+<!-- IFRAME FANTASMA PARA IMPRESSÃO NATIVA BLINDADA -->
 <iframe id="print-iframe" style="display:none;"></iframe>
 
 <script>
@@ -504,15 +529,16 @@
     let db; const dbName = "FinancasDB"; 
     function initDB() { 
         try {
-            const req = indexedDB.open(dbName, 2); 
+            const req = indexedDB.open(dbName, 3); 
             req.onsuccess = (e) => { db = e.target.result; carregarDatalistSugestoes(); definingDatasPadrao(); }; 
             req.onupgradeneeded = (e) => { 
                 let d = e.target.result; 
-                if (!d.objectStoreNames.contains('lancamentos')) d.createObjectStore('lancamentos', { keyPath: "id" }); 
-                if (!d.objectStoreNames.contains('configuracoes')) d.createObjectStore('configuracoes', { keyPath: "id" }); 
-                if (!d.objectStoreNames.contains('clientes')) d.createObjectStore('clientes', { keyPath: "id" }); 
-                if (!d.objectStoreNames.contains('estoque')) d.createObjectStore('estoque', { keyPath: "id" }); 
-                if (!d.objectStoreNames.contains('vendas')) d.createObjectStore('vendas', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('financas_pessoais')) d.createObjectStore('financas_pessoais', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('dados_usuario')) d.createObjectStore('dados_usuario', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('dados_empresa')) d.createObjectStore('dados_empresa', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('dados_clientes')) d.createObjectStore('dados_clientes', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('dados_produtos')) d.createObjectStore('dados_produtos', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('dados_vendas')) d.createObjectStore('dados_vendas', { keyPath: "id" }); 
             }; 
         } catch(err) {
             console.error("Erro na inicialização do banco:", err);
@@ -530,7 +556,6 @@
         } 
         if(id === 'view-diario') { carregarDiario(); } 
         if(id === 'view-eu') { carregarModuloEu(); }
-        if(id === 'view-print-preview') { ajustarEscalaPreview(); }
         if(id === 'view-radar') { atualizarPainelContas(); }
     }
     
@@ -541,23 +566,7 @@
     function fecharModais() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
 
     function abrirModalAjudaGlobal() {
-        document.getElementById('texto-ajuda-dinamico').innerHTML = `
-            <p><strong style="color:#2196f3">👤 EU:</strong> Gerencie dados de identificação pessoal e configure contas para cópia rápida de chaves de transferência corporativas.</p><br>
-            <p><strong style="color:#2e7d32">💲 REGISTROS:</strong> Insira entradas e despesas operacionais da sua movimentação financeira de forma isolada.</p><br>
-            <p><strong style="color:#ff9800">📓 DIÁRIO:</strong> Livro razão geral. Realize auditorias cronológicas com permissões completas para alteração e exclusão de itens errados.</p><br>
-            <p><strong style="color:#b71c1c;">📄 RELATÓRIOS:</strong> Consolidadores de movimentação e balanço mensal, preparados para enquadramento automático de impressão em papel.</p>
-        `;
         fecharModais();
-        document.getElementById('modal-ajuda-global').style.display = 'flex';
-    }
-
-    function abrirAjudaImpressao() {
-        document.getElementById('texto-ajuda-dinamico').innerHTML = `
-            <strong>🖨️ VISUALIZAÇÃO DE IMPRESSÃO:</strong><br><br>
-            Confirme o enquadramento estrutural dos dados na folha física. O sistema reduz automaticamente a escala da fonte caso localize um grande número de colunas, prevenindo cortes nas margens.<br><br>
-            Use o botão de rotação (🔄) para ajustar a orientação do papel na sua tela (Retrato/Paisagem).<br><br>
-            <strong>Atenção:</strong> Na tela da impressora do seu aparelho, você deve certificar que a opção Paisagem/Retrato esteja igual à selecionada no aplicativo.
-        `;
         document.getElementById('modal-ajuda-global').style.display = 'flex';
     }
 
@@ -576,7 +585,7 @@
     function executarEncerramentoSeguro() {
         if(confirm("Deseja realizar o encerramento seguro da sessão? Um backup completo em .json será gerado e baixado automaticamente.")) {
             document.getElementById('loading-pdf').style.display = 'flex';
-            const stores = ['lancamentos', 'configuracoes', 'clientes', 'estoque', 'vendas'];
+            const stores = ['financas_pessoais', 'dados_usuario', 'dados_clientes', 'dados_produtos', 'dados_vendas', 'dados_empresa'];
             let cofreFull = {}; let exportadas = 0;
             stores.forEach(st => {
                 const tx = db.transaction([st], "readonly");
@@ -587,7 +596,7 @@
                         const blob = new Blob([dataStr], {type: "application/json"}); 
                         const url = URL.createObjectURL(blob); 
                         const a = document.createElement('a'); 
-                        a.href = url; a.download = `WEBFIN_${formatarDataBackup()}.json`; 
+                        a.href = url; a.download = gerarNomeArquivo('backup-tudo', 'json'); 
                         document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
                         
                         // Inutilização instantânea do Viewport
@@ -621,7 +630,7 @@
     // ==========================================
     let perfilAtual = null;
     function carregarModuloEu() {
-        const t = db.transaction(['configuracoes'], "readonly"); const s = t.objectStore('configuracoes');
+        const t = db.transaction(['dados_usuario'], "readonly"); const s = t.objectStore('dados_usuario');
         s.get('perfil').onsuccess = (e) => {
             perfilAtual = e.target.result;
             if(perfilAtual) {
@@ -640,12 +649,12 @@
     function salvarPerfil() {
         const nome = document.getElementById('perfil-nome').value.trim(); const sobrenome = document.getElementById('perfil-sobrenome').value.trim(); const cpf = document.getElementById('perfil-cpf').value.trim(); const nasc = document.getElementById('perfil-nasc').value;
         if(!nome || !sobrenome) { alert("Os campos de identificação nominal são obrigatórios."); return; }
-        const t = db.transaction(['configuracoes'], "readwrite"); t.objectStore('configuracoes').put({ id: 'perfil', nome, sobrenome, cpf, nasc }); t.oncomplete = () => { fecharModais(); carregarModuloEu(); };
+        const t = db.transaction(['dados_usuario'], "readwrite"); t.objectStore('dados_usuario').put({ id: 'perfil', nome, sobrenome, cpf, nasc }); t.oncomplete = () => { fecharModais(); carregarModuloEu(); };
     }
-    function apagarPerfil() { if(confirm("Deseja remover as informações base de perfil?")) { const t = db.transaction(['configuracoes'], "readwrite"); t.objectStore('configuracoes').delete('perfil'); t.oncomplete = () => { carregarModuloEu(); }; } }
+    function apagarPerfil() { if(confirm("Deseja remover as informações base de perfil?")) { const t = db.transaction(['dados_usuario'], "readwrite"); t.objectStore('dados_usuario').delete('perfil'); t.oncomplete = () => { carregarModuloEu(); }; } }
     function abrirModalBanco(idBanco = null) {
         if(idBanco) {
-            db.transaction(['configuracoes'], "readonly").objectStore('configuracoes').get(idBanco).onsuccess = (e) => {
+            db.transaction(['dados_usuario'], "readonly").objectStore('dados_usuario').get(idBanco).onsuccess = (e) => {
                 let b = e.target.result; document.getElementById('banco-id').value = b.id; document.getElementById('banco-nome').value = b.banco;
                 document.getElementById('banco-ag').value = b.agencia; document.getElementById('banco-cc').value = b.conta; document.getElementById('banco-pix').value = b.pix;
                 document.getElementById('modal-banco').style.display = 'flex';
@@ -656,7 +665,7 @@
         let id = document.getElementById('banco-id').value; if(!id) id = 'banco-' + Date.now();
         const banco = document.getElementById('banco-nome').value.trim().toUpperCase(); const agencia = document.getElementById('banco-ag').value.trim(); const conta = document.getElementById('banco-cc').value.trim(); const pix = document.getElementById('banco-pix').value.trim();
         if(!banco || !pix) { alert("Os campos Banco e Chave Pix são obrigatórios."); return; }
-        const t = db.transaction(['configuracoes'], "readwrite"); t.objectStore('configuracoes').put({ id, banco, agencia, conta, pix }); t.oncomplete = () => { fecharModais(); carregarModuloEu(); };
+        const t = db.transaction(['dados_usuario'], "readwrite"); t.objectStore('dados_usuario').put({ id, banco, agencia, conta, pix }); t.oncomplete = () => { fecharModais(); carregarModuloEu(); };
     }
     function renderizarBancosEu(bancos) {
         const lista = document.getElementById('lista-bancos-eu'); if(bancos.length === 0) { lista.innerHTML = `<p style="color:#1b5e20; font-size:0.85rem; font-weight:bold;">Nenhuma instituição financeira catalogada.</p>`; return; }
@@ -675,10 +684,10 @@
                 </div></div>`;
         }); lista.innerHTML = html;
     }
-    function apagarBanco(id) { if(confirm("Confirmar a exclusão dos parâmetros desta conta?")) { const t = db.transaction(['configuracoes'], "readwrite"); t.objectStore('configuracoes').delete(id); t.oncomplete = () => { carregarModuloEu(); }; } }
+    function apagarBanco(id) { if(confirm("Confirmar a exclusão dos parâmetros desta conta?")) { const t = db.transaction(['dados_usuario'], "readwrite"); t.objectStore('dados_usuario').delete(id); t.oncomplete = () => { carregarModuloEu(); }; } }
     function copiarDadosBanco(idBanco) {
         if(!perfilAtual) { alert("Cadastre os dados de perfil base antes de gerar cópias."); return; }
-        db.transaction(['configuracoes'], "readonly").objectStore('configuracoes').get(idBanco).onsuccess = (e) => {
+        db.transaction(['dados_usuario'], "readonly").objectStore('dados_usuario').get(idBanco).onsuccess = (e) => {
             let b = e.target.result; if(!b) return;
             let texto = `*DADOS DE TRANSFERÊNCIA COMPLETO*\nTitular: ${perfilAtual.nome} ${perfilAtual.sobrenome}\nBanco: ${b.banco}\n`;
             if(b.agencia) texto += `Agência: ${b.agencia}\n`; if(b.conta) texto += `Conta: ${b.conta}\n`; texto += `*Chave Pix: ${b.pix}*`;
@@ -692,7 +701,7 @@
     function capturarEMandarProBanco() {
         const nome = document.getElementById('form-nome').value.trim().toUpperCase(); const dIni = document.getElementById('form-data-inicio').value; const dLim = document.getElementById('form-data-limite').value; const val = parseFloat(document.getElementById('form-valor').value); const rec = document.getElementById('form-recorrente').checked; const freq = document.getElementById('form-frequencia').value;
         if(!nome || !dIni || isNaN(val) || val <= 0) { alert("Por favor, preencha os dados do registro em conformidade."); return; }
-        const t = db.transaction(['lancamentos'], "readwrite"); const s = t.objectStore('lancamentos'); const loteId = "LOTE-" + Date.now();
+        const t = db.transaction(['financas_pessoais'], "readwrite"); const s = t.objectStore('financas_pessoais'); const loteId = "LOTE-" + Date.now();
         if (!rec) { s.add({ id: `${dIni.replace(/-/g,'')}-${nome}-${Date.now()}`, lote: loteId, data: dIni, nome: nome, valor: val, tipo: tipoForm }); } 
         else {
             if(!dLim) { alert("A definição de data limite é obrigatória."); return; }
@@ -705,11 +714,11 @@
         }
         t.oncomplete = () => { alert("Transação armazenada com sucesso."); document.getElementById('form-nome').value = ''; document.getElementById('form-valor').value = ''; carregarDatalistSugestoes(); };
     }
-    function carregarDatalistSugestoes() { const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); const n = new Set(); s.openCursor().onsuccess = (e) => { let c = e.target.result; if(c) { n.add(c.value.nome); c.continue(); } else { const dl = document.getElementById('lista-contas'); dl.innerHTML = ''; n.forEach(x => dl.innerHTML += `<option value="${x}">`); } }; }
+    function carregarDatalistSugestoes() { const s = db.transaction(['financas_pessoais'], "readonly").objectStore('financas_pessoais'); const n = new Set(); s.openCursor().onsuccess = (e) => { let c = e.target.result; if(c) { n.add(c.value.nome); c.continue(); } else { const dl = document.getElementById('lista-contas'); dl.innerHTML = ''; n.forEach(x => dl.innerHTML += `<option value="${x}">`); } }; }
 
     function carregarDiario() {
         const de = document.getElementById('diario-data-de').value; const ate = document.getElementById('diario-data-ate').value; const verRec = document.getElementById('chk-diario-receita').checked; const verDes = document.getElementById('chk-diario-despesa').checked;
-        if(!de || !ate) return; const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); let reg = [];
+        if(!de || !ate) return; const s = db.transaction(['financas_pessoais'], "readonly").objectStore('financas_pessoais'); let reg = [];
         s.openCursor().onsuccess = (e) => {
             let c = e.target.result; if(c) { let r = c.value; if(r.data >= de && r.data <= ate) { if((verRec && r.tipo === 'receita') || (verDes && r.tipo === 'despesa')) { reg.push(r); } } c.continue(); }
             else { reg.sort((a,b) => a.data.localeCompare(b.data)); renderizarHTMLDiario(reg); }
@@ -723,9 +732,9 @@
             html += `<div class="diario-item ${r.tipo}"><div class="diario-info"><div class="diario-data">${formatarDataBR(r.data)}</div><div class="diario-nome">${r.nome}</div><div class="diario-valor" style="color: ${corV};">${sinal}${formatarMoeda(r.valor)}</div></div><div class="diario-acoes"><button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="abrirModalEditarDiario('${r.id}')">✏️</button><button style="background:none; border:none; font-size:1.1rem; cursor:pointer;" onclick="apagarLancamentoDiario('${r.id}')">🗑️</button></div></div>`; 
         }); lista.innerHTML = html;
     }
-    function apagarLancamentoDiario(id) { if(confirm("Confirmar a remoção definitiva do lançamento do diário?")) { const t = db.transaction(['lancamentos'], "readwrite"); t.objectStore('lancamentos').delete(id); t.oncomplete = () => { carregarDiario(); carregarDatalistSugestoes(); }; } }
+    function apagarLancamentoDiario(id) { if(confirm("Confirmar a remoção definitiva do lançamento do diário?")) { const t = db.transaction(['financas_pessoais'], "readwrite"); t.objectStore('financas_pessoais').delete(id); t.oncomplete = () => { carregarDiario(); carregarDatalistSugestoes(); }; } }
     function abrirModalEditarDiario(id) {
-        const t = db.transaction(['lancamentos'], "readonly"); const req = t.objectStore('lancamentos').get(id);
+        const t = db.transaction(['financas_pessoais'], "readonly"); const req = t.objectStore('financas_pessoais').get(id);
         req.onsuccess = () => {
             const r = req.result; if(!r) return;
             document.getElementById('edit-id').value = r.id; document.getElementById('edit-tipo').value = r.tipo; document.getElementById('edit-lote').value = r.lote || '';
@@ -736,16 +745,64 @@
     function salvarEdicaoDiario() {
         const id = document.getElementById('edit-id').value; const tipo = document.getElementById('edit-tipo').value; const lote = document.getElementById('edit-lote').value; const data = document.getElementById('edit-data').value; const nome = document.getElementById('edit-nome').value.trim().toUpperCase(); const valor = parseFloat(document.getElementById('edit-valor').value);
         if(!nome || !data || isNaN(valor) || valor <= 0) { alert("Valores inconsistentes."); return; }
-        const t = db.transaction(['lancamentos'], "readwrite"); t.objectStore('lancamentos').put({ id: id, lote: lote, data: data, nome: nome, valor: valor, tipo: tipo }); t.oncomplete = () => { fecharModais(); carregarDiario(); carregarDatalistSugestoes(); };
+        const t = db.transaction(['financas_pessoais'], "readwrite"); t.objectStore('financas_pessoais').put({ id: id, lote: lote, data: data, nome: nome, valor: valor, tipo: tipo }); t.oncomplete = () => { fecharModais(); carregarDiario(); carregarDatalistSugestoes(); };
     }
 
     // ==========================================
-    // RELATÓRIOS E MESA DE IMPRESSÃO
+    // MOTOR DE NOMENCLATURA UNIVERSAL
+    // ==========================================
+    function obterTimestamp() {
+        const d = new Date();
+        const pad = (n) => n.toString().padStart(2, '0');
+        return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+    }
+    function gerarNomeArquivo(solicitacao, extensao) {
+        return `webfin-${obterTimestamp()}-${solicitacao}.${extensao}`;
+    }
+
+    // ==========================================
+    // MOTOR PDF FANTASMA (O ARMÁRIO DE RECURSOS)
+    // ==========================================
+    function acionarMotorPDF(htmlConteudo, orientacao, nomeSolicitacao) {
+        document.getElementById('loading-pdf').style.display = 'flex';
+        const iframe = document.getElementById('print-iframe');
+        const doc = iframe.contentWindow.document;
+        const pageCss = orientacao === 'landscape' ? '@page { size: landscape; margin: 10mm; }' : '@page { size: portrait; margin: 10mm; }';
+        
+        doc.open();
+        doc.write(`
+            <html>
+            <head>
+                <title>${gerarNomeArquivo(nomeSolicitacao, 'pdf')}</title>
+                <style>
+                    ${pageCss}
+                    body { font-family: 'Courier New', Courier, monospace; color: #000; background: #fff; margin: 0; padding: 0; }
+                    table { width: 100%; border-collapse: collapse; text-align: center; }
+                    th, td { border: 1px solid #000; padding: 8px; }
+                    th { background-color: #f0f0f0; }
+                </style>
+            </head>
+            <body>
+                ${htmlConteudo}
+            </body>
+            </html>
+        `);
+        doc.close();
+        
+        setTimeout(() => {
+            document.getElementById('loading-pdf').style.display = 'none';
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+        }, 500);
+    }
+
+    // ==========================================
+    // RELATÓRIOS (DOSSIÊ)
     // ==========================================
     let htmlDossieAtual = '';
     function gerarRelatorioDossie() {
         const de = document.getElementById('dossie-data-de').value; const ate = document.getElementById('dossie-data-ate').value; const tipo = document.getElementById('dossie-tipo').value;
-        if(!de || !ate) return; const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); let reg = []; let tR = 0; let tD = 0;
+        if(!de || !ate) return; const s = db.transaction(['financas_pessoais'], "readonly").objectStore('financas_pessoais'); let reg = []; let tR = 0; let tD = 0;
         s.openCursor().onsuccess = (e) => {
             let c = e.target.result; if(c) { let r = c.value; if(r.data >= de && r.data <= ate && (tipo === 'todos' || r.tipo === tipo)) { reg.push(r); if(r.tipo === 'receita') tR += r.valor; if(r.tipo === 'despesa') tD += r.valor; } c.continue(); }
             else { renderizarHTMLDossie(reg, tR, tD, de, ate); }
@@ -806,73 +863,16 @@
             `;
         } else { document.getElementById('btn-visualizar-impressao').style.display = 'none'; }
     }
-    
-    let isLandscape = false;
-    function ajustarEscalaPreview() {
-        const wrapper = document.getElementById('preview-wrapper');
-        const papel = document.getElementById('print-preview-content');
-        const isLand = papel.classList.contains('landscape');
-        const targetWidth = isLand ? 1123 : 794;
-        
-        const containerWidth = Math.min(window.innerWidth, 400);
-        let scale = (containerWidth - 40) / targetWidth;
-        if(scale > 1) scale = 1;
-        
-        wrapper.style.transform = `scale(${scale})`;
-        const targetHeight = isLand ? 794 : 1123;
-        wrapper.style.height = `${targetHeight * scale}px`;
-        wrapper.style.width = `${targetWidth * scale}px`;
+
+    function abrirModalPdfDossie() {
+        if(!htmlDossieAtual) { alert("Gera a tabela na tela primeiro!"); return; }
+        document.getElementById('modal-dossie-pdf').style.display = 'flex';
     }
 
-    function abrirPreviewImpressao() { 
-        if(!htmlDossieAtual) return; 
-        isLandscape = false; 
-        document.getElementById('btn-orientacao').innerText = 'PAISAGEM';
-        document.getElementById('style-orientacao').innerHTML = `@page { size: portrait; margin: 10mm; }`; 
-        const papel = document.getElementById('print-preview-content');
-        papel.classList.remove('landscape'); 
-        papel.innerHTML = htmlDossieAtual; 
-        abrirApp('view-print-preview'); 
-    }
-
-    function toggleOrientacao() { 
-        isLandscape = !isLandscape; 
-        document.getElementById('btn-orientacao').innerText = isLandscape ? 'RETRATO' : 'PAISAGEM'; 
-        document.getElementById('style-orientacao').innerHTML = `@page { size: ${isLandscape ? 'landscape' : 'portrait'}; margin: 10mm; }`; 
-        const papel = document.getElementById('print-preview-content');
-        if(isLandscape) { papel.classList.add('landscape'); } else { papel.classList.remove('landscape'); } 
-        ajustarEscalaPreview();
-    }
-
-    // A BALA DE PRATA: IMPRESSÃO VIA IFRAME FANTASMA
-    function imprimirDocumento() {
-        const iframe = document.getElementById('print-iframe');
-        const doc = iframe.contentWindow.document;
-        const pageCss = isLandscape ? '@page { size: landscape; margin: 10mm; }' : '@page { size: portrait; margin: 10mm; }';
-        
-        doc.open();
-        doc.write(`
-            <html>
-            <head>
-                <style>
-                    ${pageCss}
-                    body { font-family: 'Courier New', Courier, monospace; color: #000; background: #fff; margin: 0; padding: 0; }
-                    table { width: 100%; border-collapse: collapse; text-align: center; }
-                    th, td { border: 1px solid #000; padding: 8px; }
-                    th { background-color: #f0f0f0; }
-                </style>
-            </head>
-            <body>
-                ${htmlDossieAtual}
-            </body>
-            </html>
-        `);
-        doc.close();
-        
-        setTimeout(() => {
-            iframe.contentWindow.focus();
-            iframe.contentWindow.print();
-        }, 250);
+    function dispararPdfDossie() {
+        fecharModais();
+        const orientacao = document.querySelector('input[name="rad-pdf-orientacao-dossie"]:checked').value;
+        acionarMotorPDF(htmlDossieAtual, orientacao, 'relatorio-consolidado');
     }
 
     // ==========================================
@@ -883,11 +883,7 @@
     function toggleFiltroGrafico(tipo) {
         filtrosGrafico[tipo] = !filtrosGrafico[tipo];
         const btn = document.getElementById(`btn-filtro-${tipo}`);
-        if(filtrosGrafico[tipo]) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
+        if(filtrosGrafico[tipo]) { btn.classList.add('active'); } else { btn.classList.remove('active'); }
         renderizarGraficoAvancado();
     }
 
@@ -913,7 +909,7 @@
         const ate = document.getElementById('radar-data-ate').value; 
         if(!de || !ate) return;
         
-        const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); 
+        const s = db.transaction(['financas_pessoais'], "readonly").objectStore('financas_pessoais'); 
         let conjReceitas = new Set();
         let conjDespesas = new Set();
         
@@ -965,7 +961,7 @@
             return; 
         }
         
-        const s = db.transaction(['lancamentos'], "readonly").objectStore('lancamentos'); 
+        const s = db.transaction(['financas_pessoais'], "readonly").objectStore('financas_pessoais'); 
         let reg = [];
         s.openCursor().onsuccess = (e) => {
             let c = e.target.result; 
@@ -1098,6 +1094,34 @@
         }
     }
 
+    function abrirModalPdfRadar() {
+        document.getElementById('modal-radar-pdf').style.display = 'flex';
+    }
+
+    function dispararPdfRadar() {
+        fecharModais();
+        const orientacao = document.querySelector('input[name="rad-pdf-orientacao"]:checked').value;
+        
+        // Pega a imagem do canvas atual
+        const canvas = document.getElementById('canvasRadar');
+        const imgB64 = canvas.toDataURL('image/png');
+        
+        const de = document.getElementById('radar-data-de').value; 
+        const ate = document.getElementById('radar-data-ate').value;
+
+        let printHtml = `
+            <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px;">
+                <h1>GRÁFICO FINANCEIRO</h1>
+                <p>Período: ${formatarDataBR(de)} a ${formatarDataBR(ate)}</p>
+            </div>
+            <div style="display: flex; justify-content: center; margin-top: 30px;">
+                <img src="${imgB64}" style="max-width: 100%; height: auto;">
+            </div>
+        `;
+        
+        acionarMotorPDF(printHtml, orientacao, 'graficos-analise');
+    }
+
     // --- CALCULADORA ---
     function calcInput(val) { const d = document.getElementById('calc-display'); if (d.value === 'Erro') d.value = ''; d.value += val; }
     function calcAction(action) {
@@ -1106,34 +1130,85 @@
         }
     }
 
-    // --- MANIPULAÇÃO DE COFRE DE DADOS ---
-    function formatarDataBackup() { let d = new Date(); let aa = d.getFullYear().toString().slice(-2); let mm = ('0' + (d.getMonth() + 1)).slice(-2); let dd = ('0' + d.getDate()).slice(-2); let hh = ('0' + d.getHours()).slice(-2); let min = ('0' + d.getMinutes()).slice(-2); return `${aa}${mm}${dd}${hh}${min}`; }
-    function exportarBackup() {
-        const stores = ['lancamentos', 'configuracoes', 'clientes', 'estoque', 'vendas']; let cofreFull = {}; let exportadas = 0;
+    // --- MANIPULAÇÃO DE COFRE DE DADOS (NOVO MODELO) ---
+    let alvoRestauracao = 'tudo';
+
+    function acionarImportacao(alvo) {
+        alvoRestauracao = alvo;
+        document.getElementById('input-importar').click();
+    }
+
+    function exportarBackup(alvo) {
+        const stores = alvo === 'tudo' ? ['dados_usuario', 'financas_pessoais', 'dados_empresa', 'dados_clientes', 'dados_produtos', 'dados_vendas'] : [alvo];
+        let cofre = {};
+        let lidos = 0;
+        
         stores.forEach(st => {
-            db.transaction([st], "readonly").objectStore(st).getAll().onsuccess = (e) => { cofreFull[st] = e.target.result; exportadas++; if(exportadas === stores.length) dispararDownloadJson(cofreFull); };
+            db.transaction([st], "readonly").objectStore(st).getAll().onsuccess = (e) => {
+                cofre[st] = e.target.result;
+                lidos++;
+                if(lidos === stores.length) {
+                    const dataStr = JSON.stringify(cofre, null, 2);
+                    const blob = new Blob([dataStr], {type: "application/json"});
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = gerarNomeArquivo(`backup-${alvo}`, 'json');
+                    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+                }
+            };
         });
     }
-    function dispararDownloadJson(dados) {
-        if(dados.lancamentos.length === 0 && dados.configuracoes.length === 0) { alert("Nenhum dado localizado para exportação."); return; }
-        const dataStr = JSON.stringify(dados, null, 2); const blob = new Blob([dataStr], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `WEBFIN_${formatarDataBackup()}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-    }
+
     function processarImportacao(event) {
-        const file = event.target.files[0]; if(!file) return; const reader = new FileReader();
+        const file = event.target.files[0]; if(!file) return; 
+        const reader = new FileReader();
         reader.onload = function(e) {
             try {
-                const dados = JSON.parse(e.target.result); let importData = Array.isArray(dados) ? { lancamentos: dados } : dados;
-                if(!confirm("Aviso: Essa operação substituirá integralmente os dados do dispositivo. Prosseguir?")) return;
-                document.getElementById('loading-pdf').style.display = 'flex'; const stores = ['lancamentos', 'configuracoes', 'clientes', 'estoque', 'vendas']; const t = db.transaction(stores, "readwrite");
-                stores.forEach(st => { const s = t.objectStore(st); s.clear().onsuccess = () => { if(importData[st]) importData[st].forEach(r => s.add(r)); }; });
-                t.oncomplete = () => { document.getElementById('loading-pdf').style.display = 'none'; alert("Restauração de segurança executada."); carregarDatalistSugestoes(); };
-            } catch(err) { alert("Inconsistência no arquivo fornecido."); document.getElementById('loading-pdf').style.display = 'none'; }
-        }; reader.readAsText(file);
+                const dados = JSON.parse(e.target.result);
+                if(!confirm(`Aviso: Isso substituirá os dados de [${alvoRestauracao.toUpperCase()}]. Prosseguir?`)) return;
+                
+                document.getElementById('loading-pdf').style.display = 'flex';
+                const storesToUpdate = alvoRestauracao === 'tudo' ? Object.keys(dados) : [alvoRestauracao];
+                
+                const validStores = storesToUpdate.filter(st => db.objectStoreNames.contains(st));
+                if(validStores.length === 0) throw new Error("Nenhuma tabela válida encontrada no arquivo.");
+
+                const t = db.transaction(validStores, "readwrite");
+                validStores.forEach(st => {
+                    if(dados[st]) {
+                        const s = t.objectStore(st);
+                        s.clear().onsuccess = () => { dados[st].forEach(r => s.add(r)); };
+                    }
+                });
+                
+                t.oncomplete = () => { 
+                    document.getElementById('loading-pdf').style.display = 'none'; 
+                    alert("Restauração concluída."); 
+                    carregarDatalistSugestoes(); 
+                    if(alvoRestauracao === 'tudo' || alvoRestauracao === 'dados_usuario') carregarModuloEu();
+                };
+            } catch(err) { 
+                alert("Arquivo inválido ou corrompido."); 
+                document.getElementById('loading-pdf').style.display = 'none'; 
+            }
+            document.getElementById('input-importar').value = '';
+        }; 
+        reader.readAsText(file);
     }
-    function limparBancoGeral() { if(confirm("Aviso de segurança: Tem certeza que deseja apagar permanentemente todas as tabelas?")) { if(confirm("Confirme se realizou uma exportação .json de segurança recente.")) { const stores = ['lancamentos', 'configuracoes', 'clientes', 'estoque', 'vendas']; const t = db.transaction(stores, "readwrite"); stores.forEach(st => t.objectStore(st).clear()); t.oncomplete = () => { alert("Banco de dados limpo."); carregarDatalistSugestoes(); carregarModuloEu(); }; } } }
+
+    function limparBancoGeral() { 
+        if(confirm("Aviso de segurança: Tem certeza que deseja apagar permanentemente todas as tabelas?")) { 
+            if(confirm("Confirme se realizou uma exportação .json de segurança recente.")) { 
+                const stores = ['financas_pessoais', 'dados_usuario', 'clientes', 'estoque', 'vendas', 'dados_empresa']; 
+                const t = db.transaction(stores, "readwrite"); 
+                stores.forEach(st => t.objectStore(st).clear()); 
+                t.oncomplete = () => { alert("Banco de dados limpo."); carregarDatalistSugestoes(); carregarModuloEu(); }; 
+            } 
+        } 
+    }
 
     window.onload = initDB;
-    window.addEventListener('resize', () => { if(document.getElementById('view-print-preview').classList.contains('active')) ajustarEscalaPreview(); });
 </script>
 </body>
 </html>

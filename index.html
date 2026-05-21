@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="WEBFIN">
     <link rel="apple-touch-icon" href="icon-512.png">
-    <meta name="theme-color" content="#FFD600">
+    <meta name="theme-color" content="#1b5e20">
 
     <style id="style-orientacao">@page { size: portrait; margin: 10mm; }</style>
 
@@ -173,6 +173,8 @@
     </style>
 </head>
 <body>
+</head>
+<body>
 
 <div id="loading-pdf"><div style="font-size: 2rem; margin-bottom: 10px;">⚙️</div>PROCESSANDO...</div>
 
@@ -183,7 +185,7 @@
     
     <div id="view-launcher" class="view active">
         <div class="header">
-            <h1>WEBFIN <span>v3.28</span></h1>
+            <h1>WEBFIN <span>v3.29</span></h1>
         </div>
         <div class="view-scroll">
             <div class="launcher-grid">
@@ -208,6 +210,7 @@
 
                 <div class="divisor-grid"></div>
 
+                <!-- NOVA LINHA DE SISTEMA E SAÍDA SEGURA -->
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-sistema-launcher'))"><div class="icon-symbol">⚙️</div><h2>SISTEMA</h2></div>
                 <div class="app-icon" onclick="acaoBotao(() => abrirModalDoacao())"><div class="icon-symbol">☕</div><h2>APOIAR</h2></div>
                 <div style="grid-column: span 1;"></div>
@@ -357,7 +360,7 @@
         <div class="view-scroll">
             <div class="dados-box" style="text-align: center;">
                 <h3 style="font-size: 1.5rem;">WEBFIN</h3>
-                <p style="font-weight: bold; color: #1b5e20; margin-bottom: 20px;">Versão 3.28</p>
+                <p style="font-weight: bold; color: #1b5e20; margin-bottom: 20px;">Versão 3.29</p>
                 <p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;">
                     O WEBFIN é um sistema de código aberto, autônomo, sem mensalidade e sem roubo de dados. É um projeto gratuito, <strong>NÃO PAGUE por ele</strong>. Caso queira contribuir financeiramente com o desenvolvimento, utilize a opção APOIAR no menu principal.
                 </p>
@@ -477,7 +480,9 @@
             </div>
         </div>
         <div class="view-scroll">
-            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>PERÍODO INICIAL:</label><input type="date" id="diario-data-de" class="form-control"></div><div class="form-group" style="flex:1;"><label>PERÍODO FINAL:</label><input type="date" id="diario-data-ate" class="form-control"></div></div>
+            <!-- MOTOR DE DATA INJETADO AQUI -->
+            <div id="motor-data-diario"></div>
+            
             <div class="form-group" style="display: flex; gap: 15px; margin-bottom: 15px; justify-content: center;"><label style="display:flex; align-items:center; gap:5px; color:#2e7d32; font-weight:bold;"><input type="checkbox" id="chk-diario-receita" checked style="transform: scale(1.3);"> RECEITAS</label><label style="display:flex; align-items:center; gap:5px; color:#c62828; font-weight:bold;"><input type="checkbox" id="chk-diario-despesa" checked style="transform: scale(1.3);"> DESPESAS</label></div>
             <button class="btn-executar" style="padding: 10px; margin-top: 0; margin-bottom: 15px;" onclick="carregarDiario()">FILTRAR LANÇAMENTOS</button>
             <div id="diario-lista"><p style="text-align: center; color: #555; margin-top: 30px; font-size: 0.8rem;">[ Filtre o período desejado ]</p></div>
@@ -493,13 +498,15 @@
             </div>
         </div>
         <div class="view-scroll">
-            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>DATA DE INÍCIO:</label><input type="date" id="dossie-data-de" class="form-control"></div><div class="form-group" style="flex:1;"><label>DATA DE TÉRMINO:</label><input type="date" id="dossie-data-ate" class="form-control"></div></div>
+            <!-- MOTOR DE DATA INJETADO AQUI -->
+            <div id="motor-data-dossie"></div>
+            
             <div class="form-group"><label>FILTRO CONSOLIDADO:</label><select id="dossie-tipo" class="form-control"><option value="todos">Completo (Entradas e Saídas)</option><option value="receita">Apenas Faturamento</option><option value="despesa">Apenas Despesas</option></select></div>
             <button class="btn-executar" style="padding: 10px; margin-top: 5px;" onclick="gerarRelatorioDossie()">PROCESSAR MATRIZ</button>
             
             <div class="resumo-box" id="dossie-resumo" style="display: none;"><div class="resumo-item"><h4>ENTRADAS</h4><p class="text-green" id="resumo-receitas">R$ 0,00</p></div><div class="resumo-item"><h4>SAÍDAS</h4><p class="text-red" id="resumo-despesas">R$ 0,00</p></div><div class="resumo-item total" id="box-saldo-total"><h4>SALDO DO PERÍODO</h4><p id="resumo-saldo">R$ 0,00</p></div></div>
             
-            <button id="btn-visualizar-impressao" class="btn-executar" style="display:none; background:#2196f3 !important; color:#fff !important; margin-top: 15px; box-shadow: 0 4px 0 #0d47a1;" onclick="abrirPreviewImpressao()">VISUALIZAR IMPRESSÃO</button>
+            <button id="btn-visualizar-impressao" class="btn-executar" style="display:none; background:#2196f3 !important; color:#fff !important; margin-top: 15px; box-shadow: 0 4px 0 #0d47a1;" onclick="abrirModalPdfDossie()">EXPORTAR PDF</button>
             
             <div id="lista-dossie"><p style="text-align: center; color: #1b5e20; margin-top: 30px; font-size: 0.8rem; font-weight:bold;">[ Informe o período para geração ]</p></div>
         </div>
@@ -533,7 +540,9 @@
         <div class="view-scroll">
             <input type="hidden" id="radar-tipo-grafico" value="radar">
             
-            <div style="display:flex; gap:10px;"><div class="form-group" style="flex:1;"><label>DATA INICIAL:</label><input type="date" id="radar-data-de" class="form-control" onchange="atualizarPainelContas()"></div><div class="form-group" style="flex:1;"><label>DATA FINAL:</label><input type="date" id="radar-data-ate" class="form-control" onchange="atualizarPainelContas()"></div></div>
+            <!-- MOTOR DE DATA INJETADO AQUI -->
+            <div id="motor-data-radar"></div>
+            
             <div class="form-group"><label>TIPO DE PERÍODO:</label><select id="radar-agrupamento" class="form-control" onchange="verificarTravaGrafico()"><option value="geral">TODO</option><option value="diario">DIÁRIO</option><option value="semanal">SEMANAL</option><option value="mensal">MENSAL</option></select></div>
             
             <div class="form-group" style="margin-top: 15px; background: #ffffff; border: 2px solid #1b5e20; padding: 15px; border-radius: 8px;">
@@ -599,7 +608,6 @@
     <div id="view-vendas" class="view"><div class="header"><h1>VENDAS</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-dossie-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #1b5e20; font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
 
 </div>
-
 <div class="modal-overlay" id="modal-doacao">
     <div class="modal-box" style="text-align: center;">
         <h3 style="color: #1b5e20;">☕ APOIAR O DESENVOLVIMENTO</h3>
@@ -672,8 +680,14 @@
     </div>
 </div>
 
-<!-- IFRAME FANTASMA PARA IMPRESSÃO NATIVA BLINDADA -->
-<iframe id="print-iframe" style="display:none;"></iframe>
+<div class="modal-overlay" id="modal-dossie-pdf">
+    <div class="modal-box">
+        <h3>EXPORTAR RELATÓRIO</h3>
+        <div class="modal-option"><input type="radio" name="rad-pdf-orientacao-dossie" id="rad-pdf-retrato-dossie" value="portrait" checked><label for="rad-pdf-retrato-dossie">Retrato (Vertical)</label></div>
+        <div class="modal-option"><input type="radio" name="rad-pdf-orientacao-dossie" id="rad-pdf-paisagem-dossie" value="landscape"><label for="rad-pdf-paisagem-dossie">Paisagem (Horizontal)</label></div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button><button class="btn-executar" style="margin-top:0; flex: 2; background: #2196f3; border-color: #0d47a1; box-shadow: 0 4px 0 #0d47a1;" onclick="dispararPdfDossie()">GERAR PDF</button></div>
+    </div>
+</div>
 
 <script>
     // REGISTRO GLOBAL DO PLUGIN DE DATALABELS
@@ -683,19 +697,57 @@
     function initDB() { 
         try {
             const req = indexedDB.open(dbName, 3); 
-            req.onsuccess = (e) => { db = e.target.result; carregarDatalistSugestoes(); definingDatasPadrao(); }; 
+            req.onsuccess = (e) => { 
+                db = e.target.result; 
+                carregarDatalistSugestoes(); 
+                inicializarMotores(); // Chama a injeção de datas
+                definingDatasPadrao(); 
+            }; 
             req.onupgradeneeded = (e) => { 
                 let d = e.target.result; 
-                if (!d.objectStoreNames.contains('lancamentos')) d.createObjectStore('lancamentos', { keyPath: "id" }); 
-                if (!d.objectStoreNames.contains('configuracoes')) d.createObjectStore('configuracoes', { keyPath: "id" }); 
-                if (!d.objectStoreNames.contains('clientes')) d.createObjectStore('clientes', { keyPath: "id" }); 
-                if (!d.objectStoreNames.contains('estoque')) d.createObjectStore('estoque', { keyPath: "id" }); 
-                if (!d.objectStoreNames.contains('vendas')) d.createObjectStore('vendas', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('financas_pessoais')) d.createObjectStore('financas_pessoais', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('dados_usuario')) d.createObjectStore('dados_usuario', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('dados_empresa')) d.createObjectStore('dados_empresa', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('dados_clientes')) d.createObjectStore('dados_clientes', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('dados_produtos')) d.createObjectStore('dados_produtos', { keyPath: "id" }); 
+                if (!d.objectStoreNames.contains('dados_vendas')) d.createObjectStore('dados_vendas', { keyPath: "id" }); 
             }; 
         } catch(err) {
             console.error("Erro na inicialização do banco:", err);
             alert("Falha ao iniciar o banco de dados. Verifique as permissões do navegador.");
         }
+    }
+
+    // ==========================================
+    // MOTOR DE DATA UNIVERSAL (ARMÁRIO DE RECURSOS)
+    // ==========================================
+    function injetarMotorDeData(containerId, prefixo) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        const html = `
+            <div class="dados-box" style="padding: 15px; margin-bottom: 15px;">
+                <div class="form-group">
+                    <label>📅 DATA INICIAL:</label>
+                    <input type="date" id="${prefixo}-data-de" class="form-control" onchange="dispararAcaoData('${prefixo}')">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>📅 DATA FINAL:</label>
+                    <input type="date" id="${prefixo}-data-ate" class="form-control" onchange="dispararAcaoData('${prefixo}')">
+                </div>
+            </div>
+        `;
+        container.innerHTML = html;
+    }
+
+    function dispararAcaoData(prefixo) {
+        if(prefixo === 'radar') atualizarPainelContas();
+    }
+
+    function inicializarMotores() {
+        injetarMotorDeData('motor-data-diario', 'diario');
+        injetarMotorDeData('motor-data-dossie', 'dossie');
+        injetarMotorDeData('motor-data-radar', 'radar');
     }
     
     // FUNÇÃO DE NAVEGAÇÃO COM DELAY TÁTIL (250ms)
@@ -720,7 +772,6 @@
     function abrirGraficoEspecifico(tipo) {
         document.getElementById('radar-tipo-grafico').value = tipo;
         
-        // Ajusta o título da tela baseado no tipo
         const titulos = {
             'radar': 'RADAR',
             'pie': 'PIZZA',
@@ -747,7 +798,7 @@
         document.getElementById('texto-ajuda-dinamico').innerHTML = `
             <strong>🖨️ VISUALIZAÇÃO DE IMPRESSÃO:</strong><br><br>
             Confirme o enquadramento estrutural dos dados na folha física. O sistema reduz automaticamente a escala da fonte caso localize um grande número de colunas, prevenindo cortes nas margens.<br><br>
-            Use o botão de rotação (🔄) para ajustar a orientação do papel na sua tela (Retrato/Paisagem).<br><br>
+            Use o botão de rotação (🔄) para ajustar a orientation do papel na sua tela (Retrato/Paisagem).<br><br>
             <strong>Atenção:</strong> Na tela da impressora do seu aparelho, você deve certificar que a opção Paisagem/Retrato esteja igual à selecionada no aplicativo.
         `;
         document.getElementById('modal-ajuda-global').style.display = 'flex';
@@ -803,9 +854,20 @@
     function definingDatasPadrao() { 
         const hoje = new Date().toISOString().split('T')[0]; 
         document.getElementById('form-data-inicio').value = hoje; 
-        document.getElementById('diario-data-de').value = hoje; document.getElementById('diario-data-ate').value = "2026-12-31"; 
-        document.getElementById('dossie-data-de').value = hoje; document.getElementById('dossie-data-ate').value = "2026-12-31"; 
-        document.getElementById('radar-data-de').value = hoje; document.getElementById('radar-data-ate').value = "2026-12-31"; 
+        
+        // Atualiza os inputs gerados pelo motor
+        if(document.getElementById('diario-data-de')) {
+            document.getElementById('diario-data-de').value = hoje; 
+            document.getElementById('diario-data-ate').value = "2026-12-31"; 
+        }
+        if(document.getElementById('dossie-data-de')) {
+            document.getElementById('dossie-data-de').value = hoje; 
+            document.getElementById('dossie-data-ate').value = "2026-12-31"; 
+        }
+        if(document.getElementById('radar-data-de')) {
+            document.getElementById('radar-data-de').value = hoje; 
+            document.getElementById('radar-data-ate').value = "2026-12-31"; 
+        }
     }
 
     // ==========================================

@@ -12,6 +12,8 @@
     <link rel="apple-touch-icon" href="icon-512.png">
     <meta name="theme-color" content="#1b5e20">
 
+    <style id="style-orientacao">@page { size: portrait; margin: 10mm; }</style>
+
     <!-- Puxando o arquivo de CSS -->
     <link rel="stylesheet" href="style.css">
 
@@ -29,17 +31,19 @@
     
     <div id="view-launcher" class="view active">
         <div class="header">
-            <h1>WEBFIN <span>v4.0</span></h1>
+            <h1>WEBFIN <span>v4.0.1</span></h1>
         </div>
         <div class="view-scroll">
             <div class="launcher-grid">
+                <!-- LINHA 1 -->
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-eu'))"><div class="icon-symbol">👤</div><h2>EU</h2></div>
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-contas'))"><div class="icon-cifrao">$</div><h2>REGISTROS</h2></div>
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-diario'))"><div class="icon-symbol">📓</div><h2>DIÁRIO</h2></div>
-                <div style="grid-column: span 1;"></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-notas'))"><div class="icon-symbol">📝</div><h2>NOTAS</h2></div>
                 
                 <div class="divisor-grid"></div>
 
+                <!-- LINHA 2 -->
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-negocio'))"><div class="icon-symbol">🏢</div><h2>NEGÓCIO</h2></div>
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-clientes'))"><div class="icon-symbol">👥</div><h2>CLIENTES</h2></div>
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-estoque'))"><div class="icon-symbol">📦</div><h2>ESTOQUE</h2></div>
@@ -47,14 +51,15 @@
                 
                 <div class="divisor-grid"></div>
 
+                <!-- LINHA 3 -->
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-dossie-launcher'))"><div class="icon-symbol">📄</div><h2>RELATÓRIOS</h2></div>
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-radar-launcher'))"><div class="icon-symbol">📊</div><h2>GRÁFICOS</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-agenda'))"><div class="icon-symbol">📅</div><h2>AGENDA</h2></div>
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-calculadora'))"><div class="icon-symbol">🔢</div><h2>CALCULADORA</h2></div>
-                <div style="grid-column: span 1;"></div>
 
                 <div class="divisor-grid"></div>
 
-                <!-- NOVA LINHA DE SISTEMA E SAÍDA SEGURA -->
+                <!-- LINHA 4 -->
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-sistema-launcher'))"><div class="icon-symbol">⚙️</div><h2>SISTEMA</h2></div>
                 <div class="app-icon" onclick="acaoBotao(() => abrirModalDoacao())"><div class="icon-symbol">☕</div><h2>APOIAR</h2></div>
                 <div style="grid-column: span 1;"></div>
@@ -74,6 +79,7 @@
         <div class="view-scroll">
             <div class="launcher-grid">
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-dados'))"><div class="icon-symbol">💾</div><h2>BACKUP</h2></div>
+                <div class="app-icon" onclick="acaoBotao(() => abrirModalTema())"><div class="icon-symbol">🎨</div><h2>APARÊNCIA</h2></div>
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-sobre'))"><div class="icon-symbol">ℹ️</div><h2>SOBRE</h2></div>
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-comunidade'))"><div class="icon-symbol">📢</div><h2>COMUNIDADE</h2></div>
                 <div class="app-icon" onclick="acaoBotao(() => abrirApp('view-desenvolvedor'))"><div class="icon-symbol">👨‍💻</div><h2>DEV</h2></div>
@@ -204,7 +210,7 @@
         <div class="view-scroll">
             <div class="dados-box" style="text-align: center;">
                 <h3 style="font-size: 1.5rem;">WEBFIN</h3>
-                <p style="font-weight: bold; color: #1b5e20; margin-bottom: 20px;">Versão 4.0</p>
+                <p style="font-weight: bold; color: var(--cor-primaria); margin-bottom: 20px;">Versão 4.0.1</p>
                 <p style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;">
                     O WEBFIN é um sistema de código aberto, autônomo, sem mensalidade e sem roubo de dados. É um projeto gratuito, <strong>NÃO PAGUE por ele</strong>. Caso queira contribuir financeiramente com o desenvolvimento, utilize a opção APOIAR no menu principal.
                 </p>
@@ -275,10 +281,10 @@
                 <button class="btn-executar" onclick="abrirModalPerfil()">CADASTRAR INFORMAÇÕES PESSOAIS</button>
             </div>
             <div id="bloco-com-perfil" style="display: none;">
-                <div class="dados-box" style="border-left: 5px solid #1b5e20;">
+                <div class="dados-box" style="border-left: 5px solid var(--cor-primaria);">
                     <div style="display: flex; justify-content: space-between; align-items: start;">
                         <div>
-                            <h3 id="txt-nome-completo" style="color: #1b5e20; margin-bottom: 8px; border:none;"></h3>
+                            <h3 id="txt-nome-completo" style="color: var(--cor-primaria); margin-bottom: 8px; border:none;"></h3>
                             <p style="margin-bottom: 4px;"><strong>CPF:</strong> <span id="txt-cpf"></span></p>
                             <p style="margin-bottom: 0;"><strong>Nasc:</strong> <span id="txt-nasc"></span></p>
                         </div>
@@ -288,7 +294,7 @@
                         </div>
                     </div>
                 </div>
-                <h3 style="margin-top: 25px; margin-bottom: 10px; color: #1b5e20; border-bottom: 2px solid #1b5e20; padding-bottom: 5px; font-size: 1rem; text-transform: uppercase; font-weight:bold;">CONTAS BANCÁRIAS</h3>
+                <h3 style="margin-top: 25px; margin-bottom: 10px; color: var(--cor-primaria); border-bottom: 2px solid var(--cor-primaria); padding-bottom: 5px; font-size: 1rem; text-transform: uppercase; font-weight:bold;">CONTAS BANCÁRIAS</h3>
                 <div id="lista-bancos-eu"></div>
                 <button class="btn-dados" style="margin-top: 15px; border-style: dashed;" onclick="abrirModalBanco()">+ ADICIONAR CONTA BANCÁRIA</button>
             </div>
@@ -306,7 +312,7 @@
         <div class="view-scroll">
             <div class="tipo-toggle"><div id="form-tipo-receita" class="tipo-btn active receita" onclick="setTipoForm('receita')">RECEITA</div><div id="form-tipo-despesa" class="tipo-btn" onclick="setTipoForm('despesa')">DESPESA</div></div>
             <div class="form-group"><label>NOME DO REGISTRO:</label><input list="lista-contas" id="form-nome" class="form-control"><datalist id="lista-contas"></datalist></div>
-            <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin: 15px 0;"><input type="checkbox" id="form-recorrente" onchange="toggleRecorrenciaForm()" style="transform: scale(1.4);"><label style="margin: 0; color: #1b5e20;">LANÇAMENTO RECORRENTE?</label></div>
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin: 15px 0;"><input type="checkbox" id="form-recorrente" onchange="toggleRecorrenciaForm()" style="transform: scale(1.4);"><label style="margin: 0; color: var(--cor-primaria);">LANÇAMENTO RECORRENTE?</label></div>
             <div id="bloco-recorrencia"><div class="form-group"><label>FREQUÊNCIA:</label><select id="form-frequencia" class="form-control" onchange="ajustarLabelsData()"><option value="diario">Diário</option><option value="semanal">Semanal</option><option value="mensal" selected>Mensal</option></select></div></div>
             <div class="form-group"><label id="lbl-data-inicial">DATA DE COMPETÊNCIA:</label><input type="date" id="form-data-inicio" class="form-control"></div>
             <div class="form-group" id="grp-data-limite" style="display: none;"><label>DATA LIMITE VIGÊNCIA:</label><input type="date" id="form-data-limite" class="form-control"></div>
@@ -352,14 +358,14 @@
             
             <button id="btn-visualizar-impressao" class="btn-executar" style="display:none; background:#2196f3 !important; color:#fff !important; margin-top: 15px; box-shadow: 0 4px 0 #0d47a1;" onclick="abrirModalPdfDossie()">EXPORTAR PDF</button>
             
-            <div id="lista-dossie"><p style="text-align: center; color: #1b5e20; margin-top: 30px; font-size: 0.8rem; font-weight:bold;">[ Informe o período para geração ]</p></div>
+            <div id="lista-dossie"><p style="text-align: center; color: var(--cor-primaria); margin-top: 30px; font-size: 0.8rem; font-weight:bold;">[ Informe o período para geração ]</p></div>
         </div>
     </div>
 
     <!-- TELA DE PREVIEW DE IMPRESSÃO (A4 ABSOLUTO COM SCALE) -->
     <div id="view-print-preview" class="view">
-        <div class="header no-print" style="background: #1b5e20; border-bottom: 2px solid #0a3916;">
-            <h1 style="color: #FFD600; font-size: 1rem;">VISUALIZAÇÃO A4</h1>
+        <div class="header no-print" style="background: var(--cor-primaria); border-bottom: 2px solid var(--cor-primaria-dark);">
+            <h1 style="color: var(--cor-secundaria); font-size: 1rem;">VISUALIZAÇÃO A4</h1>
             <div class="header-acoes">
                 <button id="btn-orientacao" class="btn-header" style="background: #ff9800; color: #000; border: none; font-size: 0.8rem;" onclick="toggleOrientacao()">PAISAGEM</button>
                 <button class="btn-header" style="background: #2196f3; color: #fff; border: none; font-size: 1.2rem;" onclick="imprimirDocumento()">💾</button>
@@ -389,7 +395,7 @@
             
             <div class="form-group"><label>TIPO DE PERÍODO:</label><select id="radar-agrupamento" class="form-control" onchange="verificarTravaGrafico()"><option value="geral">TODO</option><option value="diario">DIÁRIO</option><option value="semanal">SEMANAL</option><option value="mensal">MENSAL</option></select></div>
             
-            <div class="form-group" style="margin-top: 15px; background: #ffffff; border: 2px solid #1b5e20; padding: 15px; border-radius: 8px;">
+            <div class="form-group" style="margin-top: 15px; background: #ffffff; border: 2px solid var(--cor-primaria); padding: 15px; border-radius: 8px;">
                 
                 <!-- BLOCO RECEITAS -->
                 <div style="margin-bottom: 15px;">
@@ -446,22 +452,27 @@
         </div>
     </div>
 
-    <div id="view-negocio" class="view"><div class="header"><h1>NEGÓCIO</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #1b5e20; font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
-    <div id="view-clientes" class="view"><div class="header"><h1>CLIENTES</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-dossie-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #1b5e20; font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
-    <div id="view-estoque" class="view"><div class="header"><h1>ESTOQUE</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-dossie-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #1b5e20; font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
-    <div id="view-vendas" class="view"><div class="header"><h1>VENDAS</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-dossie-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: #1b5e20; font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
+    <!-- NOVOS MÓDULOS (PLACEHOLDERS) -->
+    <div id="view-notas" class="view"><div class="header"><h1>NOTAS</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: var(--cor-primaria); font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
+    <div id="view-agenda" class="view"><div class="header"><h1>AGENDA</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: var(--cor-primaria); font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
+
+    <!-- MÓDULOS DE NEGÓCIO (PLACEHOLDERS) -->
+    <div id="view-negocio" class="view"><div class="header"><h1>NEGÓCIO</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: var(--cor-primaria); font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
+    <div id="view-clientes" class="view"><div class="header"><h1>CLIENTES</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-dossie-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: var(--cor-primaria); font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
+    <div id="view-estoque" class="view"><div class="header"><h1>ESTOQUE</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-dossie-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: var(--cor-primaria); font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
+    <div id="view-vendas" class="view"><div class="header"><h1>VENDAS</h1><div class="header-acoes"><button class="btn-header" onclick="abrirApp('view-dossie-launcher')">⬅</button></div></div><div class="view-scroll"><p style="text-align: center; margin-top: 50px; color: var(--cor-primaria); font-weight:bold;">[ Em Desenvolvimento ]</p></div></div>
 
 </div>
 
 <!-- MODAIS -->
 <div class="modal-overlay" id="modal-doacao">
     <div class="modal-box" style="text-align: center;">
-        <h3 style="color: #1b5e20;">☕ APOIAR O DESENVOLVIMENTO</h3>
+        <h3 style="color: var(--cor-primaria);">☕ APOIAR O DESENVOLVIMENTO</h3>
         <p style="font-size: 0.85rem; margin-bottom: 15px; color: #333; font-weight:bold;">O WEBFIN é de código aberto e livre de anúncios. Se a ferramenta otimizou seu controle, considere apoiar a manutenção do projeto.</p>
-        <div style="background: #FFD600; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: left; border: 2px solid #1b5e20;">
-            <p style="color: #1b5e20; font-size: 0.8rem; margin-bottom: 5px;"><strong>TITULAR:</strong> Raphaelo H C B Melo</p>
-            <p style="color: #1b5e20; font-size: 0.8rem; margin-bottom: 5px;"><strong>INSTITUIÇÃO:</strong> InfinitePay</p>
-            <p style="color: #1b5e20; font-size: 0.8rem; margin-bottom: 5px;"><strong>TIPO:</strong> Chave Aleatória</p>
+        <div style="background: var(--cor-secundaria); padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: left; border: 2px solid var(--cor-primaria);">
+            <p style="color: var(--cor-primaria); font-size: 0.8rem; margin-bottom: 5px;"><strong>TITULAR:</strong> Raphaelo H C B Melo</p>
+            <p style="color: var(--cor-primaria); font-size: 0.8rem; margin-bottom: 5px;"><strong>INSTITUIÇÃO:</strong> InfinitePay</p>
+            <p style="color: var(--cor-primaria); font-size: 0.8rem; margin-bottom: 5px;"><strong>TIPO:</strong> Chave Aleatória</p>
             <p style="color: #121212; font-weight: bold; font-size: 0.75rem; word-break: break-all; margin-top: 10px; text-align: center;">182edc11-4ace-46c1-ad6f-ad3dec83eb32</p>
         </div>
         <div style="display: flex; gap: 10px;">
@@ -535,6 +546,23 @@
     </div>
 </div>
 
+<!-- NOVO MODAL DE TEMAS -->
+<div class="modal-overlay" id="modal-tema">
+    <div class="modal-box">
+        <h3>🎨 APARÊNCIA DO SISTEMA</h3>
+        <div class="modal-option"><input type="radio" name="rad-tema" id="tema-classico" value="classico" checked><label for="tema-classico">🟢🟡 Clássico (Verde/Amarelo)</label></div>
+        <div class="modal-option"><input type="radio" name="rad-tema" id="tema-corporativo" value="corporativo"><label for="tema-corporativo">🔵⚪ Corporativo (Azul/Branco)</label></div>
+        <div class="modal-option"><input type="radio" name="rad-tema" id="tema-noturno" value="noturno"><label for="tema-noturno">⚫🟠 Noturno (Preto/Laranja)</label></div>
+        <div class="modal-option"><input type="radio" name="rad-tema" id="tema-moderno" value="moderno"><label for="tema-moderno">🟣⚪ Moderno (Roxo/Cinza)</label></div>
+        <div class="modal-option"><input type="radio" name="rad-tema" id="tema-roxo-amarelo" value="roxo-amarelo"><label for="tema-roxo-amarelo">🟣🟡 Roxo e Amarelo</label></div>
+        <div class="modal-option"><input type="radio" name="rad-tema" id="tema-rosa-preto" value="rosa-preto"><label for="tema-rosa-preto">⚫🔴 Rosa e Preto</label></div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button class="btn-cancelar" onclick="fecharModais()">CANCELAR</button>
+            <button class="btn-executar" style="margin-top:0; flex: 2;" onclick="salvarTema()">APLICAR</button>
+        </div>
+    </div>
+</div>
+
 <!-- REGISTRO DO SERVICE WORKER PARA FUNCIONAR OFFLINE -->
 <script>
   if ('serviceWorker' in navigator) {
@@ -544,8 +572,14 @@
   }
 </script>
 
-<!-- PUXANDO O MOTOR LÓGICO -->
-<script src="app.js"></script>
+<!-- PUXANDO OS NOVOS MOTORES E GAVETAS (ARQUITETURA 4.0.1) -->
+<script src="motor-dados.js"></script>
+<script src="motor-recursos.js"></script>
+<script src="ux-base.js"></script>
+<script src="ux-pessoal.js"></script>
+<script src="ux-financas.js"></script>
+<script src="ux-negocios.js"></script>
+<script src="ux-sistema.js"></script>
 
 </body>
 </html>
